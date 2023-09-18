@@ -1,0 +1,23 @@
+jwt:
+  token:
+    secret: "1a61af05a6bfcfefe9f090ff34929ea707c6a410e7fdc689645361df6f40e49a"
+  expiration:
+    access: 604800000
+    refresh: 2592000000
+server:
+  port: 8070
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/foodapp
+    username: root
+    password: IchBinEinBerliner1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
