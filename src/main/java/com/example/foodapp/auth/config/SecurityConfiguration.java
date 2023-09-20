@@ -40,18 +40,27 @@ public class SecurityConfiguration {
         MvcRequestMatcher.Builder builder = new MvcRequestMatcher.Builder(new HandlerMappingIntrospector());
 //
         http
+//                .oauth2Client()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(builder.pattern("/api/v1/auth/**")).permitAll()
-                        .requestMatchers(builder.pattern("/api/v1/user/**")).permitAll()
-                        .requestMatchers(builder.pattern("/swagger-ui")).permitAll()
-                        .anyRequest().authenticated()
+//                        .requestMatchers(builder.pattern("/api/v1/auth/**")).permitAll()
+//                        .requestMatchers(builder.pattern("/api/v1/user/**")).permitAll()
+//                        .requestMatchers(builder.pattern("/swagger-ui")).permitAll()
+//                        .requestMatchers(builder.pattern("/swagger-resources/**")).permitAll()
+//                        .requestMatchers(builder.pattern("/configuration/security")).permitAll()
+//                        .requestMatchers(builder.pattern("/swagger-ui.html")).permitAll()
+//                        .requestMatchers(builder.pattern("/swagger-ui/*")).permitAll()
+//                        .requestMatchers(builder.pattern("/webjars/**")).permitAll()
+//                        .requestMatchers(builder.pattern("/v2/**")).permitAll()
+                                .anyRequest().permitAll()
+//                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .rememberMe(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

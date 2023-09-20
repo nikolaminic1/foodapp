@@ -7,6 +7,13 @@ jwt:
 server:
   port: 8070
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  springdoc:
+    swagger-ui:
+      csrf:
+        enabled: true
   datasource:
     url: jdbc:mysql://localhost:3306/foodapp
     username: root
