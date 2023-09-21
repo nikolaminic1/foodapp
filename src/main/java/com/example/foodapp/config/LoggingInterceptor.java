@@ -1,4 +1,4 @@
-package com.example.foodapp.auth.config;
+package com.example.foodapp.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

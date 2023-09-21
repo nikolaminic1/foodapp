@@ -1,4 +1,4 @@
-package com.example.foodapp.auth.config;
+package com.example.foodapp.config;
 
 import com.example.foodapp.auth.repo.UserRepository;
 import lombok.RequiredArgsConstructor;

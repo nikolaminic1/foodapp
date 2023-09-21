@@ -1,5 +1,6 @@
-package com.example.foodapp.auth.config;
+package com.example.foodapp.config;
 
+import com.example.foodapp.auth.config.JwtAuthenticationFilter;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

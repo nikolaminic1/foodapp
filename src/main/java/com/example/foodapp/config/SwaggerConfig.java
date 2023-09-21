@@ -1,4 +1,4 @@
-package com.example.foodapp.auth.config;
+package com.example.foodapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
