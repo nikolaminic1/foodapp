@@ -11,7 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -33,18 +35,24 @@ public class User implements UserDetails {
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn
-//            (name = "user_profile_id", referencedColumnName = "id")
-//    @JsonManagedReference
-//    private UserProfile userProfile;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "authorities",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "authority"))
+    private Set<Role> roles = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn
+            (name = "user_profile_id", referencedColumnName = "id")
+    @JsonManagedReference
+    private UserProfile userProfile;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private ERole ERole;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority((role.name())));
+        return List.of(new SimpleGrantedAuthority((ERole.name())));
     }
 
     @Override

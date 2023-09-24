@@ -2,6 +2,8 @@ package com.example.foodapp.auth.user;
 
 //import com.example.foodapp.auth.user.Addresses.Address;
 //import com.example.foodapp.auth.user.UserProfiles._Profile;
+import com.example.foodapp.auth.user.Addresses.Address;
+import com.example.foodapp.auth.user.UserProfiles._Profile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -10,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user_profile")
@@ -36,12 +38,12 @@ public class UserProfile {
     private boolean oneClickPurchasing;
     private boolean isStaff;
 
-//    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name = "user_addresses",
-//            joinColumns = @JoinColumn(name = "address"),
-//            inverseJoinColumns = @JoinColumn(name = "user"))
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_addresses",
+            joinColumns = @JoinColumn(name = "address"),
+            inverseJoinColumns = @JoinColumn(name = "user"))
 
-//    private Address addresses;
+    private Address addresses;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIgnore
@@ -49,31 +51,9 @@ public class UserProfile {
     @JsonManagedReference
     private User user;
 
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "userProfile")
-//    @JoinColumn(name = "business_owner_id", referencedColumnName = "id")
-//    @JsonManagedReference
-//    private BusinessOwner businessOwner;
-
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "profile_table_id")
-//    private _Profile profile;
-
-//    public boolean isBusinessOwner(){
-//        return this.isBusinessOwner;
-//    }
-
-//    @JsonManagedReference
-//    public BusinessOwner getBusinessOwner(){
-//        return this.businessOwner;
-//    }
-
-//    public void setBusinessOwnerBoolean(boolean businessOwner) {
-//        isBusinessOwner = businessOwner;
-//    }
-
-//    public void setBusinessOwner(BusinessOwner businessOwner) {
-//        this.businessOwner = businessOwner;
-//    }
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_table_id")
+    private _Profile profile;
 
 //    public void setProfileObject(_Profile profile){
 //        this.profile = profile;

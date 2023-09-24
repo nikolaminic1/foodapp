@@ -4,16 +4,13 @@ import com.example.foodapp.auth.config.JwtService;
 import com.example.foodapp.auth.dto.*;
 import com.example.foodapp.auth.repo.TokenRepository;
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.user.Role;
+//import com.example.foodapp.auth.repo.profiles._ProfileRepo;
+import com.example.foodapp.auth.repo.profiles._ProfileRepository;
 import com.example.foodapp.auth.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +20,8 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
+
+    private final _ProfileRepository profileRepo;
 
     public AuthenticationResponse login(LoginRequest request) {
 

@@ -43,7 +43,7 @@ public class SecurityConfiguration {
         http
 //                .oauth2Client()
                 .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(builder.pattern("/api/v1/auth/**")).permitAll()
+//                        .requestMatchers(builder.pattern("/api/v1/**")).permitAll()
 //                        .requestMatchers(builder.pattern("/api/v1/user/**")).permitAll()
 //                        .requestMatchers(builder.pattern("/swagger-ui")).permitAll()
 //                        .requestMatchers(builder.pattern("/swagger-resources/**")).permitAll()
@@ -52,27 +52,30 @@ public class SecurityConfiguration {
 //                        .requestMatchers(builder.pattern("/swagger-ui/*")).permitAll()
 //                        .requestMatchers(builder.pattern("/webjars/**")).permitAll()
 //                        .requestMatchers(builder.pattern("/v2/**")).permitAll()
+//                                .anyRequest().authenticated()
                                 .anyRequest().permitAll()
 //                        .anyRequest().authenticated()
+
                 )
 
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .rememberMe(Customizer.withDefaults())
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of("http://localhost:3001"));
+//        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

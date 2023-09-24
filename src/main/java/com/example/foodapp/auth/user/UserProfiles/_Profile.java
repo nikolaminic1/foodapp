@@ -1,23 +1,22 @@
 package com.example.foodapp.auth.user.UserProfiles;
 
-import com.example.foodapp.auth.user.Role;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.example.foodapp.auth.user.ERole;
+import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
-@Entity(name = "profile_type")
+@Builder
+@Entity(name = "_profile")
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "profiles")
 public class _Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Role role;
+    private ERole ERole;
 
     @Column(name = "profile_t_id")
     private Long profileId;

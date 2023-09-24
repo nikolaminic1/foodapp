@@ -20,22 +20,14 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/register")
-    public ResponseEntity<Response> register (
+    public ResponseEntity<String> register (
             @RequestBody RegisterRequest request
     ) {
         try {
             String message = service.register(request);
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .data(Map.of("Message", message))
-                            .build()
-            );
+            return ResponseEntity.ok(message);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
-                            .build()
-            );
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
@@ -58,7 +50,6 @@ public class UserController {
                             .build()
             );
         }
-
     }
 
     @PostMapping("/logout")
@@ -99,6 +90,27 @@ public class UserController {
 
     @DeleteMapping("/delete-me")
     public ResponseEntity<Response> deleteMyProfile (
+            @RequestBody LoginRequest request,
+            Principal principal
+    ) {
+        try {
+            ConfirmationRequestResponse token = service.deleteMyProfile(principal, request);
+            return ResponseEntity.ok().body(
+                    Response.builder()
+                            .data(Map.of("Token", token))
+                            .build()
+            );
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    Response.builder()
+                            .data(Map.of("Message", e.getMessage()))
+                            .build()
+            );
+        }
+    }
+
+    @PostMapping("/delete-me-confirmation")
+    public ResponseEntity<Response> deleteMyProfileConfirmation (
             @RequestBody LoginRequest request,
             Principal principal
     ) {

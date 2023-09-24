@@ -1,6 +1,6 @@
 package com.example.foodapp.auth.dto;
 
-import com.example.foodapp.auth.user.Role;
+import com.example.foodapp.auth.user.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +15,5 @@ public class RegisterRequest {
     private String lastname;
     private String email;
     private String password;
-    private Role role;
+    private ERole ERole;
 }

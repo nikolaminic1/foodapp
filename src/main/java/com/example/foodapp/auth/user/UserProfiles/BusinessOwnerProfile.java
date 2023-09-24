@@ -2,16 +2,13 @@ package com.example.foodapp.auth.user.UserProfiles;
 
 
 import com.example.foodapp.auth.user.BusinessOwner;
-import com.example.foodapp.auth.user.Role;
+import com.example.foodapp.auth.user.ERole;
 import com.example.foodapp.auth.user.UserProfile;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "business_owner_profile")
@@ -19,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BusinessOwnerProfile {
-    private Role ROLE = Role.BUSINESS;
+    private ERole EROLE = ERole.BUSINESS;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

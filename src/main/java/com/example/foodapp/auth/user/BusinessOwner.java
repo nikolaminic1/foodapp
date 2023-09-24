@@ -1,9 +1,10 @@
 package com.example.foodapp.auth.user;
 
+import com.example.foodapp.business.model.Business;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "business_owner")
@@ -27,9 +28,9 @@ public class BusinessOwner {
     @JsonBackReference
     private UserProfile userProfile;
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonBackReference
-//    private Business business;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Business business;
 
 //    public Business getBusiness() {
 //        return business;

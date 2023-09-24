@@ -1,50 +1,23 @@
 package com.example.foodapp.auth.user;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import jakarta.persistence.*;
 
-import static com.example.foodapp.auth.user.Permission.*;
+@Entity(name = "roles")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String authority;
 
-@RequiredArgsConstructor
-public enum Role {
-    USER(Collections.emptySet()),
-    CUSTOMER(Collections.emptySet()),
-    ADMIN(
-            Set.of(
-                    ADMIN_READ,
-                    ADMIN_UPDATE,
-                    ADMIN_DELETE,
-                    ADMIN_CREATE,
-                    BUSINESS_READ,
-                    BUSINESS_UPDATE,
-                    BUSINESS_DELETE,
-                    BUSINESS_CREATE
-            )
-    ),
-    BUSINESS(
-            Set.of(
-                    BUSINESS_READ,
-                    BUSINESS_UPDATE,
-                    BUSINESS_DELETE,
-                    BUSINESS_CREATE
-            )
-    );
-
-    @Getter
-    private final Set<Permission> permissions;
-
-    public List<SimpleGrantedAuthority> getAuthorities() {
-        var authorities = getPermissions()
-                .stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-                .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-        return authorities;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ERole name;
 }
+

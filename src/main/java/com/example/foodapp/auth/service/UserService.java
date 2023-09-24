@@ -2,7 +2,7 @@ package com.example.foodapp.auth.service;
 
 import com.example.foodapp.auth.dto.*;
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.user.Role;
+import com.example.foodapp.auth.user.ERole;
 import com.example.foodapp.auth.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +37,7 @@ public class UserService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .ERole(ERole.USER)
                 .build();
 
         user.setEnabled(true);
