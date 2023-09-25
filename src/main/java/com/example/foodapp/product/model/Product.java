@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.AUTO;
@@ -96,5 +97,16 @@ public class Product {
     public ProductCategory getProductCategory() {
         System.out.println("product cat");
         return productCategory;
+    }
+
+    @OneToMany(mappedBy = "product")
+    private Collection<ProductDescription> productDescription;
+
+    public Collection<ProductDescription> getProductDescription() {
+        return productDescription;
+    }
+
+    public void setProductDescription(Collection<ProductDescription> productDescription) {
+        this.productDescription = productDescription;
     }
 }

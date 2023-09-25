@@ -23,8 +23,7 @@ public class UserService {
         boolean doesUserExists = userRepository.findByEmail(email).isPresent();
 
         if (email == null
-                || request.getFirstname() == null
-                || request.getLastname() == null) {
+                || request.getName() == null) {
             throw new Exception("Data should be provided.");
         }
 
@@ -33,8 +32,8 @@ public class UserService {
         }
 
         var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
+                .firstname(request.getName())
+//                .lastname(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .ERole(ERole.USER)
