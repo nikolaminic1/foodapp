@@ -1,11 +1,9 @@
 package com.example.foodapp.product.service.business.implementation;
 
+import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.repo.profiles.BusinessOwnerProfileRepository;
-import com.example.foodapp.auth.repo.profiles.UserProfileRepo;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
-import com.example.foodapp.auth.user.UserProfile;
 //import com.example.foodapp.business.repo.BusinessRepo;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ProductCategoryRequest;
@@ -30,8 +28,7 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
     private final ProductCategoryRepo productCategoryRepo;
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
-    private final UserProfileRepo userProfileRepo;
-    private final BusinessOwnerProfileRepository businessOwnerRepo;
+    private final BusinessOwnerRepo businessOwnerRepo;
 //    private final BusinessRepo businessRepo;
 
     @Override
@@ -39,7 +36,6 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
 
         String username = principal.getName();
         User user = userRepo.findByEmail(username).orElseThrow();
-        UserProfile userProfile = user.getUserProfile();
 
         String nameOfCategory = payload.getNameOfCategory();
         String descOfCategory = payload.getDescOfCategory();
@@ -74,7 +70,7 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
                 User user = userRepo.findByEmail(username).orElseThrow();
                 return null;
 //                return productCategoryRepo.findProductCategoriesByBusiness(
-//                        userProfileService.returnBusinessOwnerProfile(user.getUserProfile()).getBusiness());
+//                        userProfileService.returnBusinessOwnerProfile(user).getBusiness());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -102,7 +98,6 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
             try {
                 String username = principal.getName();
                 User user = userRepo.findByEmail(username).orElseThrow();
-                UserProfile userProfile = user.getUserProfile();
 //                Business business = userProfile.getBusinessOwner().getBusiness();
 //
 //                productCategoryRepo.deleteProductCategoryById(id);

@@ -46,7 +46,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
 
             if(productCategoryRepo.findById(productCategoryId).isPresent()){
                 ProductCategory productCategory = productCategoryRepo.findById(productCategoryId).get();
-//                if(productCategory.getBusiness() == userProfileService.returnBusinessOwnerProfile(user.getUserProfile()).getBusiness()){
+//                if(productCategory.getBusiness() == userProfileService.returnBusinessOwnerProfile(user).getBusiness()){
                     Product product = new Product();
 
                     // Cannot invoke "app.web.business.model.Business.getBusinessOwner()" because the return value of "app.web.product.model.ProductCategory.getBusiness()" is null

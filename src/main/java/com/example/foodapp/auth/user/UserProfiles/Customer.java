@@ -1,8 +1,10 @@
 package com.example.foodapp.auth.user.UserProfiles;
 
 
+import com.example.foodapp.auth.user.Addresses.Address;
 import com.example.foodapp.auth.user.ERole;
-import com.example.foodapp.auth.user.UserProfile;
+import com.example.foodapp.auth.user.User;
+import com.example.foodapp.order.model.OrderO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,6 +29,13 @@ public class Customer {
     private Long id;
     private String username;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_addresses",
+            joinColumns = @JoinColumn(name = "address"),
+            inverseJoinColumns = @JoinColumn(name = "user"))
+
+    private Address addresses;
+
     @CreationTimestamp
     private LocalDateTime dateCreated;
 
@@ -33,8 +43,8 @@ public class Customer {
     private LocalDateTime dateUpdated;
 
     @OneToOne
-    private UserProfile userProfile;
+    private User user;
 
-//    @OneToMany
-//    private List<OrderO> orderList;
+    @OneToMany
+    private List<OrderO> orderList;
 }

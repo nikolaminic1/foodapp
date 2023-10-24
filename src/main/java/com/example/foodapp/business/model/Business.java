@@ -1,6 +1,6 @@
 package com.example.foodapp.business.model;
 
-import com.example.foodapp.auth.user.BusinessOwner;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import com.example.foodapp.business.enumeration.Status;
 import com.example.foodapp.product.model.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -9,8 +9,6 @@ import lombok.*;
 import jakarta.persistence.*;
 
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity
 @Getter
@@ -24,7 +22,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class Business {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;

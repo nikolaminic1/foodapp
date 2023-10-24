@@ -1,8 +1,8 @@
 package com.example.foodapp.business.service.owner_service.implementation;
 
+import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.RoleRepo;
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.repo.profiles.BusinessOwnerProfileRepository;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.model.Requests.BusinessUpdateRequest;
@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import static java.lang.Boolean.TRUE;
 
@@ -30,7 +27,7 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
     private final BusinessRepo businessRepo;
     private final UserRepository userRepo;
     private final RoleRepo roleRepository;
-    private final BusinessOwnerProfileRepository businessOwnerRepo;
+    private final BusinessOwnerRepo businessOwnerRepo;
 
 
     @Override
@@ -46,7 +43,7 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
             Business business = businessRepo.findById(id).get();
 //            BusinessOwner businessOwner = businessOwnerRepo.findBusinessOwnerByBusiness(business);
 
-//            if(businessOwner.getUserProfile() == user.getUserProfile()){
+//            if(businessOwner == user){
 //                business.setDescription(businessUpdateRequest.getDesc());
 //                business.setName(businessUpdateRequest.getName());
 //                return businessRepo.save(business);

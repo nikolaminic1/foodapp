@@ -1,9 +1,7 @@
 package com.example.foodapp.order.service.customer.implementation;
 
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.repo.profiles.UserProfileRepo;
 import com.example.foodapp.auth.service._UserProfileService;
-import com.example.foodapp.auth.user.UserProfile;
 import com.example.foodapp.order.exception.APIConnectionException;
 import com.example.foodapp.order.model.OrderO;
 import com.example.foodapp.order.model.Payment;
@@ -35,22 +33,20 @@ public class CustomerPaymentServiceImplementation implements CustomerPaymentServ
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
     private final OrderRepo orderRepo;
-    private final UserProfileRepo userProfileRepo;
 
     @Override
     public Payment create(@RequestBody PaymentRequest paymentRequest, Principal principal) throws Exception {
-        UserProfile userProfile = userRepo.findByEmail(principal.getName()).orElseThrow().getUserProfile();
         String stripeToken = paymentRequest.getStripeToken();
         String paymentMethodId = paymentRequest.getPaymentMethodId();
         Long orderId = paymentRequest.getOrderId();
-        String stripeCustomerId = userProfile.getStripeId();
+        String stripeCustomerId = "";
         Customer customer;
 
         if (stripeCustomerId == null) {
-            String customerId = createCustomer(stripeToken, userProfile.getEmail());
-            userProfile.setStripeId(customerId);
-            userProfile.setOneClickPurchasing(true);
-            userProfileRepo.save(userProfile);
+            String customerId = createCustomer(stripeToken, principal.getName());
+//            userProfile.setStripeId(customerId);
+//            userProfile.setOneClickPurchasing(true);
+//            userProfileRepo.save(userProfile);
             customer = retrieveCustomer(customerId);
         } else {
             customer = retrieveCustomer(stripeCustomerId);

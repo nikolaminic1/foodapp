@@ -1,7 +1,7 @@
 package com.example.foodapp.auth.user.UserProfiles;
 
 import com.example.foodapp.auth.user.ERole;
-import com.example.foodapp.auth.user.UserProfile;
+import com.example.foodapp.auth.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,11 +16,11 @@ public class Admin{
     private ERole EROLE = ERole.ADMIN;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
     private String adminRow;
 
     @OneToOne
-    private UserProfile userProfile;
+    private User user;
 }

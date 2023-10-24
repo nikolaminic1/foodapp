@@ -19,7 +19,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @EqualsAndHashCode(exclude = {"appendicesList"})
 public class AppendicesCategory {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nameOfCategory;
     private Boolean isRequired;

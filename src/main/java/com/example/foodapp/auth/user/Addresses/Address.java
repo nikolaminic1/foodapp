@@ -1,7 +1,7 @@
 package com.example.foodapp.auth.user.Addresses;
 
 
-import com.example.foodapp.auth.user.UserProfile;
+import com.example.foodapp.auth.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +10,6 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static jakarta.persistence.GenerationType.AUTO;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -19,7 +17,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class Address {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -35,7 +33,7 @@ public class Address {
     private Set<Address> shippingAddresses = new HashSet<>();
 
     @OneToOne
-    private UserProfile userProfile;
+    private User user;
 
     public Set<Address> getBillingAddresses() {
         return billingAddresses;

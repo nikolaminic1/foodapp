@@ -18,7 +18,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class BusinessRequest {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String contactEmail;

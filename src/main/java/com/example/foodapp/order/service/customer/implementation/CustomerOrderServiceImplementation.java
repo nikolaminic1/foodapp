@@ -6,10 +6,8 @@ import com.example.foodapp.auth.repo.BillingAddressRepo;
 import com.example.foodapp.auth.repo.ShippingAddressRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
-import com.example.foodapp.auth.user.Addresses.Address;
-import com.example.foodapp.auth.user.Addresses.BillingAddress;
 import com.example.foodapp.auth.user.Addresses.ShippingAddress;
-import com.example.foodapp.auth.user.UserProfile;
+import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
 import com.example.foodapp.order.model.Coupon;
 import com.example.foodapp.order.model.OrderO;
@@ -51,8 +49,8 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
 
     @Override
     public OrderO getActiveOrder(Principal principal) throws Exception{
-        UserProfile userProfile = userRepo.findByEmail(principal.getName()).orElseThrow().getUserProfile();
-        Customer customer = userProfileService.returnCustomer(userProfile);
+        User user = userRepo.findByEmail(principal.getName()).orElseThrow();
+        Customer customer = userProfileService.returnCustomer(user);
         if(orderRepo.findOrderOByCustomerAndOrdered(customer, false).isPresent()){
             return orderRepo.findOrderOByCustomerAndOrdered(customer, false).get();
         } else {
@@ -93,7 +91,7 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
 
     @Override
     public OrderO update(Long id, OrderCustomerUpdateRequest request, Principal principal) throws Exception {
-        Customer customer = userProfileService.returnCustomer(userRepo.findByEmail(principal.getName()).orElseThrow().getUserProfile());
+        Customer customer = userProfileService.returnCustomer(userRepo.findByEmail(principal.getName()).orElseThrow());
         OrderO orderO = orderRepo.findOrderOByCustomerAndOrdered(customer, false)
                 .orElseThrow(() -> new Exception("Order does not exists"));
         if(!Objects.equals(orderO.getId(), id)){
@@ -110,9 +108,9 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
                     .orElseThrow(() -> new Exception("Shipping address does not exits"));
 //            Address address = addressRepo.findAddressByShippingAddresses(shippingAddress)
 //                    .orElseThrow(() -> new Exception("Address does not exists"));
-//            UserProfile addressUser = userRepo.findByUsername(principal.getName()).getUserProfile();
+//            UserProfile addressUser = userRepo.findByUsername(principal.getName());
 //
-//            if(addressUser != address.getUserProfile()){
+//            if(addressUser != address){
 //                throw new Exception("This address does not belong to you");
 //            }
 
@@ -124,9 +122,9 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
 //                    .orElseThrow(() -> new Exception("Billing address does not exits"));
 //            Address address = addressRepo.findAddressByBillingAddresses(billingAddress)
 //                    .orElseThrow(() -> new Exception("Address does not exists"));
-//            UserProfile addressUser = userRepo.findByUsername(principal.getName()).getUserProfile();
+//            UserProfile addressUser = userRepo.findByUsername(principal.getName());
 //
-//            if(addressUser != address.getUserProfile()){
+//            if(addressUser != address){
 //                throw new Exception("This address does not belong to you");
 //            }
 

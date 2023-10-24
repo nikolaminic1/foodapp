@@ -50,7 +50,7 @@ public class CustomerRestaurantReviewServiceImplementation implements CustomerRe
     @Override
     public BusinessReview create(CustomerReviewRequest request, Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
         List<OrderO> ordersList = orderRepo.findOrderOSByCustomer(customer);
 
         Business business = businessRepo.findById(request.getBusinessId())

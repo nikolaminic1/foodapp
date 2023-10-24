@@ -1,6 +1,7 @@
 package com.example.foodapp.product.model;
 
 
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Image {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String nameOfImage;

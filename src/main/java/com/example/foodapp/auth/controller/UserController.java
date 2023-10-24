@@ -5,10 +5,15 @@ import com.example.foodapp.auth.dto.*;
 import com.example.foodapp.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -24,12 +29,10 @@ public class UserController {
             @RequestBody RegisterRequest request
     ) {
         try {
-            String message = service.register(request);
-            return ResponseEntity.ok(message);
+            return ResponseEntity.ok(service.register(request));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
     }
 
     @PostMapping("/activate")
@@ -40,13 +43,15 @@ public class UserController {
             String message = service.activate(request);
             return ResponseEntity.ok(
                     Response.builder()
-                            .data(Map.of("Data", message))
+                            .status(HttpStatus.OK)
+                            .timeStamp(LocalDateTime.now())
+                            .message(message)
                             .build()
             );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
+                            .message(e.getMessage())
                             .build()
             );
         }
@@ -69,20 +74,21 @@ public class UserController {
     public ResponseEntity<Response> getMyProfile (
             Principal principal
     ) {
-        System.out.println(principal.getName());
         try {
             var user = service.getMyProfile(principal);
-            System.out.println(user);
-            log.error("Error");
-            return ResponseEntity.badRequest()
-                    .body(Response.builder()
-                    .data(Map.of("User", user))
-                    .build());
+            JSONParser parser = new JSONParser(user);
+            return ResponseEntity.ok()
+                    .body(
+                            Response.builder()
+                                    .status(HttpStatus.OK)
+                                    .data(Map.of("User", parser.parse()))
+                                    .build());
         } catch (Exception e) {
-            log.error("Error");
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.badRequest()
+                    .body(
                     Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(e.getMessage())
                             .build()
             );
         }

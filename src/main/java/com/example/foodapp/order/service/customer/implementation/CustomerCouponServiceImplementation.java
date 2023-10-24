@@ -42,7 +42,7 @@ public class CustomerCouponServiceImplementation implements CustomerCouponServic
         Coupon coupon = couponRepo.findById(id).orElseThrow(() -> new Exception("This coupon does not exits"));
 
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
 
 //        if(customer == coupon.getCustomer()){
 //            return coupon;
@@ -54,7 +54,7 @@ public class CustomerCouponServiceImplementation implements CustomerCouponServic
     @Override
     public List<Coupon> getList(Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
         List<Coupon> couponList = couponRepo.findCouponsByCustomer(customer);
 
         if(couponList.isEmpty()){
@@ -77,7 +77,7 @@ public class CustomerCouponServiceImplementation implements CustomerCouponServic
     @Override
     public void applyCouponToOrder(String couponCode, Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
 
         OrderO orderO = orderRepo.findOrderOByCustomerAndOrdered(customer, false)
                 .orElseThrow(() -> new Exception("Order does not exists"));

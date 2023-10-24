@@ -4,6 +4,7 @@ jwt:
   expiration:
     access: 604800000
     refresh: 2592000000
+host: "http://localhost:3001"
 server:
   port: 8070
 spring:
@@ -32,3 +33,14 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
     generate-ddl: true
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: minicnikola999@gmail.com
+    password: corwafiaonhtfzgy
+    port: '587'

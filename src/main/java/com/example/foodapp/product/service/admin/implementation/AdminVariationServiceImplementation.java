@@ -37,10 +37,10 @@ public class AdminVariationServiceImplementation implements AdminVariationServic
         String variationName = variationRequest.getName();
 
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-//        Business business = userProfileService.returnBusinessOwnerProfile(user.getUserProfile()).getBusiness();
+//        Business business = userProfileService.returnBusinessOwnerProfile(user).getBusiness();
 
 //            List<ProductCategory> productCategoryList = user
-//                    .getUserProfile()
+//                    
 //                    .getBusinessOwner()
 //                    .getBusiness()
 //                    .getProductCategories();

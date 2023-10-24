@@ -34,7 +34,7 @@ public class CustomerRefundServiceImplementation implements CustomerRefundServic
     @Override
     public Refund create(RefundRequest refundRequest, Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
         OrderO orderO = orderRepo.findById(refundRequest.getOrderId())
                 .orElseThrow(() -> new Exception("This order does not exists"));
 
@@ -72,7 +72,7 @@ public class CustomerRefundServiceImplementation implements CustomerRefundServic
         Refund refund = refundRepo.findById(id)
                 .orElseThrow(() -> new Exception("Refund does not exits"));
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        if(refund.getCustomer() == userProfileService.returnCustomer(user.getUserProfile())){
+        if(refund.getCustomer() == userProfileService.returnCustomer(user)){
             return refund;
         }
         throw new Exception("This refund does not belong to you");
@@ -82,7 +82,7 @@ public class CustomerRefundServiceImplementation implements CustomerRefundServic
     public List<Refund> list(Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
         List<Refund> refundList = refundRepo.findRefundsByCustomer(
-                userProfileService.returnCustomer(user.getUserProfile()));
+                userProfileService.returnCustomer(user));
 
         if(refundList.isEmpty()){
             throw new Exception("You do not have refunds");

@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class ProductRating {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private int rating;

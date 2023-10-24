@@ -37,7 +37,7 @@ public class OwnerProductVariationServiceImplementation implements OwnerProductV
 //            List<ProductCategory> productCategoryList = userProfileService
 //                    .returnBusinessOwnerProfile(
 //                            userRepo.findByEmail(principal.getName())
-//                                    .getUserProfile()).getBusiness().getProductCategories();
+//                                    ).getBusiness().getProductCategories();
 //            Variation variation = variationRepo.findById(productVariationRequest.getVariationId()).get();
 //
 //            if(productCategoryList.contains(variation.getProduct().getProductCategory())){

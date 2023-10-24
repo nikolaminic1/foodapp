@@ -1,7 +1,7 @@
 package com.example.foodapp.business.repo;
 
 
-import com.example.foodapp.auth.user.BusinessOwner;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import com.example.foodapp.business.model.Business;
 import org.springframework.data.jpa.repository.JpaRepository;
 

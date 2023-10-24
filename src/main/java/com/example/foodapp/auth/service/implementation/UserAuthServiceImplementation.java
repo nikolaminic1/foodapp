@@ -1,14 +1,13 @@
 package com.example.foodapp.auth.service.implementation;
 
+import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.RoleRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.repo.profiles.*;
 import com.example.foodapp.auth.service.UserAuthService;
-import com.example.foodapp.auth.user.ERole;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import com.example.foodapp.auth.user.User;
-import com.example.foodapp.auth.user.UserProfile;
 import com.example.foodapp.auth.user.UserProfiles.Admin;
-import com.example.foodapp.auth.user.UserProfiles.BusinessOwnerProfile;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
 import com.example.foodapp.auth.user.UserProfiles._Profile;
 import jakarta.transaction.Transactional;
@@ -17,21 +16,16 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class UserAuthServiceImplementation implements UserAuthService {
     private final UserRepository userRepo;
-    private final UserProfileRepo userProfileRepo;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepo roleRepo;
     private final AdminRepository adminRepo;
-    private final BusinessOwnerProfileRepository businessOwnerProfileRepo;
+    private final BusinessOwnerRepo businessOwnerRepo;
     private final CustomerRepository customerRepo;
     private final _ProfileRepository _profileRepo;
 
@@ -88,23 +82,23 @@ public class UserAuthServiceImplementation implements UserAuthService {
 //    }
 
     @Override
-    public Admin createAdminProfile(UserProfile userProfile) throws Exception {
+    public Admin createAdminProfile(User user) throws Exception {
         Admin adminProfile = new Admin();
-        adminProfile.setUserProfile(userProfile);
+        adminProfile.setUser(user);
         return adminRepo.save(adminProfile);
     }
 
     @Override
-    public BusinessOwnerProfile createBusinessOwnerProfile(UserProfile userProfile) throws Exception {
-        BusinessOwnerProfile businessOwnerProfile = new BusinessOwnerProfile();
-        businessOwnerProfile.setUserProfile(userProfile);
-        return businessOwnerProfileRepo.save(businessOwnerProfile);
+    public BusinessOwner createBusinessOwner(User user) throws Exception {
+        BusinessOwner businessOwner = new BusinessOwner();
+        businessOwner.setUser(user);
+        return businessOwnerRepo.save(businessOwner);
     }
 
     @Override
-    public Customer createCustomerProfile(UserProfile userProfile) throws Exception {
+    public Customer createCustomerProfile(User user) throws Exception {
         Customer customer = new Customer();
-        customer.setUserProfile(userProfile);
+        customer.setUser(user);
         return customerRepo.save(customer);
     }
 }

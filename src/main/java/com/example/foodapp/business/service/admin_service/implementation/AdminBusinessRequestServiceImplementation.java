@@ -55,7 +55,7 @@ public class AdminBusinessRequestServiceImplementation implements AdminBusinessR
             businessRequest.setIsGranted(businessRequestReview.getStatus());
 
             boolean doesBusinessExits = businessOwnerAdminService.doesBusinessOwnerExists(
-                    businessRequest.getUser().getUserProfile());
+                    businessRequest.getUser());
 
             if(doesBusinessExits){
                 System.out.println(doesBusinessExits);

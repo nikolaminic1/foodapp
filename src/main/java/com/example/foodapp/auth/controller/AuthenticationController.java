@@ -9,12 +9,12 @@ import com.example.foodapp.auth.dto.VerifyRequest;
 import com.example.foodapp.auth.service.AuthenticationService;
 import com.example.foodapp.auth.dto.TokenRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.Map;
@@ -23,6 +23,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Log4j2
 public class AuthenticationController {
 
     private final AuthenticationService service;
@@ -31,9 +32,11 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> jwtCreate (
             @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(
-                service.login(request)
-        );
+        try {
+            return ResponseEntity.ok(service.login(request));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PostMapping("/jwt/refresh")

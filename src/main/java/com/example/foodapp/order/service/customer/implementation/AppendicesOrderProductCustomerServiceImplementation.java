@@ -49,7 +49,7 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
         Long appendixId = addAppendixRequest.getAppendixId();
         Long orderProductId = addAppendixRequest.getOrderProductId();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
 
         boolean doesAppendixExists = appendicesRepo.findById(appendixId).isPresent();
         boolean doesOrderProductExists = orderProductRepo.findById(orderProductId).isPresent();

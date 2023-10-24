@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -41,16 +43,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Arrays.stream(cookies)
                     .map(c -> c);
         }
-
         if (authHeader == null || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
             return;
         }
-
-//        response.addHeader("Access-Control-Allow-Origin", "true");
+//        log.error("after filter jwt authentication");
 
         jwt = authHeader.substring(7);
         // todo extract the email from JWT token
+        System.out.println(jwt);
+        boolean isExpired = jwtService.isTokenExpired(jwt);
+        System.out.println(isExpired);
+        if (isExpired) {
+            throw new ServletException("Token expired");
+        }
+
         username = jwtService.extractUsername(jwt);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

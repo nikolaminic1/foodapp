@@ -13,8 +13,13 @@ import static com.example.foodapp.auth.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum ERole {
-    USER(Collections.emptySet()),
-    CUSTOMER(Collections.emptySet()),
+//    USER(Collections.emptySet()),
+    CUSTOMER(Set.of(
+        CUSTOMER_READ,
+        CUSTOMER_UPDATE,
+        CUSTOMER_DELETE,
+        CUSTOMER_CREATE
+)),
     ADMIN(
             Set.of(
                     ADMIN_READ,

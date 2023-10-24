@@ -53,7 +53,7 @@ public class OwnerImageServiceImplementation implements BusinessImageService {
 
                 if(productRepo.findById(productId).isPresent()){
 //                    Business business =
-//                            userProfileService.returnBusinessOwnerProfile(user.getUserProfile()).getBusiness();
+//                            userProfileService.returnBusinessOwnerProfile(user).getBusiness();
 //                    List<ProductCategory> productCategoryList = business.getProductCategories();
 //                    Product product = productRepo.findById(productId).get();
 

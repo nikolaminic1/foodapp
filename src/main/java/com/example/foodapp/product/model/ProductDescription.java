@@ -14,7 +14,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class ProductDescription {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String key_desc;

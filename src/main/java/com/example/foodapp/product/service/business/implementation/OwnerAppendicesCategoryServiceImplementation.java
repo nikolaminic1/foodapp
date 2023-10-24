@@ -2,9 +2,7 @@ package com.example.foodapp.product.service.business.implementation;
 
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
-import com.example.foodapp.auth.user.ERole;
 import com.example.foodapp.auth.user.User;
-import com.example.foodapp.auth.user.UserProfile;
 import com.example.foodapp.product.model.AppendicesCategory;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.Request.AppendicesCategoryCreateRequest;
@@ -58,7 +56,6 @@ public class OwnerAppendicesCategoryServiceImplementation implements OwnerAppend
         if(productRepo.findById(productId).isPresent()){
             User user = userRepo.findByEmail(principal.getName()).orElseThrow();
             Product product = productRepo.findById(productId).get();
-            UserProfile userProfile = user.getUserProfile();
 
 //            if(userProfile.getProfile().getRole() == ERole.ROLE_BUSINESS){
 //                if(product.getProductCategory().getBusiness() == userProfileService.returnBusinessOwnerProfile(userProfile).getBusiness()){

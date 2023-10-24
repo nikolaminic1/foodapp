@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @EqualsAndHashCode(exclude = {"product"})
 public class ProductTag {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;

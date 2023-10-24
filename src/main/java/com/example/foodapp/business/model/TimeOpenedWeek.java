@@ -14,7 +14,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class TimeOpenedWeek {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

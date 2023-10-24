@@ -1,7 +1,6 @@
 package com.example.foodapp.product.service.business.implementation;
 
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.user.UserProfile;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductTag;
 import com.example.foodapp.product.model.Request.ProductTagRequest;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -34,9 +32,8 @@ public class OwnerProductTagServiceImplementation implements OwnerProductTagServ
 
         if(productRepo.findById(productId).isPresent()){
             Product product = productRepo.findById(productId).get();
-            UserProfile userProfile = userRepo.findByEmail(principal.getName()).orElseThrow().getUserProfile();
 
-//            if(userProfile != product.getProductCategory().getBusiness().getBusinessOwner().getUserProfile()) {
+//            if(userProfile != product.getProductCategory().getBusiness().getBusinessOwner()) {
 //                return null;
 //            }
 

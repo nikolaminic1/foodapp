@@ -1,9 +1,8 @@
 package com.example.foodapp.business.service.admin_service.implementation;
 
+import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.RoleRepo;
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.repo.profiles.BusinessOwnerProfileRepository;
-import com.example.foodapp.auth.repo.profiles.UserProfileRepo;
 import com.example.foodapp.auth.user.*;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.BusinessRepo;
@@ -14,11 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 
-import java.security.Principal;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.lang.Boolean.TRUE;
 import static org.springframework.data.domain.PageRequest.of;
@@ -31,8 +27,7 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
     private final BusinessRepo businessRepo;
     private final UserRepository userRepo;
     private final RoleRepo roleRepository;
-    private final UserProfileRepo userProfileRepo;
-    private final BusinessOwnerProfileRepository businessOwnerRepo;
+    private final BusinessOwnerRepo businessOwnerRepo;
 
     @Override
     public Business create(User user) {
@@ -40,24 +35,24 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
             Business business = new Business();
 
             // it saves multiple times
+            // TODO add roles for business users
+//            Set<Role> roles = new HashSet<>();
+//            Optional<Role> userRole = roleRepository.findByName(ERole.USER);
+//            Optional<Role> userBusinessRole = roleRepository.findByName(ERole.BUSINESS);
+//            userRole.ifPresent(roles::add);
+//            userBusinessRole.ifPresent(roles::add);
 
-            Set<Role> roles = new HashSet<>();
-            Optional<Role> userRole = roleRepository.findByName(ERole.USER);
-            Optional<Role> userBusinessRole = roleRepository.findByName(ERole.BUSINESS);
-            userRole.ifPresent(roles::add);
-            userBusinessRole.ifPresent(roles::add);
+//            UserProfile userProfile = user;
 
-            UserProfile userProfile = user.getUserProfile();
-
-            BusinessOwner businessOwner = new BusinessOwner();
+//            BusinessOwner businessOwner = new BusinessOwner();
 //            businessOwner.setBusiness(business);
-            businessOwner.setUserProfile(userProfile);
-            businessOwner.setIsActive(false);
+//            businessOwner.setUserProfile(userProfile);
+//            businessOwner.setIsActive(false);
 //            userProfile.setBusinessOwnerBoolean(true);
 //            userProfile.setBusinessOwner(businessOwner);
-            userProfile.setStaff(true);
-            userProfileRepo.save(userProfile);
-            user.setRoles(roles);
+//            userProfile.setStaff(true);
+//            userProfileRepo.save(userProfile);
+//            user.setRoles(roles);
             userRepo.save(user);
             businessRepo.save(business);
             return null;

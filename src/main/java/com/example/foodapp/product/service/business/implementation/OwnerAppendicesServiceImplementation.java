@@ -55,7 +55,7 @@ public class OwnerAppendicesServiceImplementation implements OwnerAppendicesServ
         if(appendicesCategoryRepo.findById(appendicesCategoryId).isPresent()){
             AppendicesCategory appendicesCategory = appendicesCategoryRepo.findById(appendicesCategoryId).get();
 //            if(appendicesCategory.getProduct().getProductCategory().getBusiness() == userProfileService
-//                    .returnBusinessOwnerProfile(user.getUserProfile()).getBusiness()){
+//                    .returnBusinessOwnerProfile(user).getBusiness()){
 //                Appendices appendices = new Appendices();
 //                appendices.setAppendicesCategory(appendicesCategory);
 //                appendices.setDoesAffectPrice(doesAffectPrice);

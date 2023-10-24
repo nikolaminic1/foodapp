@@ -40,7 +40,7 @@ public class OwnerVariationServiceImplementation implements OwnerVariationServic
 //        List<ProductCategory> productCategoryList = userProfileService
 //                .returnBusinessOwnerProfile(
 //                        userRepo.findByEmail(principal.getName())
-//                                .getUserProfile()).getBusiness().getProductCategories();
+//                                ).getBusiness().getProductCategories();
 //
 //        if(productRepo.findById(productId).isPresent()){
 //            Product product = productRepo.findById(productId).get();

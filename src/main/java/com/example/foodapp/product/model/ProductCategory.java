@@ -29,7 +29,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 //@EqualsAndHashCode(exclude = { "business" })
 public class ProductCategory {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String nameOfCategory;

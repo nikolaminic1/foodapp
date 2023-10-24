@@ -50,7 +50,7 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
     @Override
     public OrderProduct create(OrderProductRequest orderProductRequest, Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
         boolean doesOrderExits = orderRepo.findOrderOByCustomerAndOrdered(customer, false).isPresent();
         long orderProductVariation = orderProductRequest.getProductVariationId();
         boolean doesProductExits = productRepo.findById(orderProductRequest.getProductId()).isPresent();
@@ -130,8 +130,8 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
 
                 String uuid = UUID.nameUUIDFromBytes(totalUUID.getBytes()).toString();
 
-                orderO.setCustomer(userProfileService.returnCustomer(userRepo.findByEmail(principal.getName()).orElseThrow().getUserProfile()));
-//                orderO.setUserProfile(userRepo.findByUsername(principal.getName()).getUserProfile());
+                orderO.setCustomer(userProfileService.returnCustomer(userRepo.findByEmail(principal.getName()).orElseThrow()));
+//                orderO.setUserProfile(userRepo.findByUsername(principal.getName()));
                 orderO.setDelivered(false);
                 orderO.setOrdered(false);
                 orderO.setPickedUp(false);

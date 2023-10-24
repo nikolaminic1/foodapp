@@ -52,7 +52,7 @@ public class CustomerRestaurantServiceImplementation implements CustomerRestaura
         }
 
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
 
         Business business = businessRepo.findById(request.getRestaurantId())
                 .orElseThrow(() -> new Exception("This business does not exists"));
@@ -77,7 +77,7 @@ public class CustomerRestaurantServiceImplementation implements CustomerRestaura
         }
 
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Customer customer = userProfileService.returnCustomer(user.getUserProfile());
+        Customer customer = userProfileService.returnCustomer(user);
 
         Business business = businessRepo.findById(request.getRestaurantId())
                 .orElseThrow(() -> new Exception("This business does not exists"));

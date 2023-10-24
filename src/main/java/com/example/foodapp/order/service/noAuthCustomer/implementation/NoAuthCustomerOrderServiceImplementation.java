@@ -3,7 +3,7 @@ package com.example.foodapp.order.service.noAuthCustomer.implementation;
 
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
-import com.example.foodapp.auth.user.UserProfile;
+import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
 import com.example.foodapp.order.model.OrderO;
 import com.example.foodapp.order.repo.OrderRepo;
@@ -31,8 +31,8 @@ public class NoAuthCustomerOrderServiceImplementation implements NoAuthCustomerO
 
     @Override
     public OrderO getActiveOrder(Principal principal) throws Exception{
-        UserProfile userProfile = userRepo.findByEmail(principal.getName()).orElseThrow().getUserProfile();
-        Customer customer = userProfileService.returnCustomer(userProfile);
+        User user = userRepo.findByEmail(principal.getName()).orElseThrow();
+        Customer customer = userProfileService.returnCustomer(user);
         if(orderRepo.findOrderOByCustomerAndOrdered(customer, false).isPresent()){
             return orderRepo.findOrderOByCustomerAndOrdered(customer, false).get();
         } else {

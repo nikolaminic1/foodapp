@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,10 @@ public class AuthenticationService {
 
     private final _ProfileRepository profileRepo;
 
-    public AuthenticationResponse login(LoginRequest request) {
+    public AuthenticationResponse login(LoginRequest request) throws Exception {
+
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new Exception("User with provided email does not exist"));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -31,9 +35,6 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
 
         return AuthenticationResponse.builder()
                 .access(jwtService.generateToken(user))
