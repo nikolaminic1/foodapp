@@ -1,7 +1,6 @@
 package com.example.foodapp.business.service.admin_service.implementation;
 
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
-import com.example.foodapp.auth.repo.RoleRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.user.*;
 import com.example.foodapp.business.model.Business;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Collection;
-import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static org.springframework.data.domain.PageRequest.of;
@@ -26,7 +24,6 @@ import static org.springframework.data.domain.PageRequest.of;
 public class AdminBusinessServiceImplementation implements AdminBusinessService {
     private final BusinessRepo businessRepo;
     private final UserRepository userRepo;
-    private final RoleRepo roleRepository;
     private final BusinessOwnerRepo businessOwnerRepo;
 
     @Override

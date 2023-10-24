@@ -1,7 +1,6 @@
 package com.example.foodapp.business.service.owner_service.implementation;
 
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
-import com.example.foodapp.auth.repo.RoleRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.business.model.Business;
@@ -26,7 +25,6 @@ import static java.lang.Boolean.TRUE;
 public class OwnerBusinessServiceImplementation implements OwnerBusinessService {
     private final BusinessRepo businessRepo;
     private final UserRepository userRepo;
-    private final RoleRepo roleRepository;
     private final BusinessOwnerRepo businessOwnerRepo;
 
 

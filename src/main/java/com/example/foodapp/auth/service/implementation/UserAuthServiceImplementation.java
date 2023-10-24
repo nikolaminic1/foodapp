@@ -1,7 +1,6 @@
 package com.example.foodapp.auth.service.implementation;
 
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
-import com.example.foodapp.auth.repo.RoleRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.repo.profiles.*;
 import com.example.foodapp.auth.service.UserAuthService;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class UserAuthServiceImplementation implements UserAuthService {
     private final UserRepository userRepo;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final RoleRepo roleRepo;
     private final AdminRepository adminRepo;
     private final BusinessOwnerRepo businessOwnerRepo;
     private final CustomerRepository customerRepo;
