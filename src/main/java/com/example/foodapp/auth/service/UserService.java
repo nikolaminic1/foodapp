@@ -154,6 +154,10 @@ public class UserService {
         return mapper.writeValueAsString(user);
     }
 
+    public String logout(Principal principal) throws Exception {
+        return "OK";
+    }
+
     public ConfirmationRequestResponse deleteMyProfile(Principal principal, LoginRequest request) throws Exception{
         throw new Exception("Error");
     }

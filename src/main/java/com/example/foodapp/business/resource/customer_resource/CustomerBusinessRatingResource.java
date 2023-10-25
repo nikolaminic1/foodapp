@@ -21,7 +21,7 @@ import static java.time.LocalDateTime.now;
 @RequestMapping("/api/v1/customer/business_rating")
 @RequiredArgsConstructor
 @Log4j2
-@PreAuthorize("hasRole('ROLE_CUSTOMER')")
+@PreAuthorize("hasRole('CUSTOMER')")
 public class CustomerBusinessRatingResource {
 
     private final CustomerRestaurantRatingService customerRestaurantRatingService;

@@ -2,6 +2,7 @@ package com.example.foodapp.auth.controller;
 
 import com.example.foodapp._api.Response;
 import com.example.foodapp.auth.dto.*;
+import com.example.foodapp.auth.service.LogoutService;
 import com.example.foodapp.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -62,7 +63,8 @@ public class UserController {
             Principal principal
     ) {
         try {
-            return ResponseEntity.ok().body("OK");
+//            String message = logoutService.logout(principal);
+            return ResponseEntity.ok().body("");
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
@@ -74,6 +76,7 @@ public class UserController {
     public ResponseEntity<Response> getMyProfile (
             Principal principal
     ) {
+
         try {
             var user = service.getMyProfile(principal);
             JSONParser parser = new JSONParser(user);
@@ -81,7 +84,7 @@ public class UserController {
                     .body(
                             Response.builder()
                                     .status(HttpStatus.OK)
-                                    .data(Map.of("User", parser.parse()))
+                                    .data(Map.of("user", parser.parse()))
                                     .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest()

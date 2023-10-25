@@ -36,17 +36,23 @@ public class AuthenticationService {
                 )
         );
 
+        String accessToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        saveUserToken(user, accessToken, TokenType.ACCESS);
+        saveUserToken(user, refreshToken, TokenType.REFRESH);
+
         return AuthenticationResponse.builder()
-                .access(jwtService.generateToken(user))
-                .refresh(jwtService.generateRefreshToken(user))
+                .access(accessToken)
+                .refresh(refreshToken)
                 .build();
     }
 
-    private void saveUserToken(User user, String jwtToken) {
+    private void saveUserToken(User user, String jwtToken, TokenType type) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
-                .tokenType(TokenType.BEARER)
+                .tokenType(type)
                 .expired(false)
                 .revoked(false)
                 .build();
@@ -90,8 +96,8 @@ public class AuthenticationService {
                 revokeAllUserTokens(user);
                 accessToken = jwtService.generateToken(user);
                 String newRefreshToken = jwtService.generateRefreshToken(user);
-                saveUserToken(user, accessToken);
-                saveUserToken(user, newRefreshToken);
+                saveUserToken(user, accessToken, TokenType.ACCESS);
+                saveUserToken(user, newRefreshToken, TokenType.REFRESH);
                 return AuthenticationResponse.builder()
                         .access(accessToken)
                         .refresh(newRefreshToken)

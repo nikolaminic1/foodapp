@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @Transactional
 @Log4j2
-public class CustomerRestaurantServiceImplementation implements CustomerRestaurantRatingService {
+public class CustomerRestaurantRatingServiceImplementation implements CustomerRestaurantRatingService {
     private final _UserProfileService userProfileService;
     private final BusinessRatingRepo businessRatingRepo;
     private final UserRepository userRepo;

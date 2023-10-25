@@ -1,5 +1,6 @@
 package com.example.foodapp.auth.config;
 
+import com.example.foodapp.auth.repo.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -28,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -47,6 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        log.info(authHeader);
 //        log.error("after filter jwt authentication");
 
         jwt = authHeader.substring(7);
@@ -59,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         username = jwtService.extractUsername(jwt);
+        System.out.println(username);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails;
@@ -69,8 +73,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            var isTokenValid = tokenRepository.findByToken(jwt)
+                    .map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
