@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface BusinessRepo extends JpaRepository<Business, Long> {
     Optional<Business> findBusinessById(Long id);
+//    List<Business> findAllByActive(Boolean active);
     Business findBusinessByBusinessOwner(BusinessOwner businessOwner);
 }

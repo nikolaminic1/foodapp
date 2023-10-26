@@ -54,6 +54,7 @@ public class ProductCategory {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonSerialize(using = ProductCategory_BusinessSerializer.class)
     @JsonBackReference
+    @JsonIgnore
     private Business business;
 
     @OneToMany(cascade = CascadeType.ALL

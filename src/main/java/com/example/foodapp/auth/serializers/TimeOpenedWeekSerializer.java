@@ -21,6 +21,10 @@ public class TimeOpenedWeekSerializer extends StdSerializer<TimeOpenedWeek> {
                           JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
-//        jsonGenerator.writeObjectField("monday", );
+        jsonGenerator.writeObjectFieldStart("monday");
+        jsonGenerator.writeStringField("opened", timeOpenedWeek.getTimeOpenedDayMonday().getTimeOpen());
+        jsonGenerator.writeStringField("closed", timeOpenedWeek.getTimeOpenedDayMonday().getTimeClose());
+        jsonGenerator.writeBooleanField("isNonStop", timeOpenedWeek.getTimeOpenedDayMonday().getIsNonStop());
+        jsonGenerator.writeEndObject();
     }
 }

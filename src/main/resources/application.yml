@@ -8,6 +8,9 @@ host: "http://localhost:3001"
 server:
   port: 8070
 spring:
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
   session:
     jdbc:
       initialize-schema: always

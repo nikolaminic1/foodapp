@@ -1,5 +1,6 @@
 package com.example.foodapp.business.serializers;
 
+import com.example.foodapp.auth.serializers.TimeOpenedWeekSerializer;
 import com.example.foodapp.business.model.Business;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JavaType;
@@ -30,6 +31,7 @@ public class BusinessSerializer extends StdSerializer<Business> {
         jsonGenerator.writeStringField("logo", business.getLogoImage());
         jsonGenerator.writeNumberField("delivery_price", business.getPriceOfDelivery());
         jsonGenerator.writeStringField("name", business.getName());
+//        jsonGenerator.writeObjectField("time_opened", business.getWorkingTime());
 
     }
 }

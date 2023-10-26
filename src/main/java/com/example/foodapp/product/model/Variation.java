@@ -28,6 +28,7 @@ public class Variation {
     @OneToOne(cascade = CascadeType.ALL)
 //    @JsonSerialize(using = Variation_ProductSerializer.class)
     @JsonBackReference
+    @JsonIgnore
     private Product product;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "variation")

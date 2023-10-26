@@ -78,4 +78,9 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
         businessRepo.deleteById(id);
         return TRUE;
     }
+
+    @Override
+    public Business create(Business business) {
+        return businessRepo.save(business);
+    }
 }

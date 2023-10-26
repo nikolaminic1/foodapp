@@ -9,6 +9,7 @@ import java.util.Collection;
 
 public interface AdminBusinessService {
     Business create(User user);
+    Business create(Business business);
     Collection<Business> list(int page, int limit);
     Business get(Long id);
     Business update(Long id);

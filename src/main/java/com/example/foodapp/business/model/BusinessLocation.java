@@ -1,6 +1,7 @@
 package com.example.foodapp.business.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,6 @@ public class BusinessLocation {
     @OneToOne
 //    @JoinColumn(name = "business_id")
     @JsonBackReference
+    @JsonIgnore
     private Business business;
 }

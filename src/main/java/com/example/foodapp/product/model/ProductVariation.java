@@ -1,6 +1,7 @@
 package com.example.foodapp.product.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -30,6 +31,7 @@ public class ProductVariation {
     @ManyToOne
 //    @JoinColumn(name = "variation_id")
     @JsonBackReference
+    @JsonIgnore
     private Variation variation;
 
     @OneToOne(cascade = CascadeType.ALL)
