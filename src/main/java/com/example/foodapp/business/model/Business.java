@@ -29,14 +29,22 @@ public class Business {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView({View.PublicList.class})
     private Long id;
 
+    @JsonView({View.PublicList.class})
     private String name;
+    @JsonView({View.PublicList.class})
     private Status status;
+    @JsonView({View.PublicList.class})
     private String description;
+    @JsonView({View.PublicList.class})
     private String backgroundImage;
+    @JsonView({View.PublicList.class})
     private String logoImage;
+    @JsonView({View.PublicList.class})
     private double priceOfDelivery;
+    @JsonView({View.PublicList.class})
     private double priceOfOrderForFreeDelivery;
 
     @JsonIgnore
@@ -47,9 +55,11 @@ public class Business {
     )
 //    @JsonSerialize(using = ProductCategory_BusinessSerializer.class)
     @JsonManagedReference
+    @JsonView({View.PublicDetail.class})
     private List<ProductCategory> productCategories;
 
     @OneToOne(cascade = CascadeType.MERGE)
+    @JsonView({View.PublicList.class})
     private TimeOpenedWeek timeOpened;
 
     @OneToOne(fetch = FetchType.LAZY
@@ -61,12 +71,15 @@ public class Business {
     private BusinessOwner businessOwner;
 
     @OneToMany
+    @JsonView({View.PublicList.class})
     private List<BusinessTag> tags;
 
     @OneToOne(mappedBy = "business")
     @JsonManagedReference
+    @JsonView({View.PublicList.class})
     private BusinessLocation businessLocation;
 
+    @JsonView({View.PublicList.class})
     private double averageRating;
 
     public void addBusinessCategory(ProductCategory productCategory) {

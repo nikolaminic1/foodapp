@@ -45,6 +45,7 @@ public class Product {
     private String aboutProduct;
     private int preparationTime;
     private Availability availability;
+    private int weight;
 
     @CreationTimestamp
     private LocalDateTime dataCreated;

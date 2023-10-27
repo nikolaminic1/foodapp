@@ -3,6 +3,7 @@ package com.example.foodapp.business.service.owner_service.implementation;
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.user.User;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.model.Requests.BusinessUpdateRequest;
 import com.example.foodapp.business.repo.BusinessRepo;
@@ -29,8 +30,14 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
 
 
     @Override
-    public Business get(Long id) {
-        return businessRepo.findById(id).get();
+    public Business get(Principal principal) throws Exception {
+        String email = principal.getName();
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new Exception("Not found"));
+        BusinessOwner owner = businessOwnerRepo.findBusinessOwnerByUser(user)
+                .orElseThrow(() -> new Exception("Owner not found"));
+        return businessRepo.findBusinessByBusinessOwner(owner)
+                .orElseThrow(() -> new Exception("Business not found"));
     }
 
     @Override

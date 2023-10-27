@@ -7,7 +7,7 @@ import com.example.foodapp.business.model.Requests.BusinessUpdateRequest;
 import java.security.Principal;
 
 public interface OwnerBusinessService {
-    Business get(Long id);
+    Business get(Principal principal) throws Exception;
     Business update(Long id, BusinessUpdateRequest businessUpdateRequest, Principal principal);
     Boolean delete(Long id);
 }

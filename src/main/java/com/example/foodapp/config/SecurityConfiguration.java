@@ -115,8 +115,8 @@ public class SecurityConfiguration {
 //                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
 //                )
 //                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable);
+//                .cors(AbstractHttpConfigurer::disable);
 
 
         return http.build();
@@ -125,8 +125,8 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3001"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3001", "http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
 //        configuration.setAllowedHeaders(List.of("Access-Control-Allow-Origin"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -140,7 +140,7 @@ public class SecurityConfiguration {
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowCredentials(true)
-                        .allowedOrigins("http://localhost:8070", "http://localhost:3001")
+                        .allowedOrigins("http://localhost:8070", "http://localhost:3001", "http://localhost:5173")
                         .allowedMethods("*");
             }
         };

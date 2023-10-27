@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.Map;

@@ -1,14 +1,18 @@
 package com.example.foodapp.business.resource.owner_resource;
 
 import com.example.foodapp.api_resources.Response;
+import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.model.Requests.BusinessUpdateRequest;
+import com.example.foodapp.business.serializers.View;
 import com.example.foodapp.business.service.owner_service.OwnerBusinessService;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.Map;
@@ -17,24 +21,20 @@ import static java.time.LocalDateTime.now;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/business/owner")
+@RequestMapping("/api/v1/business/business")
 @RequiredArgsConstructor
 @Log4j2
 public class OwnerBusinessResource {
     private final OwnerBusinessService businessService;
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getOwnerBusiness(@PathVariable("id") Long id) {
-        System.out.println(id);
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("single_business", businessService.get(id)))
-                        .message("Single business retrieved")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build()
-        );
+    @GetMapping
+    @JsonView(View.Internal.class)
+    public ResponseEntity<Business> getOwnerBusiness(Principal principal) {
+        try {
+            return ResponseEntity.ok().body(businessService.get(principal));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PostMapping("/save")
