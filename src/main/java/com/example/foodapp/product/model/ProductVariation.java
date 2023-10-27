@@ -34,7 +34,7 @@ public class ProductVariation {
     @JsonIgnore
     private Variation variation;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private ProductImage productImage;
 

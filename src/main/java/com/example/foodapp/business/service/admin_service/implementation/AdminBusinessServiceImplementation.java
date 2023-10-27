@@ -68,9 +68,8 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
     }
 
     @Override
-    public Business update(Long id) {
-        Business business = businessRepo.findById(id).get();
-        return null;
+    public Business update(Business business) {
+        return businessRepo.save(business);
     }
 
     @Override

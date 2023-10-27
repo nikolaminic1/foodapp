@@ -20,13 +20,13 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "billing_addresses",
             joinColumns = @JoinColumn(name = "billing_addresses"),
             inverseJoinColumns = @JoinColumn(name = "user"))
     private Set<Address> billingAddresses = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "shipping_addresses",
             joinColumns = @JoinColumn(name = "shipping_addresses"),
             inverseJoinColumns = @JoinColumn(name = "user"))

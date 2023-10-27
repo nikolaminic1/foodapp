@@ -29,7 +29,7 @@ public class Customer {
     private Long id;
     private String username;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_addresses",
             joinColumns = @JoinColumn(name = "address"),
             inverseJoinColumns = @JoinColumn(name = "user"))

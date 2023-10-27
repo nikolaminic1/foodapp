@@ -43,7 +43,7 @@ public class User implements UserDetails {
 //            inverseJoinColumns = @JoinColumn(name = "authority"))
 //    private Set<Role> roles;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_table_id")
     private _Profile profile;
 
@@ -56,7 +56,7 @@ public class User implements UserDetails {
 //        user.setUserProfile(this);
 //    }
 
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 //    @JoinColumn
 //            (name = "user_profile_id", referencedColumnName = "id")
 //    @JsonManagedReference

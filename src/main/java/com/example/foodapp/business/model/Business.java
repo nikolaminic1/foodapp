@@ -50,7 +50,7 @@ public class Business {
     @JsonIgnore
     private boolean isActive;
     @OneToMany(cascade = CascadeType.MERGE
-            , fetch = FetchType.LAZY
+            , fetch = FetchType.EAGER
             , mappedBy = "business"
     )
 //    @JsonSerialize(using = ProductCategory_BusinessSerializer.class)
@@ -92,6 +92,13 @@ public class Business {
     public Map<String, Object> getWorkingTime() {
         var map = new HashMap<String, Object>();
         map.put("monday", this.timeOpened.getWorkingTimeMonday());
+        return map;
+    }
+
+    @JsonView({View.Internal.class})
+    public Map<String, String> getBusinessOwner() {
+        var map = new HashMap<String, String>();
+        map.put("tax_code", this.businessOwner.getTaxCode());
         return map;
     }
 

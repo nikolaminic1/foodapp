@@ -19,7 +19,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "payment")
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "payment")
     @JsonBackReference
     private OrderO orderO;
 

@@ -6,7 +6,7 @@ import com.example.foodapp.auth.user.UserProfiles.Admin;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
 
 public interface _UserProfileService {
-    Admin returnAdmin(User userProfile);
-    BusinessOwner returnBusinessOwner(User user);
-    Customer returnCustomer(User userProfile);
+    Admin returnAdmin(User userProfile) throws Exception;
+    BusinessOwner returnBusinessOwner(User user) throws Exception;
+    Customer returnCustomer(User userProfile) throws Exception;
 }

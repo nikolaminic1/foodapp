@@ -55,7 +55,7 @@ public class AdminBusinessResource {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("business", adminBusinessService.update(id)))
+//                        .data(Map.of("business", adminBusinessService.update(id)))
                         .message("Business updated")
                         .status(HttpStatus.OK)
                         .statusCode(HttpStatus.OK.value())

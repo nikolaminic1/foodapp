@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -22,12 +24,14 @@ public class ProductImage {
 
     private String nameOfImage;
     private String description;
+    @CreationTimestamp
     private LocalDateTime dateCreated;
+    @UpdateTimestamp
     private LocalDateTime dateUpdated;
     private String imageUrl;
 
-    @OneToOne
-    @JoinColumn(name = "product_id")
-    @JsonManagedReference
-    private Product product;
+//    @OneToOne
+//    @JoinColumn(name = "product_id")
+//    @JsonManagedReference
+//    private Product product;
 }

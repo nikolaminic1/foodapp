@@ -62,7 +62,7 @@ public class BusinessResource {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("business", businessService.update(id)))
+//                        .data(Map.of("business", businessService.update(id)))
                         .message("Business updated")
                         .status(HttpStatus.OK)
                         .statusCode(HttpStatus.OK.value())

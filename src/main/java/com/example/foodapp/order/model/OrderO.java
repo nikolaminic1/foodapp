@@ -29,16 +29,16 @@ public class OrderO {
 
     private String uuid;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
+//    @ManyToOne(cascade = CascadeType.MERGE)
 //    @JsonBackReference
 //    private UserProfile userProfile;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderO", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "orderO", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<OrderProduct> productList;
 
@@ -55,21 +55,21 @@ public class OrderO {
 
     private Boolean ordered;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonManagedReference
     private ShippingAddress shippingAddress;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonManagedReference
     private BillingAddress billingAddress;
 
     private DeliveryType deliveryType;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JsonManagedReference
     private Payment payment;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JsonManagedReference
     private Coupon coupon;
 

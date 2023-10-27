@@ -2,6 +2,7 @@ package com.example.foodapp.product.model;
 
 //import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.model.Business;
+import com.example.foodapp.business.serializers.View;
 import com.example.foodapp.product.serializers.ProductCategory_BusinessSerializer;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,39 +31,47 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(View.Public.class)
     private Long id;
 
+    @JsonView(View.Public.class)
     private String nameOfCategory;
+    @JsonView(View.Public.class)
     private String descOfCategory;
+    @JsonView(View.Public.class)
     private Boolean categoryVisible;
+    @JsonView(View.Public.class)
     private Boolean featured;
 
     @CreationTimestamp
+    @JsonView(View.Public.class)
     private LocalDateTime dateCreated;
 
     @UpdateTimestamp
+    @JsonView(View.Public.class)
     private LocalDateTime dateUpdated;
     private URI uri;
 
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "product")
+//    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "product")
 //    @JoinColumn(name = "image_id", referencedColumnName = "id")
 //    private ProductImage productImage;
 
-    @ManyToOne(cascade = CascadeType.ALL
+    @ManyToOne(cascade = CascadeType.MERGE
             , fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_id")
+//    @JoinColumn(name = "business_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonSerialize(using = ProductCategory_BusinessSerializer.class)
     @JsonBackReference
     @JsonIgnore
     private Business business;
 
-    @OneToMany(cascade = CascadeType.ALL
+    @OneToMany(cascade = CascadeType.MERGE
             , fetch = FetchType.LAZY
             , mappedBy = "productCategory"
     )
 //    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     @JsonManagedReference
+    @JsonView(View.Public.class)
     private List<Product> productList;
 //
 //    @JsonManagedReference

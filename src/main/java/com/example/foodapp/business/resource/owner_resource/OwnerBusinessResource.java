@@ -21,7 +21,7 @@ import static java.time.LocalDateTime.now;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/business/business")
+@RequestMapping("/api/v1/business/restaurant")
 @RequiredArgsConstructor
 @Log4j2
 public class OwnerBusinessResource {
@@ -30,6 +30,7 @@ public class OwnerBusinessResource {
     @GetMapping
     @JsonView(View.Internal.class)
     public ResponseEntity<Business> getOwnerBusiness(Principal principal) {
+        System.out.println(principal);
         try {
             return ResponseEntity.ok().body(businessService.get(principal));
         } catch (Exception e) {

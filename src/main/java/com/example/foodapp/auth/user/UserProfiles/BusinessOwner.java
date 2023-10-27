@@ -27,7 +27,6 @@ public class BusinessOwner {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Boolean isActive;
-    private String businessOwnerRow;
     private String taxCode;
 
     @CreationTimestamp
@@ -35,12 +34,12 @@ public class BusinessOwner {
     @UpdateTimestamp
     private LocalDateTime dateUpdated;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
 //    @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
     @JsonBackReference
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonBackReference
     private Business business;
 

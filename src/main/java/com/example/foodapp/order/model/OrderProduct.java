@@ -33,18 +33,18 @@ public class OrderProduct {
     private String uuid;
     private boolean ordered;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonSerialize(using = OrderProduct_ProductSerializer.class)
     private Product product;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private ProductVariation productVariation;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderProducts")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "orderProducts")
     @JsonManagedReference
     private List<AppendicesCategoryOrderProduct> appendicesCategoryList;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
     private OrderO orderO;
 

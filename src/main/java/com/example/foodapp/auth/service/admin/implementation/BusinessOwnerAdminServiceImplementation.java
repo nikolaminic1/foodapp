@@ -1,8 +1,9 @@
-package com.example.foodapp.auth.service.implementation;
+package com.example.foodapp.auth.service.admin.implementation;
 
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
-import com.example.foodapp.auth.service.BusinessOwnerAdminService;
+import com.example.foodapp.auth.service.admin.service.BusinessOwnerAdminService;
 import com.example.foodapp.auth.user.User;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +26,10 @@ public class BusinessOwnerAdminServiceImplementation implements BusinessOwnerAdm
     public Boolean delete(Long id) {
         businessOwnerRepo.deleteBusinessOwnerById(id);
         return true;
+    }
+
+    @Override
+    public BusinessOwner create(BusinessOwner owner) throws Exception {
+        return businessOwnerRepo.save(owner);
     }
 }

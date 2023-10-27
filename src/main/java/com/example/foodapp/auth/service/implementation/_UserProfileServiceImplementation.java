@@ -23,17 +23,17 @@ public class _UserProfileServiceImplementation implements _UserProfileService {
     private final CustomerRepository customerRepo;
 
     @Override
-    public Admin returnAdmin(User user) {
+    public Admin returnAdmin(User user) throws Exception {
         return adminRepo.findAdminByUser(user);
     }
 
     @Override
-    public BusinessOwner returnBusinessOwner(User user) {
-        return businessOwnerRepo.findBusinessOwnerByUser(user);
+    public BusinessOwner returnBusinessOwner(User user) throws Exception {
+        return businessOwnerRepo.findBusinessOwnerByUser(user).orElseThrow(() -> new Exception("Not found"));
     }
 
     @Override
-    public Customer returnCustomer(User user) {
+    public Customer returnCustomer(User user) throws Exception {
         return customerRepo.findCustomerByUser(user);
     }
 }

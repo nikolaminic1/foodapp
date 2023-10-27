@@ -1,7 +1,7 @@
 package com.example.foodapp.business.service.admin_service.implementation;
 
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.service.BusinessOwnerAdminService;
+import com.example.foodapp.auth.service.admin.service.BusinessOwnerAdminService;
 import com.example.foodapp.business.enumeration.BusinessRequestStatus;
 import com.example.foodapp.business.model.Requests.BusinessRequest;
 import com.example.foodapp.business.model.Requests.BusinessRequestReview;

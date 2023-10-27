@@ -6,6 +6,7 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.AUTO;
@@ -25,13 +26,13 @@ public class Variation {
     private String name;
     private Boolean isRequired;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
 //    @JsonSerialize(using = Variation_ProductSerializer.class)
     @JsonBackReference
     @JsonIgnore
     private Product product;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "variation")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "variation")
 //    @JsonSerialize(using = ProductVariationSerializer.class)
     @JsonManagedReference
     private List<ProductVariation> productVariationList;

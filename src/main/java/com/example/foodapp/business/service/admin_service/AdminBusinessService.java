@@ -12,6 +12,6 @@ public interface AdminBusinessService {
     Business create(Business business);
     Collection<Business> list(int page, int limit);
     Business get(Long id);
-    Business update(Long id);
+    Business update(Business business);
     Boolean delete(Long id);
 }

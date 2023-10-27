@@ -20,7 +20,7 @@ public class Refund {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
     private OrderO orderO;
 

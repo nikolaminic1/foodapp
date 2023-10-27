@@ -21,7 +21,12 @@ public class ProductTag {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+//    @JoinColumn(name = "product_id")
     @JsonBackReference
     private Product product;
+
+    public void setProduct(Product product) {
+        this.product = product;
+        product.getProductTags().add(this);
+    }
 }
