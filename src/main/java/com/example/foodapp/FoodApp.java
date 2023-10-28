@@ -55,93 +55,93 @@ public class FoodApp {
 			ImageRepo imageRepo
 	) {
 		return args -> {
-			Business business = adminBusinessService.get(252L);
-
-			ProductCategory category = new ProductCategory();
-			category.setNameOfCategory("Name of category");
-			category.setDescOfCategory("Description of category");
-			category.setCategoryVisible(true);
-			category.setBusiness(business);
-			productCategoryRepo.save(category);
-
-			business.getProductCategories().add(category);
-			businessRepo.save(business);
-
-			Product product = new Product();
-			product.setNameOfProduct("Name of product");
-			product.setCodeOfProduct("Code 123");
-			product.setPriceOfProduct(321);
-			product.setDiscountPrice(311);
-			product.setIsOnDiscount(true);
-			product.setAboutProduct("About product");
-			product.setPreparationTime(21);
-			product.setAvailability(Availability.AVAILABLE);
-			product.setWeight(300);
-			product.setProductVisible(true);
-			product.setProductCategory(category);
-
-			if (category.getProductList() == null){
-				List<Product> categoryList = new ArrayList<>();
-				categoryList.add(product);
-				category.setProductList(categoryList);
-			} else {
-				category.getProductList().add(product);
-			}
-			productCategoryRepo.save(category);
-
-			ProductVariation productVariation = new ProductVariation();
-			productVariation.setName("Product variation");
-			productVariation.setValue("Value");
-			productVariation.setDoesAffectPrice(true);
-			productVariation.setPriceOfVariation(123);
-			productVariation.setPriceOfVariationDiscount(121);
-			productVariation.setIsOnDiscount(true);
-			productVariation.setCodeOfVariation("Code 123");
-
-			productVariationRepo.save(productVariation);
-
-			ProductImage productImage = new ProductImage();
-			productImage.setNameOfImage("name of image");
-			productImageRepo.save(productImage);
-
-			Variation variation = new Variation();
-			variation.setName("Variation");
-			variation.setProductVariationList(new ArrayList<>());
-			variation.getProductVariationList().add(productVariation);
-			variationRepo.save(variation);
-
-			AppendicesCategory appendicesCategory = new AppendicesCategory();
-			appendicesCategory.setNameOfCategory("Name of appendices category");
-			appendicesCategory.setIsRequired(true);
-			appendicesCategory.setNumberOfAllowed(2);
-
-			Image img = new Image();
-			img.setImageUrl("123");
-			imageRepo.save(img);
-			appendicesCategory.setImage(img);
-			appendicesCategoryRepo.save(appendicesCategory);
-			product.addToAppendicesCategoryList(appendicesCategory);
-
-			Appendices appendices = new Appendices();
-			appendices.setNameOfAppendices("Name of appendices");
-			appendices.setDoesAffectPrice(true);
-			appendices.setPrice(321);
-
-			appendices.setAppendicesCategory(appendicesCategory);
-
-			appendicesRepo.save(appendices);
-			productRepo.save(product);
-
-			ProductTag tag = new ProductTag();
-			tag.setName("BBQ");
-			tag.setProduct(product);
-			tagRepo.save(tag);
-			ProductTag productTag = new ProductTag();
-			productTag.setName("ITALIAN");
-			productTag.setProduct(product);
-			tagRepo.save(productTag);
-			appendicesCategory.setProduct(product);
-			appendicesCategoryRepo.save(appendicesCategory);
+//			Business business = adminBusinessService.get(252L);
+//
+//			ProductCategory category = new ProductCategory();
+//			category.setNameOfCategory("Name of category");
+//			category.setDescOfCategory("Description of category");
+//			category.setCategoryVisible(true);
+//			category.setBusiness(business);
+//			productCategoryRepo.save(category);
+//
+//			business.getProductCategories().add(category);
+//			businessRepo.save(business);
+//
+//			Product product = new Product();
+//			product.setNameOfProduct("Name of product");
+//			product.setCodeOfProduct("Code 123");
+//			product.setPriceOfProduct(321);
+//			product.setDiscountPrice(311);
+//			product.setIsOnDiscount(true);
+//			product.setAboutProduct("About product");
+//			product.setPreparationTime(21);
+//			product.setAvailability(Availability.AVAILABLE);
+//			product.setWeight(300);
+//			product.setProductVisible(true);
+//			product.setProductCategory(category);
+//
+//			if (category.getProductList() == null){
+//				List<Product> categoryList = new ArrayList<>();
+//				categoryList.add(product);
+//				category.setProductList(categoryList);
+//			} else {
+//				category.getProductList().add(product);
+//			}
+//			productCategoryRepo.save(category);
+//
+//			ProductVariation productVariation = new ProductVariation();
+//			productVariation.setName("Product variation");
+//			productVariation.setValue("Value");
+//			productVariation.setDoesAffectPrice(true);
+//			productVariation.setPriceOfVariation(123);
+//			productVariation.setPriceOfVariationDiscount(121);
+//			productVariation.setIsOnDiscount(true);
+//			productVariation.setCodeOfVariation("Code 123");
+//
+//			productVariationRepo.save(productVariation);
+//
+//			ProductImage productImage = new ProductImage();
+//			productImage.setNameOfImage("name of image");
+//			productImageRepo.save(productImage);
+//
+//			Variation variation = new Variation();
+//			variation.setName("Variation");
+//			variation.setProductVariationList(new ArrayList<>());
+//			variation.getProductVariationList().add(productVariation);
+//			variationRepo.save(variation);
+//
+//			AppendicesCategory appendicesCategory = new AppendicesCategory();
+//			appendicesCategory.setNameOfCategory("Name of appendices category");
+//			appendicesCategory.setIsRequired(true);
+//			appendicesCategory.setNumberOfAllowed(2);
+//
+//			Image img = new Image();
+//			img.setImageUrl("123");
+//			imageRepo.save(img);
+//			appendicesCategory.setImage(img);
+//			appendicesCategoryRepo.save(appendicesCategory);
+//			product.addToAppendicesCategoryList(appendicesCategory);
+//
+//			Appendices appendices = new Appendices();
+//			appendices.setNameOfAppendices("Name of appendices");
+//			appendices.setDoesAffectPrice(true);
+//			appendices.setPrice(321);
+//
+//			appendices.setAppendicesCategory(appendicesCategory);
+//
+//			appendicesRepo.save(appendices);
+//			productRepo.save(product);
+//
+//			ProductTag tag = new ProductTag();
+//			tag.setName("BBQ");
+//			tag.setProduct(product);
+//			tagRepo.save(tag);
+//			ProductTag productTag = new ProductTag();
+//			productTag.setName("ITALIAN");
+//			productTag.setProduct(product);
+//			tagRepo.save(productTag);
+//			appendicesCategory.setProduct(product);
+//			appendicesCategoryRepo.save(appendicesCategory);
 
 		};
 	}

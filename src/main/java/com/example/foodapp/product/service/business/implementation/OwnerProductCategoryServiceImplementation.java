@@ -5,6 +5,8 @@ import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 //import com.example.foodapp.business.repo.BusinessRepo;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
+import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ProductCategoryRequest;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
@@ -60,30 +62,28 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
     }
 
     @Override
-    public List<ProductCategory> getMyList(Principal principal) {
-        log.error("error");
-
-        if(principal != null)
-        {
-            try {
-                String username = principal.getName();
-                User user = userRepo.findByEmail(username).orElseThrow();
-                return null;
-//                return productCategoryRepo.findProductCategoriesByBusiness(
-//                        userProfileService.returnBusinessOwnerProfile(user).getBusiness());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            System.out.println("else");
-        }
-
-        return null;
+    public List<ProductCategory> getMyList(Principal principal) throws Exception {
+        String username = principal.getName();
+        User user = userRepo.findByEmail(username).orElseThrow();
+        BusinessOwner owner = businessOwnerRepo.findBusinessOwnerByUser(user)
+                .orElseThrow(() -> new Exception("Business owner not found"));
+        return productCategoryRepo.findProductCategoriesByBusiness(owner.getBusiness());
     }
 
     @Override
     public ProductCategory get(Long id) {
         return null;
+    }
+
+    @Override
+    public ProductCategory get(Principal principal, Long id) throws Exception {
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+        BusinessOwner owner = businessOwnerRepo.findBusinessOwnerByUser(user)
+                .orElseThrow(() -> new Exception("Business owner not found"));
+        return productCategoryRepo
+                .findProductCategoryByIdAndBusiness_BusinessOwner(id, owner)
+                .orElseThrow(() -> new Exception("Not found"));
     }
 
     @Override
