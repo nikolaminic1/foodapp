@@ -55,4 +55,76 @@ public class TimeOpenedWeek {
         map.put("nonstop", nonstop);
         return map;
     }
+
+    @JsonIgnore
+    public Map<String, Object> getWorkingTimeTuesday() {
+        String open = this.timeOpenedDayTuesday.getTimeOpen();
+        String close = this.timeOpenedDayTuesday.getTimeClose();
+        Boolean nonstop = this.timeOpenedDayTuesday.getIsNonStop();
+        var map = new HashMap<String, Object>();
+        map.put("open", open);
+        map.put("close", close);
+        map.put("nonstop", nonstop);
+        return map;
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getWorkingTimeWednesday() {
+        String open = this.timeOpenedDayWednesday.getTimeOpen();
+        String close = this.timeOpenedDayWednesday.getTimeClose();
+        Boolean nonstop = this.timeOpenedDayWednesday.getIsNonStop();
+        var map = new HashMap<String, Object>();
+        map.put("open", open);
+        map.put("close", close);
+        map.put("nonstop", nonstop);
+        return map;
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getWorkingTimeThursday() {
+        String open = this.timeOpenedDayThursday.getTimeOpen();
+        String close = this.timeOpenedDayThursday.getTimeClose();
+        Boolean nonstop = this.timeOpenedDayThursday.getIsNonStop();
+        var map = new HashMap<String, Object>();
+        map.put("open", open);
+        map.put("close", close);
+        map.put("nonstop", nonstop);
+        return map;
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getWorkingTimeFriday() {
+        String open = this.timeOpenedDayFriday.getTimeOpen();
+        String close = this.timeOpenedDayFriday.getTimeClose();
+        Boolean nonstop = this.timeOpenedDayFriday.getIsNonStop();
+        var map = new HashMap<String, Object>();
+        map.put("open", open);
+        map.put("close", close);
+        map.put("nonstop", nonstop);
+        return map;
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getWorkingTimeSaturday() {
+        String open = this.timeOpenedDaySaturday.getTimeOpen();
+        String close = this.timeOpenedDaySaturday.getTimeClose();
+        Boolean nonstop = this.timeOpenedDaySaturday.getIsNonStop();
+        var map = new HashMap<String, Object>();
+        map.put("open", open);
+        map.put("close", close);
+        map.put("nonstop", nonstop);
+        return map;
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getWorkingTimeSunday() {
+        String open = this.timeOpenedDaySunday.getTimeOpen();
+        String close = this.timeOpenedDaySunday.getTimeClose();
+        Boolean nonstop = this.timeOpenedDaySunday.getIsNonStop();
+        var map = new HashMap<String, Object>();
+        map.put("open", open);
+        map.put("close", close);
+        map.put("nonstop", nonstop);
+        return map;
+    }
 }

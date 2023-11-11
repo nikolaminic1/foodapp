@@ -86,9 +86,9 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
                         orderO.getProductList().add(orderProduct);
                         orderProduct.updatePrice();
 
-                        if(product.getVariations() != null){
-                            System.out.println(product.getVariations());
-                            if(product.getVariations().getProductVariationList().size() > 0){
+                        if(product.getVariation() != null){
+                            System.out.println(product.getVariation());
+                            if(product.getVariation().getProductVariationList().size() > 0){
                                 addProductVariations(product, orderProduct, orderProductVariation);
                             }
                         }
@@ -157,9 +157,9 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
                 orderO.getProductList().add(orderProduct);
                 orderProduct.updatePrice();
 
-                if(product.getVariations() != null){
-                    System.out.println(product.getVariations());
-                    if(product.getVariations().getProductVariationList().size() > 0){
+                if(product.getVariation() != null){
+                    System.out.println(product.getVariation());
+                    if(product.getVariation().getProductVariationList().size() > 0){
                         addProductVariations(product, orderProduct, orderProductVariation);
                     }
                 }
@@ -253,7 +253,7 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
 
     @Override
     public void addProductVariations(Product product, OrderProduct orderProduct, Long orderProductVariation) throws Exception{
-            if(product.getVariations().getProductVariationList().size() > 0){
+            if(product.getVariation().getProductVariationList().size() > 0){
                 if(productVariationRepo.findById(orderProductVariation).isPresent()){
                     ProductVariation productVariation = productVariationRepo.findById(orderProductVariation).get();
                     if(product == productVariation.getVariation().getProduct()){

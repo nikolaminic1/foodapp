@@ -21,14 +21,19 @@ public class BusinessLocation {
     private Long id;
 
     private String streetName;
-    private int buildingNumber;
-    private int flatNumber;
+    private String buildingNumber;
+    private String flatNumber;
     private int zipCode;
-    private String cityNumber;
+    private String cityName;
 
     @OneToOne
 //    @JoinColumn(name = "business_id")
     @JsonBackReference
     @JsonIgnore
     private Business business;
+
+    public void setBusiness(Business business){
+        this.business = business;
+        business.setBusinessLocation(this);
+    }
 }

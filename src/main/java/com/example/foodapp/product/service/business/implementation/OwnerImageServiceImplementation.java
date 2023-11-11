@@ -1,12 +1,10 @@
 package com.example.foodapp.product.service.business.implementation;
 
-import com.example.foodapp.api_resources.ImageFileSave;
+import com.example.foodapp.api_resources.ImageFileSaveService;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 //import com.example.foodapp.business.model.Business;
-import com.example.foodapp.product.model.Product;
-import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.ProductImage;
 import com.example.foodapp.product.repo.ProductImageRepo;
 import com.example.foodapp.product.repo.ProductRepo;
@@ -43,7 +41,7 @@ public class OwnerImageServiceImplementation implements BusinessImageService {
 
             try {
                 User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-                fileCode = ImageFileSave.saveFile(fileName, file);
+                fileCode = ImageFileSaveService.saveFile(fileName, file);
                 String pathToSave = "/general/product/image/" + fileCode;
                 System.out.println(pathToSave);
                 ProductImage image = new ProductImage();

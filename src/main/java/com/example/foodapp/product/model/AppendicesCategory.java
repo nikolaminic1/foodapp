@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,9 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"appendicesList"})
-@EqualsAndHashCode(exclude = {"appendicesList"})
+//@ToString(exclude = {"appendicesList"})
+//@EqualsAndHashCode(exclude = {"appendicesList"})
+//@Transactional
 public class AppendicesCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,11 +35,11 @@ public class AppendicesCategory {
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "appendicesCategory", fetch = FetchType.LAZY)
     @JsonManagedReference
     @JsonView(View.Public.class)
-    private List<Appendices> appendicesList;
+    private List<Appendices> appendicesList = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonBackReference
-    @JsonView(View.Public.class)
+//    @JsonView(View.Public.class)
     private Product product;
 
     @OneToOne(cascade = CascadeType.MERGE)
@@ -46,6 +48,11 @@ public class AppendicesCategory {
 
     @JsonView(View.Public.class)
     private int numberOfAllowed;
+
+    public void setProduct (Product product) {
+        this.product = product;
+//        product.getAppendicesCategoryList().add(this);
+    }
 
     public void setAppendicesList (Appendices appendices) {
         if (this.getAppendicesList() == null){

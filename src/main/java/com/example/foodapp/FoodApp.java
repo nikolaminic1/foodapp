@@ -6,15 +6,17 @@ import com.example.foodapp.auth.service.admin.service.BusinessOwnerAdminService;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import com.example.foodapp.business.model.Business;
+import com.example.foodapp.business.model.BusinessLocation;
 import com.example.foodapp.business.model.TimeOpenedDay;
 import com.example.foodapp.business.model.TimeOpenedWeek;
-import com.example.foodapp.business.repo.BusinessRepo;
-import com.example.foodapp.business.repo.BusinessWorkingTimeRepo;
-import com.example.foodapp.business.repo.TimeOpenedDayRepo;
+import com.example.foodapp.business.repo.*;
 import com.example.foodapp.business.service.admin_service.AdminBusinessService;
+import com.example.foodapp.business.service.admin_service.TimeOpenedService;
 import com.example.foodapp.product.enumeration.Availability;
 import com.example.foodapp.product.model.*;
 import com.example.foodapp.product.repo.*;
+import org.aspectj.weaver.ast.Var;
+import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -52,9 +54,79 @@ public class FoodApp {
 			ProductTagRepo tagRepo,
 			AppendicesCategoryRepo appendicesCategoryRepo,
 			AppendicesRepo appendicesRepo,
-			ImageRepo imageRepo
+			ImageRepo imageRepo,
+			BusinessLocationRepo businessLocationRepo,
+			TimeOpenedDayRepo timeOpenedDayRepo,
+			TimeOpenedWeekRepo timeOpenedWeekRepo,
+			TimeOpenedService timeOpenedService
 	) {
 		return args -> {
+//			Business business = businessRepo.findBusinessById(252L).get();
+
+//			var time = new TimeOpenedDay();
+//			time.setTimeOpen("08:00");
+//			time.setTimeClose("22:00");
+//			timeOpenedDayRepo.save(time);
+//			var opened = business.getTimeOpened();
+//			opened.setTimeOpenedDayTuesday(time);
+//			timeOpenedWeekRepo.save(opened);
+//			timeOpenedService.save(business);
+
+//			BusinessLocation location = new BusinessLocation();
+//			location.setFlatNumber(123);
+//			location.setZipCode(123123);
+//			location.setBuildingNumber(343);
+//			location.setStreetName("Street name");
+//			location.setCityName("City name");
+////			businessLocationRepo.save(location);
+//			businessRepo.save(business);
+//
+//			location.setBusiness(business);
+//			businessLocationRepo.save(location);
+
+
+
+		};
+	}
+
+}
+//			Product product = productRepo.findById(202L).orElseThrow(() -> new Exception("Error"));
+//			ProductImage image = new ProductImage();
+//			image.setImageUrl("ksdjbv");
+//			product.setProductImage(image);
+//
+//			productImageRepo.save(image);
+//
+//
+//			productRepo.save(product);
+//			var restaurant = new Business();
+//			restaurant.setName("Restaurant 1");
+//			restaurant.setDescription("Description");
+//			restaurant.setActive(true);
+//
+//			var timeOpened = new TimeOpenedWeek();
+//
+//			var timeOpenedMonday = new TimeOpenedDay();
+//			timeOpenedMonday.setTimeOpen("08:00");
+//			timeOpenedMonday.setTimeClose("22:00");
+//
+//			timeOpened.setTimeOpenedDayMonday(timeOpenedMonday);
+//
+//			var timeOpenedTuesday = new TimeOpenedDay();
+//			timeOpenedTuesday.setTimeOpen("08:00");
+//			timeOpenedTuesday.setTimeClose("22:00");
+//
+//			timeOpened.setTimeOpenedDayTuesday(timeOpenedTuesday);
+//
+//
+//			restaurant.setTimeOpened(timeOpened);
+//			timeOpenedDayRepo.save(timeOpenedMonday);
+//
+//			timeOpenedDayRepo.save(timeOpenedTuesday);
+//
+//			timeOpenedWeekRepo.save(timeOpened);
+//
+//			adminBusinessService.create(restaurant);
 //			Business business = adminBusinessService.get(252L);
 //
 //			ProductCategory category = new ProductCategory();
@@ -142,37 +214,43 @@ public class FoodApp {
 //			tagRepo.save(productTag);
 //			appendicesCategory.setProduct(product);
 //			appendicesCategoryRepo.save(appendicesCategory);
+//			ProductVariation productVariation = new ProductVariation();
+//			productVariation.setName("Product variation");
+//			productVariation.setValue("Value");
+//			productVariation.setDoesAffectPrice(true);
+//			productVariation.setPriceOfVariation(123);
+//			productVariation.setPriceOfVariationDiscount(121);
+//			productVariation.setIsOnDiscount(true);
+//			productVariation.setCodeOfVariation("Code 123");
+//
+//			Variation variation = new Variation();
+//			variation.setName("Variation");
+//			variation.setProduct(product);
+//			variationRepo.save(variation);
+//
+//			productVariation.setVariation(variation);
+//			productVariationRepo.save(productVariation);
+//			variation.setProductVariationList(new ArrayList<>());
+//			variation.getProductVariationList().add(productVariation);
+//			AppendicesCategory appendicesCategory = new AppendicesCategory();
+//			appendicesCategory.setNameOfCategory("Name of appendices category");
+//			appendicesCategory.setIsRequired(true);
+//			appendicesCategory.setNumberOfAllowed(2);
+//			appendicesCategory.setProduct(product);
+//
+//			System.out.println(product.getAppendicesCategoryList());
 
-		};
-	}
+//			Hibernate.initialize(product.getAppendicesCategoryList().add(appendicesCategory));
+//			product.addToAppendicesCategoryList(appendicesCategory);
 
-}
+//			Appendices appendices = new Appendices();
+//			appendices.setNameOfAppendices("Name of appendices");
+//			appendices.setDoesAffectPrice(true);
+//			appendices.setPrice(321);
+//			appendices.setAppendicesCategory(appendicesCategory);
 
-//			var restaurant = new Business();
-//			restaurant.setName("Restaurant 1");
-//			restaurant.setDescription("Description");
-//			restaurant.setActive(true);
-//
-//			var timeOpened = new TimeOpenedWeek();
-//
-//			var timeOpenedMonday = new TimeOpenedDay();
-//			timeOpenedMonday.setTimeOpen("08:00");
-//			timeOpenedMonday.setTimeClose("22:00");
-//
-//			timeOpened.setTimeOpenedDayMonday(timeOpenedMonday);
-//
-//			var timeOpenedTuesday = new TimeOpenedDay();
-//			timeOpenedTuesday.setTimeOpen("08:00");
-//			timeOpenedTuesday.setTimeClose("22:00");
-//
-//			timeOpened.setTimeOpenedDayTuesday(timeOpenedTuesday);
-//
-//
-//			restaurant.setTimeOpened(timeOpened);
-//			timeOpenedDayRepo.save(timeOpenedMonday);
-//
-//			timeOpenedDayRepo.save(timeOpenedTuesday);
-//
-//			timeOpenedWeekRepo.save(timeOpened);
-//
-//			adminBusinessService.create(restaurant);
+//			appendicesCategoryRepo.save(appendicesCategory);
+
+//			appendicesCategory.setProduct(product);
+//			appendicesCategoryRepo.save(appendicesCategory);
+//			appendicesRepo.save(appendices);

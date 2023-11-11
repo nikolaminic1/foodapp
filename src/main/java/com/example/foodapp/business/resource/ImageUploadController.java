@@ -1,7 +1,7 @@
 package com.example.foodapp.business.resource;
 
 
-import com.example.foodapp.api_resources.ImageFileSave;
+import com.example.foodapp.api_resources.ImageFileSaveService;
 import com.example.foodapp.api_resources.Response;
 import com.example.foodapp.business.service.owner_service.OwnerBusinessService;
 import com.example.foodapp.product.model.Image;
@@ -13,15 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 import static java.time.LocalDateTime.now;
 
@@ -40,7 +33,7 @@ public class ImageUploadController {
            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
            long size = file.getSize();
 
-           String fileCode = ImageFileSave.saveFile(fileName, file);
+           String fileCode = ImageFileSaveService.saveFile(fileName, file);
 
            String pathToSave = "/general/product/image/" + fileCode;
            System.out.println(pathToSave);
@@ -69,7 +62,7 @@ public class ImageUploadController {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             long size = file.getSize();
 
-            String fileCode = ImageFileSave.saveFile(fileName, file);
+            String fileCode = ImageFileSaveService.saveFile(fileName, file);
 
             String pathToSave = "/general/product/image/" + fileCode;
             System.out.println(pathToSave);

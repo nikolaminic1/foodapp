@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BusinessOwnerRepo extends JpaRepository<BusinessOwner, Long> {
-    Optional<BusinessOwner> findBusinessOwnerByUser(User userProfile);
+    Optional<BusinessOwner> findBusinessOwnerByUser(User user);
     List<BusinessOwner> findAllByUser(User user);
     void deleteBusinessOwnersByUser(User user);
     void deleteBusinessOwnerById(Long id);

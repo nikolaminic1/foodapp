@@ -30,11 +30,17 @@ public class Appendices {
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonBackReference
-    @JoinTable(name = "appendicesListTable")
+//    @JoinTable(name = "appendicesListTable")
     @JsonView(View.Public.class)
     private AppendicesCategory appendicesCategory;
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JsonView(View.Public.class)
     private Image image;
+
+    public void setAppendicesCategory(AppendicesCategory appendicesCategory){
+        this.appendicesCategory = appendicesCategory;
+        appendicesCategory.getAppendicesList().add(this);
+    }
+
 }

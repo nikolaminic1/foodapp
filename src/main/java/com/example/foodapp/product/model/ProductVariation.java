@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.aspectj.weaver.ast.Var;
+
+import java.util.ArrayList;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -35,7 +38,7 @@ public class ProductVariation {
     private Variation variation;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
+//    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private ProductImage productImage;
 
     public void setPrice(){
@@ -44,6 +47,11 @@ public class ProductVariation {
         } else if(doesAffectPrice & isOnDiscount) {
             this.totalPrice = priceOfVariationDiscount;
         }
+    }
+
+    public void setVariation(Variation variation) {
+        this.variation = variation;
+        variation.getProductVariationList().add(this);
     }
 
     public Double getPrice(){

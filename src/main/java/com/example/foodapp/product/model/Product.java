@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -25,9 +26,10 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"productCategory", "appendicesCategoryList","productTags","variations"})
-@EqualsAndHashCode(exclude = {"productCategory", "appendicesCategoryList", "productTags","variations"})
+@ToString(exclude = {"productCategory","productTags","variation"})
+@EqualsAndHashCode(exclude = {"productCategory", "productTags","variation"})
 @Log4j2
+//@Transactional
 //@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "productCategory" })
 //@JsonIdentityInfo(
 //        generator = ObjectIdGenerators.StringIdGenerator.class,
@@ -80,9 +82,9 @@ public class Product {
     private ProductCategory productCategory;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE
-//            , mappedBy = "product"
+            , mappedBy = "product"
     )
-//    @JsonBackReference
+    @JsonBackReference
     @JsonView(View.Public.class)
     private ProductImage productImage;
 
@@ -90,38 +92,41 @@ public class Product {
 //    @JsonSerialize(using = VariationSerializer.class)
     @JsonManagedReference
     @JsonView(View.Public.class)
-    private Variation variations;
+    private Variation variation;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JsonManagedReference
     @JsonView(View.Public.class)
     private List<ProductTag> productTags = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(
+//            cascade = CascadeType.MERGE,
+            mappedBy = "product",
+            fetch = FetchType.EAGER
+    )
     @JsonManagedReference
     @JsonView(View.Public.class)
-    private List<AppendicesCategory> appendicesCategoryList;
+    private List<AppendicesCategory> appendicesCategoryList = new ArrayList<>();
 
     public void setProductVisible(Boolean productVisible) {
         this.productVisible = productVisible;
     }
 
-//    public void setProductImage(ProductImage productImage) {
-//        this.productImage = productImage;
-//        productImage.setProduct(this);
-//    }
-//
+    public void setProductImage(ProductImage productImage) {
+        this.productImage = productImage;
+        productImage.setProduct(this);
+    }
+
     @JsonManagedReference
     public Variation getVariation(){
         System.out.println("var");
-        return this.variations;
+        return this.variation;
     }
 
-    @JsonBackReference
-    public ProductCategory getProductCategory() {
-        System.out.println("product cat");
-        return productCategory;
-    }
+    //    public List<AppendicesCategory> getAppendicesCategoryList() {
+    //        System.out.println(this.appendicesCategoryList);
+    //        return this.appendicesCategoryList;
+    //    }
 
     @OneToMany(mappedBy = "product")
     private Collection<ProductDescription> productDescription;
@@ -135,12 +140,13 @@ public class Product {
     }
 
     public void addToAppendicesCategoryList (AppendicesCategory appendicesCategory) {
-        if (this.appendicesCategoryList == null){
-            this.appendicesCategoryList = new ArrayList<>();
-            this.appendicesCategoryList.add(appendicesCategory);
-        } else {
-            this.appendicesCategoryList.add(appendicesCategory);
-        }
+//        this.appendicesCategoryList.add(appendicesCategory);
+//        if (this.appendicesCategoryList == null){
+//            this.appendicesCategoryList = new ArrayList<>();
+//            this.appendicesCategoryList.add(appendicesCategory);
+//        } else {
+//            this.appendicesCategoryList.add(appendicesCategory);
+//        }
 //        appendicesCategory.setProduct(this);
     }
 }

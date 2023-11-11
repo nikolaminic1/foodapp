@@ -26,4 +26,9 @@ public class TimeOpenedDay {
     private String timeClose;
     private Boolean isNonStop;
 
+    public TimeOpenedDay(String timeOpen, String timeClose, Boolean isNonStop) {
+        this.timeOpen = timeOpen;
+        this.timeClose = timeClose;
+        this.isNonStop = isNonStop;
+    }
 }

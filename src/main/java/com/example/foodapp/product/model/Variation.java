@@ -35,6 +35,11 @@ public class Variation {
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "variation")
 //    @JsonSerialize(using = ProductVariationSerializer.class)
     @JsonManagedReference
-    private List<ProductVariation> productVariationList;
+    private List<ProductVariation> productVariationList = new ArrayList<>();
+
+    public void setProduct(Product product) {
+        this.product = product;
+        product.setVariation(this);
+    }
 
 }
