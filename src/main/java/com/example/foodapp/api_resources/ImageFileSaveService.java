@@ -20,6 +20,7 @@ import static com.example.foodapp.api_resources.RandomStringGenerator.createBusi
 public class ImageFileSaveService {
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/static/media/";
     public static String slugify(String input) {
         String nonwhitespace = WHITESPACE.matcher(input).replaceAll("-");
         String normalized = Normalizer.normalize(nonwhitespace, Normalizer.Form.NFD);
@@ -36,13 +37,13 @@ public class ImageFileSaveService {
         String fileCode = createBusinessId(10);
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            String path = fileCode + "-" + slugify(fileName) + ".jpg";
-            String a = System.getProperty("user.dir");
-            String fullPath = a + "/src/main/resources/media" + path;
-            Path path1 = Paths.get(fullPath);
-            log.error(path1);
-            Files.copy(inputStream, path1, StandardCopyOption.REPLACE_EXISTING);
-            return path;
+            String file = fileCode + "-" + slugify(fileName) + ".jpg";
+            StringBuilder fileNames = new StringBuilder();
+            Path fileNameAndPath = Paths.get(UPLOAD_DIR, file);
+//            fileNames.append(file.getOriginalFilename());
+//            Files.write(fileNameAndPath, file.getBytes());
+            return "";
+//            return path.toString();
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
             return "File is not saved";

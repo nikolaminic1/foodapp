@@ -3,11 +3,9 @@ package com.example.foodapp.product.resource.general;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,16 +19,15 @@ public class ImageDownload {
     public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException
     {
         try {
-            String path = "/media/" + id;
+            String path = "static/media/" + id;
             var imgFile = new ClassPathResource(path);
-            System.out.println(imgFile);
-            byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
-            System.out.println(imgFile);
+            System.out.println(path);
+            byte[] bytes = path.getBytes();
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
                     .body(bytes);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), e.getMessage());
         }
     }
 }

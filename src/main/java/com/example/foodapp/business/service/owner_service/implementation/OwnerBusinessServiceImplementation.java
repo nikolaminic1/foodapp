@@ -128,6 +128,7 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
                 .findBusinessByBusinessOwner_User(user)
                 .orElseThrow(() -> new Exception("Business not found"));
         String path = saveFile(business.getName(), file);
+        System.out.println(path);
         business.setLogoImage(path);
         businessRepo.save(business);
         return "OK";
