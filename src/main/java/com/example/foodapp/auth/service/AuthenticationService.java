@@ -110,11 +110,8 @@ public class AuthenticationService {
     }
 
     public String verify(String token) throws Exception{
-        if (token == null || !token.startsWith("Bearer ")) {
-            throw new Exception("Error");
-        }
-        final String tokenToVerify = token.substring(7);
-        final String userEmail = jwtService.extractUsername(tokenToVerify);
+        String validToken = token.replace("\"", "");
+        final String userEmail = jwtService.extractUsername(validToken);
 
         if (userEmail == null) {
             throw new Exception("Token is not valid");
@@ -123,7 +120,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(userEmail)
                 .orElseThrow();
 
-        if (!jwtService.isTokenValid(tokenToVerify, user)) {
+        if (!jwtService.isTokenValid(validToken, user)) {
             throw new Exception("Token is not valid");
         }
 

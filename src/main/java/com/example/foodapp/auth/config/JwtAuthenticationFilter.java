@@ -54,15 +54,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
         // todo extract the email from JWT token
-        System.out.println(jwt);
         boolean isExpired = jwtService.isTokenExpired(jwt);
-        System.out.println(isExpired);
         if (isExpired) {
             throw new ServletException("Token expired");
         }
-
         username = jwtService.extractUsername(jwt);
-        System.out.println(username);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails;
@@ -86,7 +82,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
-                System.out.println(authToken);
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

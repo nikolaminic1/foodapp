@@ -28,7 +28,7 @@ public class ImageUploadController {
     private final ImageRepo imageRepo;
 
     @PostMapping("/upload")
-    public ResponseEntity<Response> uploadImage(@RequestParam("file") MultipartFile file) throws IOException{
+    public ResponseEntity<Response> uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
         if (file != null){
            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
            long size = file.getSize();
@@ -57,7 +57,7 @@ public class ImageUploadController {
 
     @PostMapping("/product_image_upload")
     public ResponseEntity<Response> productImageUpload(@RequestParam("file") MultipartFile file,
-                                                       @RequestParam("productId") Long id) throws IOException{
+                                                       @RequestParam("productId") Long id) throws Exception {
         if (file != null){
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             long size = file.getSize();

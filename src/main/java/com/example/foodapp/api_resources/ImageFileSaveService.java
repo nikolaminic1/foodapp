@@ -29,7 +29,7 @@ public class ImageFileSaveService {
     }
 
     public static String saveFile(String fileName, MultipartFile multipartFile)
-            throws IOException {
+            throws Exception {
 
 //        if (!Files.exists(uploadPath)) {
 //            Files.createDirectories(uploadPath);
@@ -37,15 +37,14 @@ public class ImageFileSaveService {
         String fileCode = createBusinessId(10);
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
+            System.out.println(Paths.get("static").getRoot());
             String file = fileCode + "-" + slugify(fileName) + ".jpg";
-            StringBuilder fileNames = new StringBuilder();
             Path fileNameAndPath = Paths.get(UPLOAD_DIR, file);
-//            fileNames.append(file.getOriginalFilename());
-//            Files.write(fileNameAndPath, file.getBytes());
+            Files.write(fileNameAndPath, file.getBytes());
             return "";
 //            return path.toString();
-        } catch (IOException ioe) {
-            System.out.println(ioe.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "File is not saved";
         }
     }
