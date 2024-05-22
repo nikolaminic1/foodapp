@@ -99,7 +99,7 @@ public class SecurityConfiguration {
                         .requestMatchers(builder.pattern("/swagger-ui/*")).permitAll()
                         .requestMatchers(builder.pattern("/webjars/**")).permitAll()
                         .requestMatchers(builder.pattern("/api/v2/**")).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
 
                 )
 
