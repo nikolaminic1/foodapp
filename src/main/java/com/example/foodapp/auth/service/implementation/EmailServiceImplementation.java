@@ -31,6 +31,7 @@ public class EmailServiceImplementation implements EmailService {
             mailSender.send(mailMessage);
             return "OK";
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new Exception(e.getMessage());
         }
     }

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserService {
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
@@ -76,7 +78,7 @@ public class UserService {
 //                .lastname(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .ERole(ERole.CUSTOMER)
+                .ERole(ERole.ADMIN)
                 .build();
 
         /*
@@ -106,13 +108,18 @@ public class UserService {
         activationTokenRepo.save(activationToken);
 
         String activationLink = host + "/account-activation?uid=" + activationToken.getUid() + "&token=" + activationToken.getToken();
-
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(email);
         emailDetails.setSubject("Activation email");
         emailDetails.setMessageBody(activationLink);
-        emailService.sendEmail(emailDetails);
-        return "OK";
+
+        try {
+            emailService.sendEmail(emailDetails);
+            return "OK";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Email error");
+        }
     }
 
     public String activate(ConfirmationRequestResponse request) throws Exception {

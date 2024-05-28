@@ -32,6 +32,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(service.register(request));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }

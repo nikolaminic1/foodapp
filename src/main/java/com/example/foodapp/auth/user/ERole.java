@@ -22,6 +22,10 @@ public enum ERole {
 )),
     ADMIN(
             Set.of(
+                    CUSTOMER_READ,
+                    CUSTOMER_UPDATE,
+                    CUSTOMER_DELETE,
+                    CUSTOMER_CREATE,
                     ADMIN_READ,
                     ADMIN_UPDATE,
                     ADMIN_DELETE,
