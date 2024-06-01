@@ -45,14 +45,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Arrays.stream(cookies)
                     .map(c -> c);
         }
-        if (authHeader == null || !authHeader.startsWith("Bearer")) {
+        if (authHeader == null || !authHeader.startsWith("JWT")) {
             filterChain.doFilter(request, response);
             return;
         }
         log.info(authHeader);
 //        log.error("after filter jwt authentication");
 
-        jwt = authHeader.substring(7);
+        jwt = authHeader.substring(4);
         // todo extract the email from JWT token
         boolean isExpired = jwtService.isTokenExpired(jwt);
         if (isExpired) {

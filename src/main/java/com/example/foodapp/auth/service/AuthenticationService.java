@@ -80,7 +80,7 @@ public class AuthenticationService {
         final String accessToken;
         final String userEmail;
 
-        if (token == null || !token.startsWith("Bearer ")) {
+        if (token == null || !token.startsWith("JWT ")) {
 //            return "Refresh token should be provided.";
             throw new Exception("Error");
         }

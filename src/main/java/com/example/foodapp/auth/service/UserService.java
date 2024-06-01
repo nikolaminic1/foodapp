@@ -3,6 +3,7 @@ package com.example.foodapp.auth.service;
 import com.example.foodapp.auth.dto.*;
 import com.example.foodapp.auth.repo.ActivationTokenRepo;
 import com.example.foodapp.auth.repo.UserRepository;
+import com.example.foodapp.auth.serializers.UserCustomerSerializer;
 import com.example.foodapp.auth.serializers.UserDetailSerializer;
 import com.example.foodapp.auth.user.ERole;
 import com.example.foodapp.auth.user.User;
@@ -157,6 +158,22 @@ public class UserService {
         mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
         SimpleModule module = new SimpleModule();
         module.addSerializer(User.class, new UserDetailSerializer());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(user);
+    }
+
+    public String getProfile(Principal principal) throws Exception {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User does not exists"));
+//        SimpleModule module = new SimpleModule();
+//        module.addSerializer(User.class, new UserCustomerSerializer.Serializer());
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+//        mapper.registerModule(module);
+
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(User.class, new UserCustomerSerializer.Serializer());
         mapper.registerModule(module);
         return mapper.writeValueAsString(user);
     }

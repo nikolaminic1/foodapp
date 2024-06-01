@@ -4,10 +4,11 @@ import com.example.foodapp._api.Response;
 import com.example.foodapp.auth.dto.*;
 import com.example.foodapp.auth.service.LogoutService;
 import com.example.foodapp.auth.service.UserService;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.json.JSONParser;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,19 +75,14 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Response> getMyProfile (
+    public ResponseEntity<Object> getMyProfile (
             Principal principal
     ) {
-
         try {
-            var user = service.getMyProfile(principal);
-            JSONParser parser = new JSONParser(user);
+            var user = service.getProfile(principal);
             return ResponseEntity.ok()
-                    .body(
-                            Response.builder()
-                                    .status(HttpStatus.OK)
-                                    .data(Map.of("user", parser.parse()))
-                                    .build());
+                    .body(user);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(

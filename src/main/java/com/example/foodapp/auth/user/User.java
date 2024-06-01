@@ -1,5 +1,6 @@
 package com.example.foodapp.auth.user;
 
+import com.example.foodapp.auth.user.Addresses.Address;
 import com.example.foodapp.auth.user.UserProfiles._Profile;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -11,10 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -43,6 +41,9 @@ public class User implements UserDetails {
 //            inverseJoinColumns = @JoinColumn(name = "authority"))
 //    private Set<Role> roles;
 
+    @OneToOne
+    private Address address;
+
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_table_id")
     private _Profile profile;
@@ -69,6 +70,13 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return ERole.getAuthorities();
 //        return List.of(new SimpleGrantedAuthority((ERole.name())));
+    }
+
+    public Map<String, Object> getAddresses() {
+        HashMap<String, Object> addresses = new HashMap<>();
+        Object obj = new Object();
+        addresses.put("Address", obj);
+        return addresses;
     }
 
     @Override
