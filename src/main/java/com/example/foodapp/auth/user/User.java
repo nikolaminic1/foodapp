@@ -1,6 +1,9 @@
 package com.example.foodapp.auth.user;
 
+import com.example.foodapp.auth.dto.Gender;
 import com.example.foodapp.auth.user.Addresses.Address;
+import com.example.foodapp.auth.user.Addresses.AddressModel;
+import com.example.foodapp.auth.user.Addresses.AddressType;
 import com.example.foodapp.auth.user.UserProfiles._Profile;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -13,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -34,6 +38,7 @@ public class User implements UserDetails {
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
     private String phone;
+    private Gender gender;
 
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(name = "authorities",
@@ -41,12 +46,28 @@ public class User implements UserDetails {
 //            inverseJoinColumns = @JoinColumn(name = "authority"))
 //    private Set<Role> roles;
 
-    @OneToOne
-    private Address address;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<AddressModel> addresses;
 
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_table_id")
     private _Profile profile;
+
+    public HashMap<String, List<AddressModel>> getAddresses() {
+        List<AddressModel> billingAddresses = this.addresses.stream().filter((add) ->
+           add.getAddressType().equals(AddressType.BILLING)
+        ).collect(Collectors.toList());
+
+        List<AddressModel> shippingAddresses = this.addresses.stream().filter((add) ->
+                add.getAddressType().equals(AddressType.SHIPPING)
+        ).collect(Collectors.toList());
+
+        HashMap<String, List<AddressModel>> add = new HashMap<>();
+        add.put("billing_address", billingAddresses);
+        add.put("shipping_address", shippingAddresses);
+        return add;
+    }
 
     public void setProfileObject(_Profile profile){
         this.profile = profile;
@@ -72,11 +93,16 @@ public class User implements UserDetails {
 //        return List.of(new SimpleGrantedAuthority((ERole.name())));
     }
 
-    public Map<String, Object> getAddresses() {
-        HashMap<String, Object> addresses = new HashMap<>();
-        Object obj = new Object();
-        addresses.put("Address", obj);
-        return addresses;
+//    public HashMap<String, Set<Object>> getAddresses() {
+//        if (this.address != null) {
+//            return this.address.getAddresses();
+//        }
+//        return null;
+//    }
+
+
+    public Gender getGender() {
+        return gender;
     }
 
     @Override

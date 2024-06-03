@@ -1,7 +1,7 @@
-package com.example.foodapp.auth.service.admin.implementation;
+package com.example.foodapp.auth.service.customer.implementation;
 
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
-import com.example.foodapp.auth.service.admin.service.BusinessOwnerAdminService;
+import com.example.foodapp.auth.service.customer.service.BusinessOwnerAdminService;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
 import jakarta.transaction.Transactional;

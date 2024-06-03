@@ -24,14 +24,13 @@ public class UserDetailSerializer extends StdSerializer<User> {
                           SerializerProvider serializerProvider)
             throws IOException, JsonProcessingException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("id", user.getId());
-        jsonGenerator.writeStringField("email", user.getEmail());
-        jsonGenerator.writeStringField("name", user.getFirstname());
-        jsonGenerator.writeStringField("role", user.getERole().name());
-        jsonGenerator.writeStringField("firstname", user.getFirstname());
-        jsonGenerator.writeStringField("lastname", user.getLastname());
-        jsonGenerator.writeStringField("phone", user.getPhone());
-
+//        jsonGenerator.writeNumberField("id", user.getId());
+//        jsonGenerator.writeStringField("email", user.getEmail());
+//        jsonGenerator.writeStringField("name", user.getFirstname());
+//        jsonGenerator.writeStringField("role", user.getERole().name());
+//        jsonGenerator.writeStringField("firstname", user.getFirstname());
+//        jsonGenerator.writeStringField("lastname", user.getLastname());
+//        jsonGenerator.writeStringField("phone", user.getPhone());
         jsonGenerator.writeEndObject();
 
     }

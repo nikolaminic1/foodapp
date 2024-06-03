@@ -1,10 +1,11 @@
 package com.example.foodapp.auth.service;
 
 import com.example.foodapp.auth.dto.*;
-import com.example.foodapp.auth.repo.ActivationTokenRepo;
-import com.example.foodapp.auth.repo.UserRepository;
+import com.example.foodapp.auth.repo.*;
+import com.example.foodapp.auth.serializers.UserAdminSerializer;
 import com.example.foodapp.auth.serializers.UserCustomerSerializer;
 import com.example.foodapp.auth.serializers.UserDetailSerializer;
+import com.example.foodapp.auth.user.Addresses.Address;
 import com.example.foodapp.auth.user.ERole;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
@@ -37,11 +38,18 @@ public class UserService {
     private final ActivationTokenRepo activationTokenRepo;
     private final EmailService emailService;
     private final UserAuthService userAuthService;
+    private final AddressRepo addressRepo;
+    private final PasswordTokenRepo passwordTokenRepo;
+    private final DeleteTokenRepo deleteTokenRepo;
     @Value("${host}")
     private String host;
+
+    @Value("${host}")
+    private String web_host;
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+    // ^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$
     public static String generateNewToken() {
         byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
@@ -54,6 +62,7 @@ public class UserService {
           }
 
     public String register(RegisterRequest request) throws Exception {
+        System.out.println(request.getEmail());
         if (!isEmailValid(request.getEmail())){
             throw new Exception("Invalid email");
         }
@@ -96,6 +105,10 @@ public class UserService {
         user.setCredentialsNonExpired(true);
         System.out.println(user.isEnabled());
         userRepository.save(user);
+
+//        Address address = new Address();
+//        address.setUser(user);
+//        addressRepo.save(address);
 
         UUID uuid = UUID.nameUUIDFromBytes(email.getBytes());
         String token = generateNewToken();
@@ -151,6 +164,10 @@ public class UserService {
         return "OK";
     }
 
+    public String resendActivationEmail (String email) throws Exception {
+        return email;
+    }
+
     public String getMyProfile(Principal principal) throws Exception{
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("User does not exists"));
@@ -182,19 +199,168 @@ public class UserService {
         return "OK";
     }
 
-    public ConfirmationRequestResponse deleteMyProfile(Principal principal, LoginRequest request) throws Exception{
-        throw new Exception("Error");
+    public String deleteMyProfile(Principal principal) throws Exception {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("Invalid user"));
+
+        List<UserDeleteToken> tokenList = deleteTokenRepo.findUserDeleteTokensByEmail(user.getEmail());
+
+        tokenList.forEach((token) -> {
+            token.setActive(false);
+            token.setDateAccessed(now());
+        });
+        deleteTokenRepo.saveAll(tokenList);
+
+        String emailForUUID = user.getEmail() + now();
+        UUID uuid = UUID.nameUUIDFromBytes(emailForUUID.getBytes());
+        String token = generateNewToken();
+
+        UserDeleteToken deleteToken = new UserDeleteToken();
+        deleteToken.setActive(true);
+        deleteToken.setEmail(user.getEmail());
+        deleteToken.setDateCreated(now());
+        deleteToken.setUid(uuid);
+        deleteToken.setToken(token);
+        deleteTokenRepo.save(deleteToken);
+
+        String confirmation_link = web_host + "/delete-me-confirmation" + "?uid=" + uuid + "&token=" + token;
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(user.getEmail());
+        emailDetails.setSubject("Account delete confirmation");
+        emailDetails.setMessageBody(confirmation_link);
+
+        try {
+            emailService.sendEmail(emailDetails);
+            return "OK";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Email error");
+        }
     }
 
-    public String deleteProfileConfirmation (ConfirmationRequestResponse request) throws Exception {
-        throw new Exception("Error");
+    public String deleteProfileConfirmation (UserDeleteRequest request) throws Exception {
+        UserDeleteToken token = deleteTokenRepo.findUserDeleteTokenByUid(request.getUid())
+                .orElseThrow(() -> new Exception("Token does not exist"));
+
+        if (!token.getActive()) {
+            throw new Exception("Token is not active");
+        }
+
+        if (!Objects.equals(token.getToken(), request.getToken())) {
+            throw new Exception("Token is not valid");
+        }
+
+        User user = userRepository.findByEmail(token.getEmail())
+                .orElseThrow(() -> new Exception("Invalid user"));
+
+        System.out.println(request.getPassword());
+        System.out.println(user.getPassword());
+        System.out.println(passwordEncoder.encode(request.getPassword()));
+
+        if (!Objects.equals(passwordEncoder.encode(request.getPassword()), user.getPassword())) {
+            throw new Exception("Passwords do not match");
+        }
+
+        token.setActive(false);
+        token.setDateAccessed(now());
+        deleteTokenRepo.save(token);
+
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(user.getEmail());
+        emailDetails.setSubject("Account deleted successfully");
+        emailDetails.setMessageBody("Account deleted successfully");
+
+        try {
+            emailService.sendEmail(emailDetails);
+            return "OK";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Email error");
+        }
     }
 
-    public String resetPassword(ResetPasswordRequest request) {
-        return "Password reset";
+    public String resetPassword(ResetPasswordRequest request) throws Exception {
+        boolean doesUserExists = userRepository.findByEmail(request.getEmail()).isPresent();
+        if (!doesUserExists) {
+            throw new Exception("User with provided email does not exist");
+        }
+
+        List<PasswordResetToken> tokenList = passwordTokenRepo.findPasswordResetTokensByEmail(request.getEmail());
+        tokenList.forEach((token) -> {
+            token.setActive(false);
+            token.setDateAccessed(now());
+        });
+        passwordTokenRepo.saveAll(tokenList);
+
+        String emailForUUID = request.getEmail() + now();
+        UUID uuid = UUID.nameUUIDFromBytes(emailForUUID.getBytes());
+        String token = generateNewToken();
+
+        PasswordResetToken passwordToken = new PasswordResetToken();
+        passwordToken.setActive(true);
+        passwordToken.setEmail(request.getEmail());
+        passwordToken.setDateCreated(now());
+        passwordToken.setUid(uuid);
+        passwordToken.setToken(token);
+
+        passwordTokenRepo.save(passwordToken);
+
+        String activationLink = host + "/reset-password-confirmation?uid=" + uuid + "&token=" + token;
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(request.getEmail());
+        emailDetails.setSubject("Password reset email");
+        emailDetails.setMessageBody(activationLink);
+
+        try {
+            emailService.sendEmail(emailDetails);
+            return "Email has been sent";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Email error");
+        }
+
     }
 
-    public String resetPasswordConfirm(ResetPasswordConfirmRequest request) {
-        return "Password reset confirm";
+    public String resetPasswordConfirm(ResetPasswordConfirmRequest request) throws Exception {
+        System.out.println(request.getUid());
+        var tt = passwordTokenRepo.findAll();
+        System.out.println(tt);
+        PasswordResetToken token = passwordTokenRepo.findPasswordResetTokenByUid(request.getUid())
+                .orElseThrow(() -> new Exception("Token does not exist"));
+
+        if (!token.getActive()) {
+            throw new Exception("Token is not active");
+        }
+
+        if (!Objects.equals(token.getToken(), request.getToken())) {
+            throw new Exception("Token is not valid");
+        }
+
+        if (!Objects.equals(request.getNew_password(), request.getRe_new_password())) {
+            throw new Exception("Passwords do not match");
+        }
+
+        User user = userRepository.findByEmail(token.getEmail())
+                .orElseThrow(() -> new Exception("Invalid user"));
+
+        user.setPassword(passwordEncoder.encode(request.getNew_password()));
+        userRepository.save(user);
+
+        token.setActive(false);
+        token.setDateAccessed(now());
+        passwordTokenRepo.save(token);
+
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(user.getEmail());
+        emailDetails.setSubject("Password reset was successful");
+        emailDetails.setMessageBody("Password reset was successful");
+
+        try {
+            emailService.sendEmail(emailDetails);
+            return "Email has been sent";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Email error");
+        }
     }
 }

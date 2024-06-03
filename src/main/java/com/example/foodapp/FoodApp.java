@@ -1,33 +1,17 @@
 package com.example.foodapp;
 
 import com.example.foodapp.auth.repo.UserRepository;
-import com.example.foodapp.auth.service.UserService;
-import com.example.foodapp.auth.service.admin.service.BusinessOwnerAdminService;
-import com.example.foodapp.auth.user.User;
-import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
-import com.example.foodapp.business.model.Business;
-import com.example.foodapp.business.model.BusinessLocation;
-import com.example.foodapp.business.model.TimeOpenedDay;
-import com.example.foodapp.business.model.TimeOpenedWeek;
+import com.example.foodapp.auth.service.customer.service.BusinessOwnerAdminService;
 import com.example.foodapp.business.repo.*;
 import com.example.foodapp.business.service.admin_service.AdminBusinessService;
 import com.example.foodapp.business.service.admin_service.TimeOpenedService;
-import com.example.foodapp.product.enumeration.Availability;
-import com.example.foodapp.product.model.*;
 import com.example.foodapp.product.repo.*;
-import org.aspectj.weaver.ast.Var;
-import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import java.util.ArrayList;
-import java.util.List;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication

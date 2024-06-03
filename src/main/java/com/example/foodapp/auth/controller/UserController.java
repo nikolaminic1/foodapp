@@ -5,6 +5,8 @@ import com.example.foodapp.auth.dto.*;
 import com.example.foodapp.auth.service.LogoutService;
 import com.example.foodapp.auth.service.UserService;
 import io.swagger.v3.core.util.Json;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.json.JSONParser;
@@ -59,6 +61,28 @@ public class UserController {
             );
         }
     }
+    @PostMapping("/resend-activation-email")
+    @ResponseBody
+    public ResponseEntity<Object> resendActivationEmail (
+            @RequestBody String request, HttpServletResponse response
+    ) {
+        try {
+            String message = service.resendActivationEmail(request);
+            Cookie c = new Cookie(
+                    "name",
+                    "value"
+            );
+            response.addCookie(c);
+            response.setStatus(HttpStatus.OK.value());
+            return ResponseEntity.ok("OK");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    Response.builder()
+                            .message(e.getMessage())
+                            .build()
+            );
+        }
+    }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout (
@@ -95,85 +119,51 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-me")
-    public ResponseEntity<Response> deleteMyProfile (
-            @RequestBody LoginRequest request,
+    public ResponseEntity<?> deleteMyProfile (
             Principal principal
     ) {
         try {
-            ConfirmationRequestResponse token = service.deleteMyProfile(principal, request);
-            return ResponseEntity.ok().body(
-                    Response.builder()
-                            .data(Map.of("Token", token))
-                            .build()
-            );
+            String token = service.deleteMyProfile(principal);
+            return ResponseEntity.ok().body(token);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
-                            .build()
-            );
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping("/delete-me-confirmation")
-    public ResponseEntity<Response> deleteMyProfileConfirmation (
-            @RequestBody LoginRequest request,
-            Principal principal
+    public ResponseEntity<?> deleteMyProfileConfirmation (
+            @RequestBody UserDeleteRequest request
     ) {
         try {
-            ConfirmationRequestResponse token = service.deleteMyProfile(principal, request);
-            return ResponseEntity.ok().body(
-                    Response.builder()
-                            .data(Map.of("Token", token))
-                            .build()
-            );
+            // TODO: Password should be decoded in some other way in order to allow password check
+            String token = service.deleteProfileConfirmation(request);
+            return ResponseEntity.ok().body(token);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
-                            .build()
-            );
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Response> activate (
+    public ResponseEntity<?> activate (
             @RequestBody ResetPasswordRequest request
     ) {
         try {
             String message = service.resetPassword(request);
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .data(Map.of("Data", message))
-                            .build()
-            );
+            return ResponseEntity.ok().body(message);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
-                            .build()
-            );
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
 
     @PostMapping("/reset-password-confirmation")
-    public ResponseEntity<Response> activate (
+    public ResponseEntity<?> activate (
             @RequestBody ResetPasswordConfirmRequest request
     ) {
         try {
-            String message = service.resetPasswordConfirm(request);
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .data(Map.of("Data", message))
-                            .build()
-            );
+            return ResponseEntity.ok(service.resetPasswordConfirm(request));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .data(Map.of("Message", e.getMessage()))
-                            .build()
-            );
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }

@@ -1,4 +1,4 @@
-package com.example.foodapp.auth.service.admin.service;
+package com.example.foodapp.auth.service.customer.service;
 
 
 import com.example.foodapp.auth.user.User;
