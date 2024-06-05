@@ -29,7 +29,7 @@ public class CustomerAddressServiceImplementation implements CustomerAddressServ
         User user = userRepo.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("Invalid user"));
         AddressModel address;
-        System.out.println(request.getId());
+
         if (request.getId() == null) {
             address = new AddressModel();
         } else {
@@ -63,6 +63,8 @@ public class CustomerAddressServiceImplementation implements CustomerAddressServ
             });
             address.setDefault(true);
             addressRepo.saveAll(addressByType);
+        } else {
+            address.setDefault(false);
         }
 
         addressRepo.save(address);

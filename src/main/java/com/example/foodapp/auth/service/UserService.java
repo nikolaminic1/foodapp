@@ -40,7 +40,9 @@ public class UserService {
     private final UserAuthService userAuthService;
     private final AddressRepo addressRepo;
     private final PasswordTokenRepo passwordTokenRepo;
+    private final AuthenticationService authenticationService;
     private final DeleteTokenRepo deleteTokenRepo;
+    private final TokenRepository tokenRepo;
     @Value("${host}")
     private String host;
 
@@ -54,6 +56,33 @@ public class UserService {
         byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
+    }
+
+    private String sendActivationEmail (String email) throws Exception {
+        UUID uuid = UUID.nameUUIDFromBytes(email.getBytes());
+        String token = generateNewToken();
+
+        ActivationToken activationToken = new ActivationToken();
+        activationToken.setActive(true);
+        activationToken.setUid(uuid);
+        activationToken.setToken(token);
+        activationToken.setDateCreated(now());
+        activationToken.setEmail(email);
+        activationTokenRepo.save(activationToken);
+
+        String activationLink = host + "/account-activation?uid=" + activationToken.getUid() + "&token=" + activationToken.getToken();
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(email);
+        emailDetails.setSubject("Activation email");
+        emailDetails.setMessageBody(activationLink);
+
+        try {
+            emailService.sendEmail(emailDetails);
+            return "OK";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("Email error");
+        }
     }
 
     private boolean isEmailValid(String email) {
@@ -110,30 +139,7 @@ public class UserService {
 //        address.setUser(user);
 //        addressRepo.save(address);
 
-        UUID uuid = UUID.nameUUIDFromBytes(email.getBytes());
-        String token = generateNewToken();
-
-        ActivationToken activationToken = new ActivationToken();
-        activationToken.setActive(true);
-        activationToken.setUid(uuid);
-        activationToken.setToken(token);
-        activationToken.setDateCreated(now());
-        activationToken.setEmail(email);
-        activationTokenRepo.save(activationToken);
-
-        String activationLink = host + "/account-activation?uid=" + activationToken.getUid() + "&token=" + activationToken.getToken();
-        EmailDetails emailDetails = new EmailDetails();
-        emailDetails.setRecipient(email);
-        emailDetails.setSubject("Activation email");
-        emailDetails.setMessageBody(activationLink);
-
-        try {
-            emailService.sendEmail(emailDetails);
-            return "OK";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new Exception("Email error");
-        }
+        return this.sendActivationEmail(email);
     }
 
     public String activate(ConfirmationRequestResponse request) throws Exception {
@@ -165,7 +171,22 @@ public class UserService {
     }
 
     public String resendActivationEmail (String email) throws Exception {
-        return email;
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User does not exists"));
+
+        if (!user.isAccountNonLocked()) {
+            throw new Exception("The account is locked.");
+        }
+
+        if (!user.isAccountNonExpired()) {
+            throw new Exception("The account has expired.");
+        }
+
+        if (!user.isEnabled()) {
+            return this.sendActivationEmail(user.getEmail());
+        } else {
+            throw new Exception("Serious error occurred.");
+        }
     }
 
     public String getMyProfile(Principal principal) throws Exception{
@@ -253,30 +274,41 @@ public class UserService {
         User user = userRepository.findByEmail(token.getEmail())
                 .orElseThrow(() -> new Exception("Invalid user"));
 
-        System.out.println(request.getPassword());
-        System.out.println(user.getPassword());
-        System.out.println(passwordEncoder.encode(request.getPassword()));
-
-        if (!Objects.equals(passwordEncoder.encode(request.getPassword()), user.getPassword())) {
-            throw new Exception("Passwords do not match");
-        }
-
-        token.setActive(false);
-        token.setDateAccessed(now());
-        deleteTokenRepo.save(token);
-
-        EmailDetails emailDetails = new EmailDetails();
-        emailDetails.setRecipient(user.getEmail());
-        emailDetails.setSubject("Account deleted successfully");
-        emailDetails.setMessageBody("Account deleted successfully");
+        LoginRequest loginRequest = new LoginRequest(
+                user.getEmail(),
+                request.getPassword()
+        );
 
         try {
-            emailService.sendEmail(emailDetails);
-            return "OK";
+            AuthenticationResponse authentication = authenticationService.login(loginRequest);
+            token.setActive(false);
+            token.setDateAccessed(now());
+            deleteTokenRepo.save(token);
+
+            var allTokens = tokenRepo.findAllTokensByUser(user);
+            allTokens.forEach((tokenA) -> {
+                tokenA.setUser(null);
+            });
+
+            tokenRepo.saveAll(allTokens);
+            userRepository.delete(user);
+
+            EmailDetails emailDetails = new EmailDetails();
+            emailDetails.setRecipient(user.getEmail());
+            emailDetails.setSubject("Account deleted successfully");
+            emailDetails.setMessageBody("Account deleted successfully");
+
+            try {
+                emailService.sendEmail(emailDetails);
+                return "OK";
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                throw new Exception("Email error.");
+            }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new Exception("Email error");
+            throw new Exception("User is not authenticated.");
         }
+
     }
 
     public String resetPassword(ResetPasswordRequest request) throws Exception {
@@ -362,5 +394,17 @@ public class UserService {
             System.out.println(e.getMessage());
             throw new Exception("Email error");
         }
+    }
+
+    public User updateProfile (Principal principal, UserUpdatedRequest request) throws Exception {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("Invalid user."));
+
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setPhone(request.getPhone());
+        user.setGender(request.getGender());
+        userRepository.save(user);
+        return user;
     }
 }

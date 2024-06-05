@@ -64,17 +64,10 @@ public class UserController {
     @PostMapping("/resend-activation-email")
     @ResponseBody
     public ResponseEntity<Object> resendActivationEmail (
-            @RequestBody String request, HttpServletResponse response
+            @RequestBody String email
     ) {
         try {
-            String message = service.resendActivationEmail(request);
-            Cookie c = new Cookie(
-                    "name",
-                    "value"
-            );
-            response.addCookie(c);
-            response.setStatus(HttpStatus.OK.value());
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok(service.resendActivationEmail(email));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     Response.builder()
@@ -115,6 +108,20 @@ public class UserController {
                             .message(e.getMessage())
                             .build()
             );
+        }
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<Object> updateProfile (
+            @RequestBody UserUpdatedRequest request,
+            Principal principal
+    ) {
+        try {
+            var user = service.updateProfile(principal, request);
+            return ResponseEntity.ok().body(user);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

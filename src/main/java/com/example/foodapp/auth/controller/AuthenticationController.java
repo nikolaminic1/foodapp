@@ -35,7 +35,7 @@ public class AuthenticationController {
         try {
             return ResponseEntity.ok(service.login(request));
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 

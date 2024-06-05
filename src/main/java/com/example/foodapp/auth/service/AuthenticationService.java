@@ -29,6 +29,21 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new Exception("User with provided email does not exist"));
 
+        System.out.println(user.getEmail());
+        System.out.println(user.isEnabled());
+        System.out.println(user.isAccountNonExpired());
+        System.out.println(user.isAccountNonLocked());
+
+        System.out.println(user.getFirstname());
+
+        if (!user.isEnabled()) {
+            throw new Exception("Account is not active.");
+        } else if (!user.isAccountNonLocked()) {
+            throw new Exception("Account is locked. Contact our support.");
+        } else if (!user.isAccountNonExpired()) {
+            throw new Exception("Account is expired.");
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

@@ -52,7 +52,13 @@ public class UserCustomerSerializer {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("id", user.getId());
             jsonGenerator.writeStringField("email", user.getEmail());
-            jsonGenerator.writeStringField("name", user.getFirstname());
+            String name;
+            if (user.getLastname() == null) {
+                name = user.getFirstname();
+            } else {
+                name = user.getFirstname() + " " + user.getLastname();
+            }
+            jsonGenerator.writeStringField("name", name);
             jsonGenerator.writeStringField("role", user.getERole().name());
             jsonGenerator.writeStringField("firstname", user.getFirstname());
             jsonGenerator.writeStringField("lastname", user.getLastname());
