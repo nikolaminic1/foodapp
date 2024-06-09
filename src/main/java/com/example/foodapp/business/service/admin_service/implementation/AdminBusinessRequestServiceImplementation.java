@@ -66,7 +66,7 @@ public class AdminBusinessRequestServiceImplementation implements AdminBusinessR
                 businessRequest.setGrantInfo(businessRequestReview.getGrantInfo());
                 if (businessRequest.getUser() != null){
                     log.info("admin business request granted");
-                    adminBusinessService.create(businessRequest.getUser());
+//                    adminBusinessService.create(businessRequest.getUser());
                     sendEmailGrantBusinessRequest("email", "granted");
                 }
             } else {

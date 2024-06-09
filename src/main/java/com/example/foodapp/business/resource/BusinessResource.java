@@ -20,64 +20,27 @@ public class BusinessResource {
     private final AdminBusinessService businessService;
 
     @GetMapping("/list")
-    public ResponseEntity<Response> getBusinesses() {
-        return ResponseEntity.ok(
-                Response.builder()
-                .timeStamp(now())
-                .data(Map.of("business", businessService.list(0, 100)))
-                .message("Business retrieved")
-                .status(HttpStatus.OK)
-                .statusCode(HttpStatus.OK.value())
-                .build());
-    }
+    public ResponseEntity<?> getBusinesses() {
+        return ResponseEntity.ok().body("OK");    }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getBusiness(@PathVariable("id") Long id) {
-
-        return ResponseEntity.ok(
-                Response.builder()
-                .timeStamp(now())
-                .data(Map.of("single_business", businessService.get(id)))
-                .message("Single business retrieved")
-                .status(HttpStatus.OK)
-                .statusCode(HttpStatus.OK.value())
-                .build()
-        );
+    public ResponseEntity<?> getBusiness(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body("OK");
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Response> createBusiness(Business business) {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-//                        .data(Map.of("business", businessService.create(business)))
-                        .message("Business created")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build());
+    public ResponseEntity<?> createBusiness(Business business) {
+        return ResponseEntity.ok().body("OK");
     }
 
+
     @PostMapping("/update/{id}")
-    public ResponseEntity<Response> updateBusiness(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-//                        .data(Map.of("business", businessService.update(id)))
-                        .message("Business updated")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build());
+    public ResponseEntity<?> updateBusiness(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body("OK");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteBusiness(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("business", businessService.delete(id)))
-                        .message("Business deleted")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build());
+    public ResponseEntity<?> deleteBusiness(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body("OK");
     }
 }

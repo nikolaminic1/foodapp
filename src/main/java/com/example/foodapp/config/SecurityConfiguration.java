@@ -88,7 +88,8 @@ public class SecurityConfiguration {
 
 //                                .hasAnyRole(ERole.CUSTOMER.name())
                         .requestMatchers(builder.pattern("/api/v1/admin/**"))
-                                .hasAnyRole(ERole.ADMIN.name())
+                                .permitAll()
+//                                .hasAnyRole(ERole.ADMIN.name())
                         .requestMatchers(builder.pattern("/api/v1/business/**"))
                                 .permitAll()
 //                                .hasAnyRole(ERole.BUSINESS.name())

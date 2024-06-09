@@ -1,4 +1,4 @@
-package com.example.foodapp.product.resource.general;
+package com.example.foodapp._api;
 
 
 import lombok.RequiredArgsConstructor;
@@ -21,11 +21,9 @@ public class ImageDownload {
         try {
             String path = "static/media/" + id;
             var imgFile = new ClassPathResource(path);
-            System.out.println(path);
-            byte[] bytes = path.getBytes();
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
-                    .body(bytes);
+                    .body(imgFile.getContentAsByteArray());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), e.getMessage());
         }

@@ -14,13 +14,15 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static com.example.foodapp.api_resources.RandomStringGenerator.createBusinessId;
+import static com.fasterxml.uuid.impl.UUIDUtil.uuid;
+import static java.time.LocalTime.now;
 
 
 @Log4j2
 public class ImageFileSaveService {
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/static/media/";
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/media/";
     public static String slugify(String input) {
         String nonwhitespace = WHITESPACE.matcher(input).replaceAll("-");
         String normalized = Normalizer.normalize(nonwhitespace, Normalizer.Form.NFD);
@@ -37,13 +39,17 @@ public class ImageFileSaveService {
         String fileCode = createBusinessId(10);
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            System.out.println(Paths.get("static").getRoot());
-            String file = fileCode + "-" + slugify(fileName) + ".jpg";
-            Path fileNameAndPath = Paths.get(UPLOAD_DIR, file);
-            Files.write(fileNameAndPath, file.getBytes());
-            return "";
+            if (multipartFile.getOriginalFilename() != null) {
+                var img_name = multipartFile.getOriginalFilename().split("\\.");
+                String file = fileCode + "-" + slugify(img_name[0]) + "." + img_name[1];
+                Path fileNameAndPath = Paths.get(UPLOAD_DIR, file);
+                Files.write(fileNameAndPath, multipartFile.getBytes());
+                return file;
+            }
+            return "File is not saved";
 //            return path.toString();
         } catch (Exception e) {
+            log.error(e);
             System.out.println(e.getMessage());
             return "File is not saved";
         }

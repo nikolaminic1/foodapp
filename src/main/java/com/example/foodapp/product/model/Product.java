@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -38,66 +39,47 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(View.Public.class)
     private Long id;
-    @JsonView(View.Public.class)
     private String nameOfProduct;
-    @JsonView(View.Public.class)
     private String codeOfProduct;
-    @JsonView(View.Public.class)
     private double priceOfProduct;
-    @JsonView(View.Public.class)
     private double discountPrice;
-    @JsonView(View.Public.class)
     private double discountPercentage;
-    @JsonView(View.Public.class)
     private Boolean isOnDiscount;
-    @JsonView(View.Public.class)
     private String aboutProduct;
-    @JsonView(View.Public.class)
     private int preparationTime;
-    @JsonView(View.Public.class)
     private Availability availability;
-    @JsonView(View.Public.class)
     private int weight;
 
     @CreationTimestamp
-    @JsonView(View.Public.class)
     private LocalDateTime dataCreated;
 
     @UpdateTimestamp
-    @JsonView(View.Public.class)
     private LocalDateTime dateUpdated;
-    @JsonView(View.Public.class)
     private Boolean productVisible;
 
-    @JsonView(View.Public.class)
     private URI uri;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JsonSerialize(using = ProductCategorySerializer.class)
+//    @JsonSerialize(using = ProductCategorySerializer.class)
 //    @JoinColumn(name = "product_category")
     @JsonBackReference
-    @JsonView(View.Public.class)
     private ProductCategory productCategory;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE
             , mappedBy = "product"
     )
     @JsonBackReference
-    @JsonView(View.Public.class)
     private ProductImage productImage;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "product")
 //    @JsonSerialize(using = VariationSerializer.class)
     @JsonManagedReference
-    @JsonView(View.Public.class)
     private Variation variation;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JsonManagedReference
-    @JsonView(View.Public.class)
-    private List<ProductTag> productTags = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+//    @JsonManagedReference
+//    private List<ProductTag> productTags = new ArrayList<>();
 
     @OneToMany(
 //            cascade = CascadeType.MERGE,
@@ -105,7 +87,6 @@ public class Product {
             fetch = FetchType.EAGER
     )
     @JsonManagedReference
-    @JsonView(View.Public.class)
     private List<AppendicesCategory> appendicesCategoryList = new ArrayList<>();
 
     public void setProductVisible(Boolean productVisible) {
@@ -149,4 +130,39 @@ public class Product {
 //        }
 //        appendicesCategory.setProduct(this);
     }
+
+    public Object getAdminProductCategoryDetail() {
+        if (this.getProductCategory() != null) {
+            return this.getProductCategory().getAdminDetail();
+        }
+
+        return null;
+    }
+
+    public List<Map<String, Object>> getProductDescriptionList() {
+        List<Map<String, Object>> mapsList = new ArrayList<>();
+        this.productDescription.forEach(desc -> mapsList.add(desc.getProductDescriptionData()));
+        return mapsList;
+    }
+
+    public Object getAdminProductImageDetail() {
+        if (this.getProductImage() != null) {
+            return this.getProductImage().getAdminProductImageDetail();
+        }
+
+        return null;
+    }
+//    public List<Map<String, Object>> getAdminProductTagsList() {
+//        List<Map<String, Object>> mapsList = new ArrayList<>();
+//        this.getProductTags().forEach(tag -> mapsList.add(tag.getProductTagDetail()));
+//        return mapsList;
+//    }
+
+    public List<Map<String, Object>> getAdminAppendixCategoryList() {
+        List<Map<String, Object>> mapsList = new ArrayList<>();
+        this.getAppendicesCategoryList().forEach(tag -> mapsList.add(tag.getAdminSideDishCategoryDetail()));
+        return mapsList;
+    }
+
+
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BusinessUpdateRequest {
+    private Long id;
     private String name;
     private String description;
     private Double priceOfDelivery;

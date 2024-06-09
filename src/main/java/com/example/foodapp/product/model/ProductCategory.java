@@ -14,7 +14,10 @@ import jakarta.persistence.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -31,24 +34,17 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(View.Public.class)
     private Long id;
 
-    @JsonView(View.Public.class)
     private String nameOfCategory;
-    @JsonView(View.Public.class)
     private String descOfCategory;
-    @JsonView(View.Public.class)
     private Boolean categoryVisible;
-    @JsonView(View.Public.class)
     private Boolean featured;
 
     @CreationTimestamp
-    @JsonView(View.Public.class)
     private LocalDateTime dateCreated;
 
     @UpdateTimestamp
-    @JsonView(View.Public.class)
     private LocalDateTime dateUpdated;
     private URI uri;
 
@@ -71,7 +67,6 @@ public class ProductCategory {
     )
 //    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     @JsonManagedReference
-    @JsonView(View.Public.class)
     private List<Product> productList;
 //
 //    @JsonManagedReference
@@ -84,4 +79,16 @@ public class ProductCategory {
 //        System.out.println("business");
 //        return business;
 //    }
+
+    public Object getAdminDetail() {
+        Map<String, Object> detail = new HashMap<>();
+        detail.put("id", this.getId());
+        detail.put("nameOfCategory", this.getNameOfCategory());
+        detail.put("descOfCategory", this.getDescOfCategory());
+        detail.put("categoryVisible", this.getCategoryVisible());
+        detail.put("featured", this.getFeatured());
+        detail.put("dateCreated", this.getDateCreated().format(DateTimeFormatter.ISO_DATE_TIME));
+        detail.put("dateUpdated", this.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
+        return detail;
+    }
 }

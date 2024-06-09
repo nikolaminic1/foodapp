@@ -12,6 +12,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -25,20 +27,13 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(View.Public.class)
     private Long id;
-
-    @JsonView(View.Public.class)
     private String nameOfImage;
-    @JsonView(View.Public.class)
     private String description;
     @CreationTimestamp
-    @JsonView(View.Public.class)
     private LocalDateTime dateCreated;
     @UpdateTimestamp
-    @JsonView(View.Public.class)
     private LocalDateTime dateUpdated;
-    @JsonView(View.Public.class)
     private String imageUrl;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
@@ -46,4 +41,15 @@ public class ProductImage {
 //    @JsonIgnore
     @JsonManagedReference
     private Product product;
+
+    public Object getAdminProductImageDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("nameOfImage", this.getNameOfImage());
+        map.put("description", this.getDescription());
+        map.put("dateCreated", this.getDateCreated());
+        map.put("dateUpdated", this.getDateUpdated());
+        map.put("imageUrl", this.getImageUrl());
+        return map;
+    }
 }

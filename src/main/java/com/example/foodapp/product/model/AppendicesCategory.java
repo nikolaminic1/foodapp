@@ -10,7 +10,9 @@ import jakarta.persistence.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -25,28 +27,21 @@ import static jakarta.persistence.GenerationType.AUTO;
 public class AppendicesCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(View.Public.class)
     private Long id;
-    @JsonView(View.Public.class)
     private String nameOfCategory;
-    @JsonView(View.Public.class)
     private Boolean isRequired;
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "appendicesCategory", fetch = FetchType.LAZY)
     @JsonManagedReference
-    @JsonView(View.Public.class)
     private List<Appendices> appendicesList = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonBackReference
-//    @JsonView(View.Public.class)
     private Product product;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonView(View.Public.class)
     private Image image;
 
-    @JsonView(View.Public.class)
     private int numberOfAllowed;
 
     public void setProduct (Product product) {
@@ -63,6 +58,22 @@ public class AppendicesCategory {
 
         }
 
+    }
+
+    public Map<String, Object> getAdminSideDishCategoryDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("nameOfCategory", this.getId());
+        map.put("isRequired", this.getId());
+        map.put("product", this.getId());
+
+        if (this.getImage() != null) {
+            map.put("image", this.getImage().getImageDetail());
+        }
+
+        map.put("numberOfAllowed", this.getNumberOfAllowed());
+
+        return map;
     }
 }
 

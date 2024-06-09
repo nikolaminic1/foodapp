@@ -3,6 +3,7 @@ package com.example.foodapp.product.resource.admin_resource;
 import com.example.foodapp._api.PaginatedResponse;
 import com.example.foodapp.api_resources.Response;
 import com.example.foodapp.product.model.Product;
+import com.example.foodapp.product.service.admin.AdminProductService;
 import com.example.foodapp.product.service.business.OwnerProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,69 +17,57 @@ import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 
+
+
 @RestController
 @RequestMapping("/api/v1/admin/product/product_model")
+@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ProductResourceAdmin {
-    private final OwnerProductService ownerProductService;
+    private final AdminProductService adminProductService;
 
-    @GetMapping("/list")
-    public ResponseEntity<PaginatedResponse<Product>> getProducts(Principal principal){
+    @GetMapping
+    public ResponseEntity<?> getProducts(
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page ,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
+            Principal principal)
+    {
         try {
-            return ResponseEntity.ok().body(ownerProductService.list(1, 1, 1, 1, principal));
+            var products = adminProductService.list(page, limit, principal);
+            return ResponseEntity.ok().body(products);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getProduct(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("single_product", ownerProductService.get(id)))
-                        .message("Single product retrieved")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build()
-        );
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok().body(adminProductService.get(id));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Response> createProducts(@RequestBody Product product) {
-
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-//                        .data(Map.of("products", ownerProductService.create(product)))
-                        .message("Product created")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build());
+    @PostMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok().body("OK");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
-    @PostMapping("/update/{id}")
-    public ResponseEntity<Response> updateProduct(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .message("Product updated")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build());
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteProduct(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("products", ownerProductService.delete(id)))
-                        .message("Product deleted")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok().body("OK");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
 }
