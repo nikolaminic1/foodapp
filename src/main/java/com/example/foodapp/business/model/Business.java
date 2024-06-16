@@ -76,25 +76,18 @@ public class Business {
         productCategory.setBusiness(this);
     }
 
-    @JsonIgnore
-    public List<Object> getWorkingTime() {
-        var monday = this.timeOpened.getWorkingTimeMonday();
-        monday.put("day", "monday");
-        var tuesday = this.timeOpened.getWorkingTimeTuesday();
-        tuesday.put("day", "tuesday");
-        var wednesday = this.timeOpened.getWorkingTimeWednesday();
-        wednesday.put("day", "wednesday");
-        var thursday = this.timeOpened.getWorkingTimeThursday();
-        thursday.put("day", "thursday");
-        var friday = this.timeOpened.getWorkingTimeFriday();
-        friday.put("day", "friday");
-        var saturday = this.timeOpened.getWorkingTimeSaturday();
-        saturday.put("day", "saturday");
-        var sunday = this.timeOpened.getWorkingTimeSunday();
-        sunday.put("day", "sunday");
-
-        return List.of(monday, tuesday, wednesday, thursday, friday, saturday, sunday);
-    }
+//    @JsonIgnore
+//    public Map<String, Object> getWorkingTime() {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("monday", this.timeOpened.getWorkingTimeMonday());
+//        map.put("tuesday", this.timeOpened.getWorkingTimeTuesday());
+//        map.put("wednesday", this.timeOpened.getWorkingTimeWednesday());
+//        map.put("thursday", this.timeOpened.getWorkingTimeThursday());
+//        map.put("friday", this.timeOpened.getWorkingTimeFriday());
+//        map.put("saturday", this.timeOpened.getWorkingTimeSaturday());
+//        map.put("sunday", this.timeOpened.getWorkingTimeSunday());
+//        return map;
+//    }
 
 //    @JsonView({View.Internal.class})
 //    public Map<String, String> getBusinessOwner() {

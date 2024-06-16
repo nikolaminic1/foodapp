@@ -11,10 +11,9 @@ import java.util.List;
 
 public interface OwnerProductService {
     Product create(ProductRequest productRequest, Principal principal);
-    PaginatedResponse<Product> list(Integer limit, Integer per_page, Integer order, Integer visible, Principal principal) throws Exception;
+    PaginatedResponse<Product> list(String limit, String per_page, String order, String visible, Principal principal) throws Exception;
     List<Product> getMyList(Principal principal);
-    Product get(Long id);
-    Product get(Principal principal, Long id) throws Exception;
+    String get(Principal principal, Long id) throws Exception;
     Product update(ProductRequest productRequest,Long id , Principal principal);
     Boolean delete(Long id);
 }

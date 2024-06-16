@@ -7,6 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Entity
 @Data
 @ToString
@@ -19,4 +22,12 @@ public class BusinessTag {
     @Enumerated(EnumType.STRING)
     private TagType tagType;
     private String color;
+
+    public Map<String, Object> getTagDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("type", this.getTagType().toString());
+        map.put("color", this.getColor());
+        return map;
+    }
 }

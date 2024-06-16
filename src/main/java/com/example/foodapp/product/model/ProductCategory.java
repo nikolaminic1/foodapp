@@ -89,6 +89,7 @@ public class ProductCategory {
         detail.put("featured", this.getFeatured());
         detail.put("dateCreated", this.getDateCreated().format(DateTimeFormatter.ISO_DATE_TIME));
         detail.put("dateUpdated", this.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
+        detail.put("businessId", this.getBusiness().getId());
         return detail;
     }
 }

@@ -24,7 +24,7 @@ public class ProductDescription {
     private String value_desc;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+//    @JoinColumn(name = "product_id")
     private Product product;
 
     public Map<String, Object> getProductDescriptionData() {

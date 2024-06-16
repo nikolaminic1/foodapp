@@ -11,7 +11,11 @@ import com.example.foodapp.business.model.Requests.TimeOpenedWeekRequest;
 import com.example.foodapp.business.model.TimeOpenedWeek;
 import com.example.foodapp.business.repo.BusinessRepo;
 import com.example.foodapp.business.repo.BusinessTagRepo;
+import com.example.foodapp.business.serializers.owner.OwnerRestaurantSerializer;
 import com.example.foodapp.business.service.owner_service.OwnerBusinessService;
+import com.example.foodapp.product.serializers.restaurant.RestaurantProductCategorySerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,6 +27,8 @@ import java.security.Principal;
 import java.util.List;
 
 import static com.example.foodapp.api_resources.ImageFileSaveService.saveFile;
+import static com.example.foodapp.business.model.Requests.BusinessUpdateRequest.parseDate;
+import static com.example.foodapp.business.model.Requests.BusinessUpdateRequest.setTimeOpened;
 import static java.lang.Boolean.TRUE;
 
 
@@ -36,36 +42,6 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
     private final BusinessOwnerRepo businessOwnerRepo;
     private final BusinessTagRepo businessTagRepo;
 
-    private void setTimeOpened(Business business, TimeOpenedWeekRequest request) {
-        TimeOpenedWeek openedWeek = business.getTimeOpened();
-       openedWeek.getTimeOpenedDayMonday().setTimeOpen(request.getMonday().getTimeOpen());
-       openedWeek.getTimeOpenedDayMonday().setTimeClose(request.getMonday().getTimeClose());
-       openedWeek.getTimeOpenedDayMonday().setIsNonStop(request.getMonday().getIsNonStop());
-
-       openedWeek.getTimeOpenedDayTuesday().setTimeOpen(request.getTuesday().getTimeOpen());
-       openedWeek.getTimeOpenedDayTuesday().setTimeClose(request.getTuesday().getTimeClose());
-       openedWeek.getTimeOpenedDayTuesday().setIsNonStop(request.getTuesday().getIsNonStop());
-
-       openedWeek.getTimeOpenedDayWednesday().setTimeOpen(request.getWednesday().getTimeOpen());
-       openedWeek.getTimeOpenedDayWednesday().setTimeClose(request.getWednesday().getTimeClose());
-       openedWeek.getTimeOpenedDayWednesday().setIsNonStop(request.getWednesday().getIsNonStop());
-
-       openedWeek.getTimeOpenedDayThursday().setTimeOpen(request.getThursday().getTimeOpen());
-       openedWeek.getTimeOpenedDayThursday().setTimeClose(request.getThursday().getTimeClose());
-       openedWeek.getTimeOpenedDayThursday().setIsNonStop(request.getThursday().getIsNonStop());
-
-       openedWeek.getTimeOpenedDayFriday().setTimeOpen(request.getFriday().getTimeOpen());
-       openedWeek.getTimeOpenedDayFriday().setTimeClose(request.getFriday().getTimeClose());
-       openedWeek.getTimeOpenedDayFriday().setIsNonStop(request.getFriday().getIsNonStop());
-
-       openedWeek.getTimeOpenedDaySaturday().setTimeOpen(request.getSaturday().getTimeOpen());
-       openedWeek.getTimeOpenedDaySaturday().setTimeClose(request.getSaturday().getTimeClose());
-       openedWeek.getTimeOpenedDaySaturday().setIsNonStop(request.getSaturday().getIsNonStop());
-
-       openedWeek.getTimeOpenedDaySunday().setTimeOpen(request.getSunday().getTimeOpen());
-       openedWeek.getTimeOpenedDaySunday().setTimeClose(request.getSunday().getTimeClose());
-       openedWeek.getTimeOpenedDaySunday().setIsNonStop(request.getSunday().getIsNonStop());
-    }
     private void setBusinessTags(Business business, List<Long> request) throws Exception {
         for (Long id: request) {
             BusinessTag tag = businessTagRepo
@@ -78,12 +54,18 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
     }
 
     @Override
-    public Business get(Principal principal) throws Exception {
+    public String get(Principal principal) throws Exception {
         String email = principal.getName();
         User user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new Exception("Not found"));
-        return businessRepo.findBusinessByBusinessOwner_User(user)
+
+        Business business = businessRepo.findBusinessByBusinessOwner_User(user)
                 .orElseThrow(() -> new Exception("Business not found"));
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Business.class, new OwnerRestaurantSerializer.Detail());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(business);
     }
 
     @Override
@@ -98,8 +80,8 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
         business.setDescription(request.getDescription());
         business.setPriceOfDelivery(request.getPriceOfDelivery());
         business.setPriceOfOrderForFreeDelivery(request.getPriceOfOrderForFreeDelivery());
-    //        setTimeOpened(business, request.getTimeOpened());
-    //        setBusinessTags(business, request.getTags());
+        setTimeOpened(business, request);
+//            setBusinessTags(business, request.getTags());
         businessRepo.save(business);
         return business;
     }

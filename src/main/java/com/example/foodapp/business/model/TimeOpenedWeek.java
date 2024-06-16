@@ -23,108 +23,109 @@ public class TimeOpenedWeek {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDayMonday;
+    private Integer mondayTimeOpenHour;
+    private Integer mondayTimeOpenMinute;
+    private Integer mondayTimeCloseHour;
+    private Integer mondayTimeCloseMinute;
+    private Boolean mondayIsNonStop;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDayTuesday;
+    private Integer tuesdayTimeOpenHour;
+    private Integer tuesdayTimeOpenMinute;
+    private Integer tuesdayTimeCloseHour;
+    private Integer tuesdayTimeCloseMinute;
+    private Boolean tuesdayIsNonStop;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDayWednesday;
+    private Integer wednesdayTimeOpenHour;
+    private Integer wednesdayTimeOpenMinute;
+    private Integer wednesdayTimeCloseHour;
+    private Integer wednesdayTimeCloseMinute;
+    private Boolean wednesdayIsNonStop;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDayThursday;
+    private Integer thursdayTimeOpenHour;
+    private Integer thursdayTimeOpenMinute;
+    private Integer thursdayTimeCloseHour;
+    private Integer thursdayTimeCloseMinute;
+    private Boolean thursdayIsNonStop;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDayFriday;
+    private Integer fridayTimeOpenHour;
+    private Integer fridayTimeOpenMinute;
+    private Integer fridayTimeCloseHour;
+    private Integer fridayTimeCloseMinute;
+    private Boolean fridayIsNonStop;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDaySaturday;
+    private Integer saturdayTimeOpenHour;
+    private Integer saturdayTimeOpenMinute;
+    private Integer saturdayTimeCloseHour;
+    private Integer saturdayTimeCloseMinute;
+    private Boolean saturdayIsNonStop;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private TimeOpenedDay timeOpenedDaySunday;
+    private Integer sundayTimeOpenHour;
+    private Integer sundayTimeOpenMinute;
+    private Integer sundayTimeCloseHour;
+    private Integer sundayTimeCloseMinute;
+    private Boolean sundayIsNonStop;
 
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeMonday() {
-        String open = this.timeOpenedDayMonday.getTimeOpen();
-        String close = this.timeOpenedDayMonday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDayMonday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
+    public Map<String, Object> getWorkingTime() {
+        Map<String, Object> workingTime = new HashMap<>();
+        Map<String, Object> monday = new HashMap<>();
+        Map<String, Object> tuesday = new HashMap<>();
+        Map<String, Object> wednesday = new HashMap<>();
+        Map<String, Object> thursday = new HashMap<>();
+        Map<String, Object> friday = new HashMap<>();
+        Map<String, Object> saturday = new HashMap<>();
+        Map<String, Object> sunday = new HashMap<>();
+
+        monday.put("openHour", this.getMondayTimeOpenHour());
+        monday.put("openMinute", this.getMondayTimeOpenMinute());
+        monday.put("closeHour", this.getMondayTimeCloseHour());
+        monday.put("closeMinute", this.getMondayTimeCloseMinute());
+        monday.put("nonstop", this.getMondayIsNonStop());
+
+        tuesday.put("openHour", this.getTuesdayTimeOpenHour());
+        tuesday.put("openMinute", this.getTuesdayTimeOpenMinute());
+        tuesday.put("closeHour", this.getTuesdayTimeCloseHour());
+        tuesday.put("closeMinute", this.getTuesdayTimeCloseMinute());
+        tuesday.put("nonstop", this.getTuesdayIsNonStop());
+
+        wednesday.put("openHour", this.getWednesdayTimeOpenHour());
+        wednesday.put("openMinute", this.getWednesdayTimeOpenMinute());
+        wednesday.put("closeHour", this.getWednesdayTimeCloseHour());
+        wednesday.put("closeMinute", this.getWednesdayTimeCloseMinute());
+        wednesday.put("nonstop", this.getWednesdayIsNonStop());
+
+        thursday.put("openHour", this.getThursdayTimeOpenHour());
+        thursday.put("openMinute", this.getThursdayTimeOpenMinute());
+        thursday.put("closeHour", this.getThursdayTimeCloseHour());
+        thursday.put("closeMinute", this.getThursdayTimeCloseMinute());
+        thursday.put("nonstop", this.getThursdayIsNonStop());
+
+        friday.put("openHour", this.getFridayTimeOpenHour());
+        friday.put("openMinute", this.getFridayTimeOpenMinute());
+        friday.put("closeHour", this.getFridayTimeCloseHour());
+        friday.put("closeMinute", this.getFridayTimeCloseMinute());
+        friday.put("nonstop", this.getFridayIsNonStop());
+
+        saturday.put("openHour", this.getSaturdayTimeOpenHour());
+        saturday.put("openMinute", this.getSaturdayTimeOpenMinute());
+        saturday.put("closeHour", this.getSaturdayTimeCloseHour());
+        saturday.put("closeMinute", this.getSaturdayTimeCloseMinute());
+        saturday.put("nonstop", this.getSaturdayIsNonStop());
+
+        sunday.put("openHour", this.getSundayTimeOpenHour());
+        sunday.put("openMinute", this.getSundayTimeOpenMinute());
+        sunday.put("closeHour", this.getSundayTimeCloseHour());
+        sunday.put("closeMinute", this.getSundayTimeCloseMinute());
+        sunday.put("nonstop", this.getSundayIsNonStop());
+
+        workingTime.put("monday", monday);
+        workingTime.put("tuesday", tuesday);
+        workingTime.put("wednesday", wednesday);
+        workingTime.put("thursday", thursday);
+        workingTime.put("friday", friday);
+        workingTime.put("saturday", saturday);
+        workingTime.put("sunday", sunday);
+
+        return workingTime;
     }
 
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeTuesday() {
-        String open = this.timeOpenedDayTuesday.getTimeOpen();
-        String close = this.timeOpenedDayTuesday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDayTuesday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
     }
-
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeWednesday() {
-        String open = this.timeOpenedDayWednesday.getTimeOpen();
-        String close = this.timeOpenedDayWednesday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDayWednesday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
-    }
-
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeThursday() {
-        String open = this.timeOpenedDayThursday.getTimeOpen();
-        String close = this.timeOpenedDayThursday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDayThursday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
-    }
-
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeFriday() {
-        String open = this.timeOpenedDayFriday.getTimeOpen();
-        String close = this.timeOpenedDayFriday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDayFriday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
-    }
-
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeSaturday() {
-        String open = this.timeOpenedDaySaturday.getTimeOpen();
-        String close = this.timeOpenedDaySaturday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDaySaturday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
-    }
-
-    @JsonIgnore
-    public Map<String, Object> getWorkingTimeSunday() {
-        String open = this.timeOpenedDaySunday.getTimeOpen();
-        String close = this.timeOpenedDaySunday.getTimeClose();
-        Boolean nonstop = this.timeOpenedDaySunday.getIsNonStop();
-        var map = new HashMap<String, Object>();
-        map.put("open", open);
-        map.put("close", close);
-        map.put("nonstop", nonstop);
-        return map;
-    }
-}

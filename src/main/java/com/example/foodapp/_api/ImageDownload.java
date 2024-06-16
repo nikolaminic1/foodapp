@@ -19,8 +19,10 @@ public class ImageDownload {
     public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException
     {
         try {
+            System.out.println(id);
             String path = "static/media/" + id;
             var imgFile = new ClassPathResource(path);
+            System.out.println(imgFile);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
                     .body(imgFile.getContentAsByteArray());

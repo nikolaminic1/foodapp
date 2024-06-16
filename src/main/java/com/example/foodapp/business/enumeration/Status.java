@@ -1,5 +1,7 @@
 package com.example.foodapp.business.enumeration;
 
+import java.util.Objects;
+
 public enum Status {
     BUSINESS_OPEN("BUSINESS_OPEN"),
     BUSINESS_CLOSED("BUSINESS_CLOSED");
@@ -10,7 +12,7 @@ public enum Status {
         this.status = status;
     }
 
-    public String getStatus(){
-        return this.status;
+    public Boolean getStatus(){
+        return !Objects.equals(this.status, BUSINESS_CLOSED.toString());
     }
 }

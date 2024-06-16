@@ -27,8 +27,20 @@ import static java.time.LocalDateTime.now;
 public class ProductCategoryResourceBusiness {
     private final OwnerProductCategoryService productCategoryService;
 
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<ProductCategory> getProductCategoryDetail(
+
+    @GetMapping("/list")
+    public ResponseEntity<String> getProductCategoryList(Principal principal) {
+        try {
+            return ResponseEntity.ok().body(
+                    productCategoryService.getMyList(principal)
+            );
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getProductCategoryDetail(
             @PathVariable String id,
             Principal principal) {
         try {
@@ -39,21 +51,16 @@ public class ProductCategoryResourceBusiness {
         }
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<ProductCategory>> getProductCategoryList(Principal principal, @PathVariable String id) {
-        try {
-            return ResponseEntity.ok().body(
-                    productCategoryService.getMyList(principal)
-            );
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
-
     @PostMapping("/update")
-    public ResponseEntity<ProductCategory> updateProductCategory(Principal principal, @PathVariable String id) {
+    public ResponseEntity<ProductCategory> createOrUpdate(Principal principal) {
         return null;
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProductCategory> deleteCategory(Principal principal, @PathVariable String id) {
+        return null;
+    }
+
 
 
 //    @PostMapping("/save")

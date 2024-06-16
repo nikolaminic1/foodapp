@@ -14,8 +14,8 @@ import java.util.List;
 @JsonComponent
 public class AdminProductSerializer {
 
-    private static void writeData(Product product, JsonGenerator jsonGenerator) throws IOException {
-        jsonGenerator.writeStartObject();
+    public static void writeData(Product product, JsonGenerator jsonGenerator) throws IOException {
+
         jsonGenerator.writeNumberField("id", product.getId());
         jsonGenerator.writeStringField("nameOfProduct", product.getNameOfProduct());
         jsonGenerator.writeStringField("codeOfProduct", product.getCodeOfProduct());
@@ -57,10 +57,12 @@ public class AdminProductSerializer {
                               JsonGenerator jsonGenerator,
                               SerializerProvider serializerProvider)
                 throws IOException, JsonProcessingException {
+
             jsonGenerator.writeStartArray();
 
             productsList.forEach((product) -> {
                 try {
+                    jsonGenerator.writeStartObject();
                     writeData(product, jsonGenerator);
                     jsonGenerator.writeEndObject();
 
@@ -76,6 +78,7 @@ public class AdminProductSerializer {
     public static class DetailSerializer extends JsonSerializer<Product> {
         @Override
         public void serialize(Product product, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeStartObject();
             writeData(product, jsonGenerator);
 
             jsonGenerator.writeObjectField("product_description", product.getProductDescriptionList());

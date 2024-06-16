@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/admin/product/initial")
@@ -19,9 +18,9 @@ public class ProductInitialResourceAdmin {
     private final AdminProductService adminProductService;
 
     @GetMapping
-    public ResponseEntity<?> getProductInitialData() {
+    public ResponseEntity<?> getProductInitialData(@RequestBody Long businessId, Principal principal) {
         try {
-            return ResponseEntity.ok().body(adminProductService.getInitial());
+            return ResponseEntity.ok().body(adminProductService.getInitial(businessId, principal));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

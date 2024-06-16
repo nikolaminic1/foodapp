@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity
@@ -35,5 +38,17 @@ public class BusinessLocation {
     public void setBusiness(Business business){
         this.business = business;
         business.setBusinessLocation(this);
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getLocationDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("streetName", this.getStreetName());
+        map.put("buildingNumber", this.getBuildingNumber());
+        map.put("flatNumber", this.getFlatNumber());
+        map.put("zipCode", this.getZipCode());
+        map.put("cityName", this.getCityName());
+        return map;
     }
 }

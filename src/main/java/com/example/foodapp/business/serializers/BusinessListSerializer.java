@@ -34,7 +34,7 @@ public class BusinessListSerializer {
                     jsonGenerator.writeNumberField("id", business.getId());
 
                     if (business.getStatus() != null){
-                        jsonGenerator.writeStringField("status", business.getStatus().getStatus());
+                        jsonGenerator.writeBooleanField("status", business.getStatus().getStatus());
                     }
 
                     jsonGenerator.writeStringField("name", business.getName());

@@ -18,28 +18,27 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
 
 @RestController
-@RequestMapping("/api/v1/business/products/product")
+@RequestMapping("/api/v1/business/product/product_model")
 @RequiredArgsConstructor
 //@PreAuthorize("hasRole('ROLE_BUSINESS')")
 public class ProductResourceBusiness {
     private final OwnerProductService ownerProductService;
 
     @GetMapping("/list")
-//    @JsonView(View.Public.class)
     public ResponseEntity<PaginatedResponse<Product>> getProducts(
-            @RequestParam Integer page,
-            @RequestParam Integer per_page,
-            @RequestParam Integer order,
-            @RequestParam Integer visible,
+            @RequestParam(name = "page", required = false, defaultValue = "0") String page,
+            @RequestParam(name = "limit", required = false, defaultValue = "20") String limit,
+            @RequestParam(name = "order", required = false, defaultValue = "3") String order,
+            @RequestParam(name = "visible", required = false, defaultValue = "0") String visible,
             Principal principal
     ){
         try {
-            var data = ownerProductService.list(page, per_page, order, visible, principal);
-            System.out.println(data);
+            var data = ownerProductService.list(page, limit, order, visible, principal);
             return ResponseEntity.ok().body(data);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -47,9 +46,9 @@ public class ProductResourceBusiness {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable("id") Long id ){
+    public ResponseEntity<String> getProduct(@PathVariable("id") Long id, Principal principal){
         try {
-            return ResponseEntity.ok().body(ownerProductService.get(id));
+            return ResponseEntity.ok().body(ownerProductService.get(principal, id));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

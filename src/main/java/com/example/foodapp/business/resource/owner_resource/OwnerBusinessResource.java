@@ -28,10 +28,8 @@ import static java.time.LocalDateTime.now;
 public class OwnerBusinessResource {
     private final OwnerBusinessService businessService;
 
-    @GetMapping("/get")
-    @JsonView(View.Internal.class)
-    public ResponseEntity<Business> getOwnerBusiness(Principal principal) {
-        System.out.println(principal);
+    @GetMapping
+    public ResponseEntity<?> getOwnerBusiness(Principal principal) {
         try {
             return ResponseEntity.ok().body(businessService.get(principal));
         } catch (Exception e) {
@@ -39,30 +37,30 @@ public class OwnerBusinessResource {
         }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Response> createOwnerBusiness(
-            @RequestBody Map<String, Object> payload, Principal principal
-    ) {
+//    @PostMapping
+//    public ResponseEntity<Response> createOwnerBusiness(
+//            @RequestBody Map<String, Object> payload, Principal principal
+//    ) {
+//
+//        String name = (String) payload.get("name");
+//        String desc = (String) payload.get("description");
+//
+////        if(name == null || desc == null || principal == null){
+////            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+////        } else {
+//        return ResponseEntity.ok(
+//                Response.builder()
+//                        .timeStamp(now())
+////                            .data(Map.of("business", businessService.create(name, desc, principal)))
+//                        .message("Business created")
+//                        .status(HttpStatus.CREATED)
+//                        .statusCode(HttpStatus.CREATED.value())
+//                        .build());
+////        }
+//    }
 
-        String name = (String) payload.get("name");
-        String desc = (String) payload.get("description");
 
-//        if(name == null || desc == null || principal == null){
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//        } else {
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-//                            .data(Map.of("business", businessService.create(name, desc, principal)))
-                        .message("Business created")
-                        .status(HttpStatus.CREATED)
-                        .statusCode(HttpStatus.CREATED.value())
-                        .build());
-//        }
-    }
-
-
-    @PostMapping("/update")
+    @PostMapping
     public ResponseEntity<Business> updateOwnerBusiness(@RequestBody BusinessUpdateRequest businessUpdateRequest, Principal principal) {
 
         try {

@@ -1,7 +1,11 @@
 package com.example.foodapp;
 
+import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service.customer.service.BusinessOwnerAdminService;
+import com.example.foodapp.auth.user.User;
+import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
+import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.*;
 import com.example.foodapp.business.service.admin_service.AdminBusinessService;
 import com.example.foodapp.business.service.admin_service.TimeOpenedService;
@@ -12,6 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import static java.time.LocalDateTime.now;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
@@ -27,6 +33,7 @@ public class FoodApp {
 	@Bean
 	public CommandLineRunner commandLineRunner(
 			BusinessOwnerAdminService adminService,
+			BusinessOwnerRepo businessOwnerRepo,
 			AdminBusinessService adminBusinessService,
 			UserRepository userRepository,
 			BusinessRepo businessRepo,
@@ -46,6 +53,14 @@ public class FoodApp {
 	) {
 		return args -> {
 //			Business business = businessRepo.findBusinessById(252L).get();
+//			User user = userRepository.findByEmail("minicnikola999@gmail.com").get();
+//			BusinessOwner owner = new BusinessOwner();
+//			owner.setBusiness(business);
+//			owner.setTaxCode("1231991Q");
+//			owner.setIsActive(true);
+//			owner.setUser(user);
+//			owner.setDateCreated(now());
+//			businessOwnerRepo.save(owner);
 
 //			var time = new TimeOpenedDay();
 //			time.setTimeOpen("08:00");

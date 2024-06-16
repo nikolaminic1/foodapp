@@ -65,7 +65,7 @@ public class ProductServiceImplementation implements AdminProductService {
     }
 
     @Override
-    public List<Map<String, Object>> getInitial() throws Exception {
+    public List<Map<String, Object>> getInitial(Long businessId, Principal principal) throws Exception {
         Map<String, Object> map = new HashMap<>();
 //        map.put("")
         return null;

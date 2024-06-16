@@ -37,13 +37,13 @@ public class TimeOpenedServiceImplementation implements TimeOpenedService {
         var m = List.of(monday, tuesday, thursday, wednesday, friday, saturday, sunday);
         timeOpenedDayRepo.saveAll(m);
 
-        openedWeek.setTimeOpenedDayMonday(monday);
-        openedWeek.setTimeOpenedDayTuesday(tuesday);
-        openedWeek.setTimeOpenedDayWednesday(wednesday);
-        openedWeek.setTimeOpenedDayThursday(thursday);
-        openedWeek.setTimeOpenedDayFriday(friday);
-        openedWeek.setTimeOpenedDaySaturday(saturday);
-        openedWeek.setTimeOpenedDaySunday(sunday);
+//        openedWeek.setTimeOpenedDayMonday(monday);
+//        openedWeek.setTimeOpenedDayTuesday(tuesday);
+//        openedWeek.setTimeOpenedDayWednesday(wednesday);
+//        openedWeek.setTimeOpenedDayThursday(thursday);
+//        openedWeek.setTimeOpenedDayFriday(friday);
+//        openedWeek.setTimeOpenedDaySaturday(saturday);
+//        openedWeek.setTimeOpenedDaySunday(sunday);
         timeOpenedWeekRepo.save(openedWeek);
         business.setTimeOpened(openedWeek);
         businessRepo.save(business);

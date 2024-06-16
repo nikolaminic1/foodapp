@@ -10,7 +10,12 @@ import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ProductCategoryRequest;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
+import com.example.foodapp.product.serializers.ProductCategory_BusinessSerializer;
+import com.example.foodapp.product.serializers.restaurant.RestaurantProductCategorySerializer;
+import com.example.foodapp.product.serializers.restaurant.RestaurantProductSerializer;
 import com.example.foodapp.product.service.business.OwnerProductCategoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -62,28 +67,31 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
     }
 
     @Override
-    public List<ProductCategory> getMyList(Principal principal) throws Exception {
+    public String getMyList(Principal principal) throws Exception {
         String username = principal.getName();
         User user = userRepo.findByEmail(username).orElseThrow();
         BusinessOwner owner = businessOwnerRepo.findBusinessOwnerByUser(user)
                 .orElseThrow(() -> new Exception("Business owner not found"));
-        return productCategoryRepo.findProductCategoriesByBusiness(owner.getBusiness());
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(new RestaurantProductCategorySerializer.ListSerializer());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(productCategoryRepo.findProductCategoriesByBusiness(owner.getBusiness()));
     }
 
     @Override
-    public ProductCategory get(Long id) {
-        return null;
-    }
-
-    @Override
-    public ProductCategory get(Principal principal, Long id) throws Exception {
+    public String get(Principal principal, Long id) throws Exception {
         User user = userRepo.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("User not found"));
         BusinessOwner owner = businessOwnerRepo.findBusinessOwnerByUser(user)
                 .orElseThrow(() -> new Exception("Business owner not found"));
-        return productCategoryRepo
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(ProductCategory.class, new RestaurantProductCategorySerializer.DetailSerializer());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(productCategoryRepo
                 .findProductCategoryByIdAndBusiness_BusinessOwner(id, owner)
-                .orElseThrow(() -> new Exception("Not found"));
+                .orElseThrow(() -> new Exception("Not found")));
     }
 
     @Override

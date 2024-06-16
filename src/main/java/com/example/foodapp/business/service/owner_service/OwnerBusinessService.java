@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 
 public interface OwnerBusinessService {
-    Business get(Principal principal) throws Exception;
+    String get(Principal principal) throws Exception;
     Business update(BusinessUpdateRequest businessUpdateRequest, Principal principal) throws Exception;
     String uploadBackgroundImage(MultipartFile file, Principal principal) throws Exception;
     String uploadLogoImage(MultipartFile file, Principal principal) throws Exception;

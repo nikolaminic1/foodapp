@@ -3,6 +3,7 @@ package com.example.foodapp.order.model;
 import com.example.foodapp.auth.user.Addresses.BillingAddress;
 import com.example.foodapp.auth.user.Addresses.ShippingAddress;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
+import com.example.foodapp.business.model.Business;
 import com.example.foodapp.order.enumeration.DeliveryType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -81,6 +82,9 @@ public class OrderO {
     private Boolean isDeliveryFree;
     private double deliveryPrice;
     private double price;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Business business;
 
     public void setPrice(double amount){
         this.price = amount;

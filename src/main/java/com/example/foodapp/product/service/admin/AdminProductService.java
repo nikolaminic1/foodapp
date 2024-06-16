@@ -15,5 +15,5 @@ public interface AdminProductService {
     String get(Long id) throws Exception;
     Product update(Long id) throws Exception;
     Boolean delete(Long id) throws Exception;
-    List<Map<String, Object>> getInitial() throws Exception;
+    List<Map<String, Object>> getInitial(Long businessId, Principal principal) throws Exception;
 }

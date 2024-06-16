@@ -1,5 +1,6 @@
 package com.example.foodapp.product.model;
 
+import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.serializers.View;
 import com.example.foodapp.product.enumeration.Availability;
 import com.example.foodapp.product.serializers.ProductCategorySerializer;
@@ -15,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -27,8 +25,8 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"productCategory","productTags","variation"})
-@EqualsAndHashCode(exclude = {"productCategory", "productTags","variation"})
+@ToString(exclude = {"productCategory", "variation"})
+@EqualsAndHashCode(exclude = {"productCategory", "variation"})
 @Log4j2
 //@Transactional
 //@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "productCategory" })
@@ -129,6 +127,13 @@ public class Product {
 //            this.appendicesCategoryList.add(appendicesCategory);
 //        }
 //        appendicesCategory.setProduct(this);
+    }
+
+    public List<Map<String, Object>> getAllRelatedCategories() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        Business business = this.getProductCategory().getBusiness();
+        Collection<ProductCategory> categories = null;
+        return list;
     }
 
     public Object getAdminProductCategoryDetail() {

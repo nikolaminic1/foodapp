@@ -131,9 +131,16 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3001", "http://localhost:5173"));
+        configuration
+                .setAllowedOrigins(List.of(
+                        "http://localhost:3001",
+                        "http://localhost:5173",
+                        "http://localhost:5174",
+                        "http://localhost:5175"));
+
         configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
 //        configuration.setAllowedHeaders(List.of("Access-Control-Allow-Origin"));
+//        configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -146,7 +153,12 @@ public class SecurityConfiguration {
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowCredentials(true)
-                        .allowedOrigins("http://localhost:8070", "http://localhost:3001", "http://localhost:5173")
+                        .allowedOrigins(
+                                "http://localhost:8070",
+                                "http://localhost:3001",
+                                "http://localhost:5173",
+                                "http://localhost:5174",
+                                "http://localhost:5175")
                         .allowedMethods("*");
             }
         };
