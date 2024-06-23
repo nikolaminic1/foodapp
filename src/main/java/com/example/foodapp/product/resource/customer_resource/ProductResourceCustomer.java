@@ -26,7 +26,7 @@ public class ProductResourceCustomer {
     private final OwnerProductService ownerProductService;
 
     @GetMapping("/list")
-    public ResponseEntity<PaginatedResponse<Product>> getProducts(Principal principal){
+    public ResponseEntity<?> getProducts(Principal principal){
         try {
             return ResponseEntity.ok().body(ownerProductService.list("1", "1", "1", "1", principal));
         } catch (Exception e) {

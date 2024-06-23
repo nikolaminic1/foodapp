@@ -1,12 +1,15 @@
 package com.example.foodapp.product.service.business.implementation;
 
 import com.example.foodapp._api.PaginatedResponse;
+import com.example.foodapp._api.PaginatedResponseSerialized;
+import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.BusinessRepo;
 import com.example.foodapp.business.serializers.BusinessListSerializer;
+import com.example.foodapp.business.serializers.owner.OwnerRestaurantSerializer;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ProductRequest;
@@ -15,6 +18,7 @@ import com.example.foodapp.product.repo.ProductRepo;
 import com.example.foodapp.product.serializers.admin.AdminProductSerializer;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductSerializer;
 import com.example.foodapp.product.service.business.OwnerProductService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -51,11 +55,40 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
     private final BusinessRepo businessRepo;
+    private final BusinessOwnerRepo businessOwnerRepo;
     private long productCategoryId;
 
     @Override
     public List<Product> getMyList(Principal principal) {
         productRepo.findAll();
+        return null;
+    }
+
+    @Override
+    public String getProductsToDelete(Principal principal, String id) throws Exception {
+        if (!isNumeric(id)) {
+            throw new Exception("The ID is not valid.");
+        }
+
+        if (id != null) {
+            ProductCategory category = productCategoryRepo.findById(Long.parseLong(id))
+                    .orElseThrow(() -> new Exception("This ID is not valid."));
+            Business business = businessOwnerRepo.findBusinessOwnerByUser(userRepo.findByEmail(principal.getName())
+                            .orElseThrow(() -> new Exception("User not found.")))
+                    .orElseThrow(() -> new Exception("Business owner not found.")).getBusiness();
+
+            if (category.getBusiness() != business) {
+                throw new Exception("The category with provided ID does not belong to you.");
+            }
+
+            Collection<Product> products = productRepo.findProductsByProductCategory(category);
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addSerializer(new RestaurantProductSerializer.ListSerializer());
+            mapper.registerModule(module);
+            return mapper.writeValueAsString(products);
+        }
+
         return null;
     }
 
@@ -109,7 +142,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     }
 
     @Override
-    public PaginatedResponse<Product> list(String page, String per_page, String order, String visible, Principal principal) throws Exception {
+    public PaginatedResponseSerialized<Product> list(String page, String per_page, String order, String visible, Principal principal) throws Exception {
         int page_n;
         int limit;
         int order_n;
@@ -138,7 +171,6 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
             visible_n = 0;
         }
 
-
         User user = userRepo.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("User not found"));
         Business business = businessRepo.findBusinessByBusinessOwner_User(user)
@@ -152,7 +184,6 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
         };
 
         Page<Product> productsPage;
-
         if (visible_n == 0) {
             productsPage = productRepo.findProductsByProductCategory_Business(business, pageable);
         } else {
@@ -160,9 +191,20 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                     .findProductsByProductCategory_BusinessAndProductVisible(business, true, pageable);
         }
 
-        PaginatedResponse<Product> data = new PaginatedResponse<>();
-        data.setItems(productsPage.getContent());
+        PaginatedResponseSerialized<Product> data = new PaginatedResponseSerialized<>();
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(new RestaurantProductSerializer.ListSerializer());
+        mapper.registerModule(module);
+        String dataString = mapper.writeValueAsString(productsPage.getContent());
+        data.setItems(mapper.readValue(dataString, new TypeReference<List<Product>>() {}));
         data.setCount(productsPage.getTotalElements());
+
+        if (productsPage.hasNext()) {
+            String nextLink = String.format("http://localhost:8070/api/v1/business/product/product_model/list?page=%s&limit=%s&order=%s&visible=%s",  page_n+1, limit, order_n, visible_n);
+            data.setNext(nextLink);
+        }
+
         return data;
     }
 

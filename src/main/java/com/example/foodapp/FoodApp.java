@@ -9,6 +9,7 @@ import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.*;
 import com.example.foodapp.business.service.admin_service.AdminBusinessService;
 import com.example.foodapp.business.service.admin_service.TimeOpenedService;
+import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.repo.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -52,6 +55,12 @@ public class FoodApp {
 			TimeOpenedService timeOpenedService
 	) {
 		return args -> {
+//			List<ProductCategory> categories = productCategoryRepo.findAll();
+//
+//			for (var category: categories) {
+//				category.setFeatured(false);
+//			}
+//			productCategoryRepo.saveAll(categories);
 //			Business business = businessRepo.findBusinessById(252L).get();
 //			User user = userRepository.findByEmail("minicnikola999@gmail.com").get();
 //			BusinessOwner owner = new BusinessOwner();

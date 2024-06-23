@@ -29,7 +29,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @EqualsAndHashCode(exclude = {"productCategory", "variation"})
 @Log4j2
 //@Transactional
-//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "productCategory" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "productCategory" })
 //@JsonIdentityInfo(
 //        generator = ObjectIdGenerators.StringIdGenerator.class,
 //        property="productCategory")
@@ -62,6 +62,7 @@ public class Product {
 //    @JsonSerialize(using = ProductCategorySerializer.class)
 //    @JoinColumn(name = "product_category")
     @JsonBackReference
+    @JsonIgnore
     private ProductCategory productCategory;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE
@@ -73,6 +74,7 @@ public class Product {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "product")
 //    @JsonSerialize(using = VariationSerializer.class)
     @JsonManagedReference
+    @JsonIgnore
     private Variation variation;
 
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
@@ -97,6 +99,7 @@ public class Product {
     }
 
     @JsonManagedReference
+    @JsonIgnore
     public Variation getVariation(){
         System.out.println("var");
         return this.variation;
@@ -129,13 +132,14 @@ public class Product {
 //        appendicesCategory.setProduct(this);
     }
 
-    public List<Map<String, Object>> getAllRelatedCategories() {
-        List<Map<String, Object>> list = new ArrayList<>();
-        Business business = this.getProductCategory().getBusiness();
-        Collection<ProductCategory> categories = null;
-        return list;
-    }
+//    public List<Map<String, Object>> getAllRelatedCategories() {
+//        List<Map<String, Object>> list = new ArrayList<>();
+//        Business business = this.getProductCategory().getBusiness();
+//        Collection<ProductCategory> categories = null;
+//        return list;
+//    }
 
+    @JsonIgnore
     public Object getAdminProductCategoryDetail() {
         if (this.getProductCategory() != null) {
             return this.getProductCategory().getAdminDetail();
@@ -144,6 +148,7 @@ public class Product {
         return null;
     }
 
+    @JsonIgnore
     public List<Map<String, Object>> getProductDescriptionList() {
         List<Map<String, Object>> mapsList = new ArrayList<>();
         this.productDescription.forEach(desc -> mapsList.add(desc.getProductDescriptionData()));

@@ -24,6 +24,12 @@ public class RestaurantProductCategorySerializer {
         public void serialize(ProductCategory category, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("id", category.getId());
+            jsonGenerator.writeStringField("nameOfCategory", category.getNameOfCategory());
+            jsonGenerator.writeStringField("descOfCategory", category.getDescOfCategory());
+            jsonGenerator.writeBooleanField("categoryVisible", category.getCategoryVisible());
+            jsonGenerator.writeBooleanField("featured", category.getFeatured());
+            jsonGenerator.writeStringField("dateCreated", category.getDateCreated().format(DateTimeFormatter.ISO_DATE_TIME));
+            jsonGenerator.writeStringField("dateUpdated", category.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
             jsonGenerator.writeEndObject();
         }
     }
@@ -52,11 +58,12 @@ public class RestaurantProductCategorySerializer {
                     jsonGenerator.writeBooleanField("categoryVisible", category.getCategoryVisible());
                     jsonGenerator.writeStringField("dateCreated", category.getDateCreated().format(DateTimeFormatter.ISO_DATE_TIME));
                     jsonGenerator.writeStringField("dateUpdated", category.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
-                    jsonGenerator.writeEndObject();
 
                     if (category.getFeatured() != null) {
                         jsonGenerator.writeBooleanField("featured", category.getFeatured());
                     }
+
+                    jsonGenerator.writeEndObject();
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);

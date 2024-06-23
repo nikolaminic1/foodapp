@@ -4,6 +4,7 @@ package com.example.foodapp.product.resource.business_resource;
 import com.example.foodapp.api_resources.Response;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ProductCategoryRequest;
+import com.example.foodapp.product.model.Request.ProductCategoryUpdateRequest;
 import com.example.foodapp.product.service.business.OwnerProductCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,6 +36,19 @@ public class ProductCategoryResourceBusiness {
                     productCategoryService.getMyList(principal)
             );
         } catch (Exception e) {
+            log.error(e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @GetMapping("/list-options")
+    public ResponseEntity<String> getCategoryOptions(Principal principal) {
+        try {
+            return ResponseEntity.ok().body(
+                    productCategoryService.getMyList(principal)
+            );
+        } catch (Exception e) {
+            log.error(e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
@@ -52,13 +66,24 @@ public class ProductCategoryResourceBusiness {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ProductCategory> createOrUpdate(Principal principal) {
-        return null;
+    public ResponseEntity<String> createOrUpdate(@RequestBody ProductCategoryUpdateRequest request,
+                                                 Principal principal) {
+        try {
+            return ResponseEntity.ok().body(productCategoryService.update(request, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProductCategory> deleteCategory(Principal principal, @PathVariable String id) {
-        return null;
+    public ResponseEntity<String> deleteCategory(Principal principal, @PathVariable String id) {
+        try {
+            return ResponseEntity.ok().body(productCategoryService.delete(id, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
 

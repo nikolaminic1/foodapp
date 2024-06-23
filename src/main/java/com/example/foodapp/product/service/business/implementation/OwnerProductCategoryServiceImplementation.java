@@ -6,9 +6,11 @@ import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 //import com.example.foodapp.business.repo.BusinessRepo;
 import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
+import com.example.foodapp.business.model.Business;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ProductCategoryRequest;
+import com.example.foodapp.product.model.Request.ProductCategoryUpdateRequest;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
 import com.example.foodapp.product.serializers.ProductCategory_BusinessSerializer;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductCategorySerializer;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 
+import static com.example.foodapp._api.NumericCheck.isNumeric;
 import static java.time.LocalDateTime.now;
 
 @RequiredArgsConstructor
@@ -95,30 +98,51 @@ public class OwnerProductCategoryServiceImplementation implements OwnerProductCa
     }
 
     @Override
-    public ProductCategory update(Long id) {
-        return null;
+    public String update(ProductCategoryUpdateRequest request, Principal principal) throws Exception {
+        var categoryId = request.getId();
+        ProductCategory category;
+        if (categoryId != null) {
+            category = productCategoryRepo.findById(categoryId)
+                    .orElseThrow(() -> new Exception("Category not found"));
+            Business business = businessOwnerRepo.findBusinessOwnerByUser(userRepo.findByEmail(principal.getName())
+                            .orElseThrow(() -> new Exception("User not found")))
+                    .orElseThrow(() -> new Exception("Business owner not found")).getBusiness();
+
+            if (category.getBusiness() != business) {
+                throw new Exception("The category with provided ID does not belong to you");
+            }
+        } else {
+            category = new ProductCategory();
+        }
+
+        category.setCategoryVisible(request.getCategoryVisible());
+        category.setFeatured(request.getFeatured());
+        category.setNameOfCategory(request.getNameOfCategory());
+        category.setDescOfCategory(request.getDescOfCategory());
+        productCategoryRepo.save(category);
+        return "OK";
     }
 
     @Override
-    public Boolean delete(Long id, Principal principal) {
-        if(principal != null)
-        {
-            try {
-                String username = principal.getName();
-                User user = userRepo.findByEmail(username).orElseThrow();
-//                Business business = userProfile.getBusinessOwner().getBusiness();
-//
-//                productCategoryRepo.deleteProductCategoryById(id);
-//                System.out.println(business);
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-        } else {
-            System.out.println("else");
+    public String delete(String categoryId, Principal principal) throws Exception {
+        if (!isNumeric(categoryId)) {
+            throw new Exception("The category ID is not valid.");
         }
+        if (categoryId != null) {
+            ProductCategory category = productCategoryRepo.findById(Long.parseLong(categoryId))
+                    .orElseThrow(() -> new Exception("Category not found."));
+            Business business = businessOwnerRepo.findBusinessOwnerByUser(userRepo.findByEmail(principal.getName())
+                            .orElseThrow(() -> new Exception("User not found.")))
+                    .orElseThrow(() -> new Exception("Business owner not found.")).getBusiness();
 
-        return null;
+            if (category.getBusiness() != business) {
+                throw new Exception("The category with provided ID does not belong to you.");
+            }
+            category.setBusiness(null);
+            productCategoryRepo.delete(category);
+            return "OK";
+        } else {
+            throw new Exception("The category ID is not provided.");
+        }
     }
 }

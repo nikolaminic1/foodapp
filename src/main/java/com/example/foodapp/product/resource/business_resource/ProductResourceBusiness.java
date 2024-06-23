@@ -9,6 +9,7 @@ import com.example.foodapp.product.model.Request.ProductRequest;
 import com.example.foodapp.product.service.business.OwnerProductService;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,12 +26,13 @@ import static java.time.LocalDateTime.now;
 @RestController
 @RequestMapping("/api/v1/business/product/product_model")
 @RequiredArgsConstructor
+@Log4j2
 //@PreAuthorize("hasRole('ROLE_BUSINESS')")
 public class ProductResourceBusiness {
     private final OwnerProductService ownerProductService;
 
     @GetMapping("/list")
-    public ResponseEntity<PaginatedResponse<Product>> getProducts(
+    public ResponseEntity<?> getProducts(
             @RequestParam(name = "page", required = false, defaultValue = "0") String page,
             @RequestParam(name = "limit", required = false, defaultValue = "20") String limit,
             @RequestParam(name = "order", required = false, defaultValue = "3") String order,
@@ -41,6 +43,21 @@ public class ProductResourceBusiness {
             var data = ownerProductService.list(page, limit, order, visible, principal);
             return ResponseEntity.ok().body(data);
         } catch (Exception e) {
+            log.error(e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @GetMapping("/list-delete/{id}")
+    public ResponseEntity<?> getProductsToDelete(
+            @PathVariable String id,
+            Principal principal
+    ){
+        try {
+            var data = ownerProductService.getProductsToDelete(principal, id);
+            return ResponseEntity.ok().body(data);
+        } catch (Exception e) {
+            log.error(e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
