@@ -1,8 +1,11 @@
 package com.example.foodapp.api_resources;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -22,12 +25,24 @@ import static java.time.LocalTime.now;
 public class ImageFileSaveService {
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/media/";
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/static/media/";
     public static String slugify(String input) {
         String nonwhitespace = WHITESPACE.matcher(input).replaceAll("-");
         String normalized = Normalizer.normalize(nonwhitespace, Normalizer.Form.NFD);
         String slug = NONLATIN.matcher(normalized).replaceAll("");
         return slug.toLowerCase(Locale.ENGLISH);
+    }
+
+
+    public static byte[] getImage(String filename) throws Exception {
+        try {
+            File file = new File(UPLOAD_DIR + filename);
+            Resource resource = new FileSystemResource(file);
+            return resource.getContentAsByteArray();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Exception("File is not found.");
+        }
     }
 
     public static String saveFile(String fileName, MultipartFile multipartFile)

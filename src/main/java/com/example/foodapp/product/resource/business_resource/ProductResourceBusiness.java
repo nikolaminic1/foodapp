@@ -5,6 +5,7 @@ import com.example.foodapp._api.PaginatedResponse;
 import com.example.foodapp.api_resources.Response;
 import com.example.foodapp.business.serializers.View;
 import com.example.foodapp.product.model.Product;
+import com.example.foodapp.product.model.Request.ChangeCategoryRequest;
 import com.example.foodapp.product.model.Request.ProductRequest;
 import com.example.foodapp.product.service.business.OwnerProductService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -50,11 +51,24 @@ public class ProductResourceBusiness {
 
     @GetMapping("/list-delete/{id}")
     public ResponseEntity<?> getProductsToDelete(
-            @PathVariable String id,
+            @PathVariable Long id,
             Principal principal
     ){
         try {
             var data = ownerProductService.getProductsToDelete(principal, id);
+            return ResponseEntity.ok().body(data);
+        } catch (Exception e) {
+            log.error(e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @GetMapping("/list-options")
+    public ResponseEntity<?> getProductCategoryListOptions(
+            Principal principal
+    ){
+        try {
+            var data = ownerProductService.getListOptions(principal);
             return ResponseEntity.ok().body(data);
         } catch (Exception e) {
             log.error(e);
@@ -70,6 +84,25 @@ public class ProductResourceBusiness {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+    @PostMapping("/change-category")
+    public ResponseEntity<String> changeProductCategory(@RequestBody ChangeCategoryRequest request, Principal principal){
+        try {
+            return ResponseEntity.ok().body(ownerProductService.changeProductCategory(request, principal));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id, Principal principal){
+        try {
+            return ResponseEntity.ok().body(ownerProductService.delete(id, principal));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
 
     @PostMapping("/save")
     public ResponseEntity<Response> createProduct(@RequestBody ProductRequest productRequest, Principal principal){
@@ -102,7 +135,11 @@ public class ProductResourceBusiness {
                                                   @PathVariable Long id,
                                                   Principal principal){
 
-        ownerProductService.update(productRequest,id , principal);
+        try {
+            ownerProductService.update(productRequest,id , principal);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         return ResponseEntity.ok(
                 Response.builder()

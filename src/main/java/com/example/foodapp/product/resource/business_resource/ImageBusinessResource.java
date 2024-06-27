@@ -31,24 +31,25 @@ public class ImageBusinessResource {
                                                        @RequestParam("productId") Long id,
                                                        Principal principal) throws IOException {
 
-        if(businessImageService.create(file,id, principal) != null){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message("Image uploaded...")
-                            .status(HttpStatus.CREATED)
-                            .statusCode(HttpStatus.CREATED.value())
-                            .build()
-            );
-        } else {
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message("Bad request...")
-                            .status(HttpStatus.BAD_REQUEST)
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
-                            .build()
-            );
-        }
+        return null;
+//        if(businessImageService.create(file,id, principal) != null){
+//            return ResponseEntity.ok(
+//                    Response.builder()
+//                            .timeStamp(now())
+//                            .message("Image uploaded...")
+//                            .status(HttpStatus.CREATED)
+//                            .statusCode(HttpStatus.CREATED.value())
+//                            .build()
+//            );
+//        } else {
+//            return ResponseEntity.badRequest().body(
+//                    Response.builder()
+//                            .timeStamp(now())
+//                            .message("Bad request...")
+//                            .status(HttpStatus.BAD_REQUEST)
+//                            .statusCode(HttpStatus.BAD_REQUEST.value())
+//                            .build()
+//            );
+//        }
     }
 }

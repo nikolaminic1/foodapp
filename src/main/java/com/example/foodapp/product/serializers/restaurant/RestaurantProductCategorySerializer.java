@@ -30,6 +30,7 @@ public class RestaurantProductCategorySerializer {
             jsonGenerator.writeBooleanField("featured", category.getFeatured());
             jsonGenerator.writeStringField("dateCreated", category.getDateCreated().format(DateTimeFormatter.ISO_DATE_TIME));
             jsonGenerator.writeStringField("dateUpdated", category.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
+            jsonGenerator.writeNumberField("numberOfProducts", category.getProductList().size());
             jsonGenerator.writeEndObject();
         }
     }
@@ -58,6 +59,7 @@ public class RestaurantProductCategorySerializer {
                     jsonGenerator.writeBooleanField("categoryVisible", category.getCategoryVisible());
                     jsonGenerator.writeStringField("dateCreated", category.getDateCreated().format(DateTimeFormatter.ISO_DATE_TIME));
                     jsonGenerator.writeStringField("dateUpdated", category.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
+                    jsonGenerator.writeNumberField("numberOfProducts", category.getProductList().size());
 
                     if (category.getFeatured() != null) {
                         jsonGenerator.writeBooleanField("featured", category.getFeatured());

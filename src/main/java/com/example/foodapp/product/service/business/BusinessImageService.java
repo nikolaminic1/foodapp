@@ -7,7 +7,8 @@ import java.security.Principal;
 import java.util.List;
 
 public interface BusinessImageService {
-    ProductImage create(MultipartFile file, Long id, Principal principal);
+    String  create(MultipartFile file, Long id, Principal principal) throws Exception;
+    String  createF(MultipartFile file, Long id, Principal principal) throws Exception;
     ProductImage get(Long id);
     List<ProductImage> getMyList(Principal principal);
     ProductImage update(Long id);

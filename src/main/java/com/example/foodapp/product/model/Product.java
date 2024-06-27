@@ -98,6 +98,10 @@ public class Product {
         productImage.setProduct(this);
     }
 
+    public void removeProductImage() {
+        this.productImage = null;
+    }
+
     @JsonManagedReference
     @JsonIgnore
     public Variation getVariation(){
@@ -174,5 +178,9 @@ public class Product {
         return mapsList;
     }
 
+    public void setProductCategory(ProductCategory category) {
+        this.productCategory = category;
+        category.getProductList().add(this);
+    }
 
 }

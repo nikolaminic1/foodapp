@@ -1,33 +1,30 @@
 package com.example.foodapp._api;
 
 
+import com.example.foodapp.api_resources.ImageFileSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
+import static com.example.foodapp.api_resources.ImageFileSaveService.getImage;
+
 @RestController
 @RequestMapping("/api/v1/media/")
 @RequiredArgsConstructor
 public class ImageDownload {
-    @GetMapping("{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException
+    @GetMapping("{filename}")
+    public ResponseEntity<byte[]> getImageResource(@PathVariable String filename) throws IOException
     {
         try {
-            System.out.println(id);
-            String path = "static/media/" + id;
-            var imgFile = new ClassPathResource(path);
-            System.out.println(imgFile);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
-                    .body(imgFile.getContentAsByteArray());
+                    .body(getImage(filename));
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }

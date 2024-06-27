@@ -12,10 +12,13 @@ import com.example.foodapp.business.serializers.BusinessListSerializer;
 import com.example.foodapp.business.serializers.owner.OwnerRestaurantSerializer;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
+import com.example.foodapp.product.model.Request.ChangeCategoryRequest;
 import com.example.foodapp.product.model.Request.ProductRequest;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
 import com.example.foodapp.product.repo.ProductRepo;
+import com.example.foodapp.product.serializers.ProductCategorySerializer;
 import com.example.foodapp.product.serializers.admin.AdminProductSerializer;
+import com.example.foodapp.product.serializers.restaurant.RestaurantProductCategorySerializer;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductSerializer;
 import com.example.foodapp.product.service.business.OwnerProductService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -65,13 +68,9 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     }
 
     @Override
-    public String getProductsToDelete(Principal principal, String id) throws Exception {
-        if (!isNumeric(id)) {
-            throw new Exception("The ID is not valid.");
-        }
-
+    public String getProductsToDelete(Principal principal, Long id) throws Exception {
         if (id != null) {
-            ProductCategory category = productCategoryRepo.findById(Long.parseLong(id))
+            ProductCategory category = productCategoryRepo.findById(id)
                     .orElseThrow(() -> new Exception("This ID is not valid."));
             Business business = businessOwnerRepo.findBusinessOwnerByUser(userRepo.findByEmail(principal.getName())
                             .orElseThrow(() -> new Exception("User not found.")))
@@ -256,7 +255,49 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public String delete(Long id, Principal principal) throws Exception {
         return null;
+    }
+
+    @Override
+    public String getListOptions(Principal principal) throws Exception {
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+        Business business = businessRepo.findBusinessByBusinessOwner_User(user)
+                .orElseThrow(() -> new Exception("Buiness not found"));
+
+        List<ProductCategory> categories = productCategoryRepo.findProductCategoriesByBusiness(business);
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(new RestaurantProductCategorySerializer.ListSerializer());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(categories);
+    }
+
+    @Override
+    public String changeProductCategory(ChangeCategoryRequest request, Principal principal) throws Exception {
+        System.out.println(request.getProductID());
+        System.out.println(request.getCategoryID());
+        Product product = productRepo.findById(request.getProductID())
+                .orElseThrow(() -> new Exception("The product is not found."));
+        ProductCategory category = productCategoryRepo.findById(request.getCategoryID())
+                .orElseThrow(() -> new Exception("The category is not found"));
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found."));
+        Business business = businessRepo.findBusinessByBusinessOwner_User(user)
+                .orElseThrow(() -> new Exception("The business is not found."));
+
+        if (category.getBusiness() != business) {
+            throw new Exception("This product category does not belong to you.");
+        }
+
+        if (product.getProductCategory().getBusiness() != business) {
+            throw new Exception("This product does not belong to you.");
+        }
+
+        product.setProductCategory(category);
+        productRepo.save(product);
+        productCategoryRepo.save(category);
+        return "OK";
     }
 }

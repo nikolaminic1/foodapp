@@ -5,6 +5,9 @@ import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 //import com.example.foodapp.business.model.Business;
+import com.example.foodapp.business.model.Business;
+import com.example.foodapp.business.repo.BusinessRepo;
+import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductImage;
 import com.example.foodapp.product.repo.ProductImageRepo;
 import com.example.foodapp.product.repo.ProductRepo;
@@ -20,6 +23,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
+import static com.example.foodapp.api_resources.ImageFileSaveService.saveFile;
+
 
 @RequiredArgsConstructor
 @Service
@@ -30,9 +35,44 @@ public class OwnerImageServiceImplementation implements BusinessImageService {
     private final ProductRepo productRepo;
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
+    private final BusinessRepo businessRepo;
 
     @Override
-    public ProductImage create(MultipartFile file, Long productId, Principal principal) {
+    public String create(MultipartFile file, Long productId, Principal principal) throws Exception {
+        if(file == null) {
+            throw new Exception("File is not sent.");
+        }
+
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new Exception("Product is not found"));
+
+        Business business = businessRepo
+                .findBusinessByBusinessOwner_User(userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User is not found.")))
+                .orElseThrow(() -> new Exception("Business is not found."));
+
+        if (product.getProductCategory().getBusiness() != business) {
+            throw new Exception("Selected product does not belong to you.");
+        }
+
+        ProductImage img = productImageRepo.findProductImageByProduct(product)
+                .orElseThrow(() -> new Exception("Not found"));
+        img.setProduct(null);
+
+        ProductImage image = new ProductImage();
+        String fileName = file.getOriginalFilename();
+        String fileCode = saveFile(fileName, file);
+        image.setImageUrl(fileCode);
+        image.setNameOfImage(fileName);
+        productImageRepo.save(image);
+        product.setProductImage(image);
+        productRepo.save(product);
+        return "OK";
+    }
+
+    @Override
+    @Deprecated
+    public String createF(MultipartFile file, Long productId, Principal principal) {
         if (file != null){
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             long size = file.getSize();
@@ -41,7 +81,7 @@ public class OwnerImageServiceImplementation implements BusinessImageService {
 
             try {
                 User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-                fileCode = ImageFileSaveService.saveFile(fileName, file);
+                fileCode = saveFile(fileName, file);
                 String pathToSave = "/general/product/image/" + fileCode;
                 System.out.println(pathToSave);
                 ProductImage image = new ProductImage();
@@ -66,7 +106,7 @@ public class OwnerImageServiceImplementation implements BusinessImageService {
 //                        productRepo.save(product);
 //
 //                    }
-                    return image;
+                    return "OK";
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
