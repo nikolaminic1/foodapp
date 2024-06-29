@@ -63,10 +63,15 @@ public class RestaurantProductSerializer {
             jsonGenerator.writeStartArray();
 
             products.forEach((product) -> {
+                System.out.println(product);
                 try {
                     jsonGenerator.writeStartObject();
                     jsonGenerator.writeNumberField("id", product.getId());
                     jsonGenerator.writeStringField("nameOfProduct", product.getNameOfProduct());
+                    if (product.getProductImage() != null) {
+                        jsonGenerator.writeStringField("image", product.getProductImage().getImageUrl());
+                    }
+
                     jsonGenerator.writeEndObject();
                 } catch (IOException e) {
                     throw new RuntimeException(e);

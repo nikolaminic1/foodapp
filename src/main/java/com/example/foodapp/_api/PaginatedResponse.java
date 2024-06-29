@@ -2,6 +2,7 @@ package com.example.foodapp._api;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -11,4 +12,10 @@ public class PaginatedResponse<T> {
     String next;
     String previous;
     Long count;
+
+    public PaginatedResponse(Page<T> items) {
+        System.out.println(items.getContent());
+        this.items = items.getContent();
+
+    }
 }

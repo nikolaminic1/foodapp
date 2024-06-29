@@ -1,16 +1,12 @@
 package com.example.foodapp.product.service.business.implementation;
 
 import com.example.foodapp._api.PaginatedResponse;
-import com.example.foodapp._api.PaginatedResponseSerialized;
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.BusinessRepo;
-import com.example.foodapp.business.serializers.BusinessListSerializer;
-import com.example.foodapp.business.serializers.owner.OwnerRestaurantSerializer;
-import com.example.foodapp.product.enumeration.Availability;
 import com.example.foodapp.product.model.Appendices;
 import com.example.foodapp.product.model.AppendicesCategory;
 import com.example.foodapp.product.model.Product;
@@ -23,18 +19,15 @@ import com.example.foodapp.product.repo.AppendicesCategoryRepo;
 import com.example.foodapp.product.repo.AppendicesRepo;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
 import com.example.foodapp.product.repo.ProductRepo;
-import com.example.foodapp.product.serializers.ProductCategorySerializer;
-import com.example.foodapp.product.serializers.admin.AdminProductSerializer;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductCategorySerializer;
+import com.example.foodapp.product.serializers.restaurant.RestaurantProductPageSerializer;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductSerializer;
 import com.example.foodapp.product.service.business.OwnerProductService;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.itextpdf.text.ExceptionConverter;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,11 +37,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import org.springframework.util.Assert;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 import java.security.Principal;
 import java.util.*;
 
@@ -151,7 +139,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     }
 
     @Override
-    public PaginatedResponseSerialized<Product> list(String page, String per_page, String order, String visible, Principal principal) throws Exception {
+    public String list(String page, String per_page, String order, String visible, Principal principal) throws Exception {
         int page_n;
         int limit;
         int order_n;
@@ -200,21 +188,44 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                     .findProductsByProductCategory_BusinessAndProductVisible(business, true, pageable);
         }
 
-        PaginatedResponseSerialized<Product> data = new PaginatedResponseSerialized<>();
+        PaginatedResponse<Product> data = new PaginatedResponse<Product>(productsPage);
+        System.out.println("22222222222222222----------1--");
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
+        mapper.registerModule(module);
         module.addSerializer(new RestaurantProductSerializer.ListSerializer());
         mapper.registerModule(module);
-        String dataString = mapper.writeValueAsString(productsPage.getContent());
-        data.setItems(mapper.readValue(dataString, new TypeReference<List<Product>>() {}));
-        data.setCount(productsPage.getTotalElements());
+        return mapper.writeValueAsString(data);
 
-        if (productsPage.hasNext()) {
-            String nextLink = String.format("http://localhost:8070/api/v1/business/product/product_model/list?page=%s&limit=%s&order=%s&visible=%s",  page_n+1, limit, order_n, visible_n);
-            data.setNext(nextLink);
-        }
+//        module.addSerializer(Product.class, new RestaurantProductSerializer.ListSerializer());
+//        ArrayNode arrayNode = mapper.createArrayNode();
 
-        return data;
+//        for (var p: productsPage.getContent()) {
+//            ObjectNode node = mapper.createObjectNode();
+//            node.put("id", p.getId());
+//            node.put("nameOfProduct", p.getNameOfProduct());
+//
+//            if (p.getProductImage() != null) {
+//                node.put("image", p.getProductImage().getImageUrl());
+//            }
+//
+//            arrayNode.add(node);
+//        }
+
+//        data.setItems(arrayNode);
+
+
+//        data.setItems(mapper.readValue(dataString, new TypeReference<List<Product>>() {}));
+//        data.setCount(productsPage.getTotalElements());
+//
+//
+//        data.setCount(productsPage.getTotalElements());
+//
+//        if (productsPage.hasNext()) {
+//            String nextLink = String.format("http://localhost:8070/api/v1/business/product/product_model/list?page=%s&limit=%s&order=%s&visible=%s",  page_n+1, limit, order_n, visible_n);
+//            data.setNext(nextLink);
+//        }
+
     }
 
     @Override
@@ -325,6 +336,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                 appendicesCategory.setIsRequired(sideDishCategory.getIsRequired());
 
                 for (SideDishRequest sideDish : sideDishCategory.getSideDishes()) {
+                    System.out.println(sideDish);
                     Appendices appendices;
                     if (sideDish.getId() == null) {
                         appendices = new Appendices();
@@ -340,6 +352,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                     appendices.setNameOfAppendices(sideDish.getNameOfAppendices());
                     appendices.setPrice(sideDish.getPrice());
                     appendices.setDoesAffectPrice(sideDish.getDoesAffectPrice());
+                    appendices.setAppendicesCategory(appendicesCategory);
                     appendicesRepo.save(appendices);
                 }
 

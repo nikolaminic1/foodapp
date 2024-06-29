@@ -58,6 +58,10 @@ public class UserService {
         return base64Encoder.encodeToString(randomBytes);
     }
 
+    public void sendCustomEmail (EmailSendData data) throws Exception {
+
+    }
+
     private String sendActivationEmail (String email) throws Exception {
         UUID uuid = UUID.nameUUIDFromBytes(email.getBytes());
         String token = generateNewToken();
@@ -164,6 +168,9 @@ public class UserService {
         activationToken.setActive(false);
         activationToken.setDateAccessed(now());
         activationTokenRepo.save(activationToken);
+
+        // TODO send email after activation
+//        sendCustomEmail();
 
         Customer customer = new Customer();
         customer.setUser(user);
