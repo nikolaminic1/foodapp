@@ -10,10 +10,17 @@ import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.BusinessRepo;
 import com.example.foodapp.business.serializers.BusinessListSerializer;
 import com.example.foodapp.business.serializers.owner.OwnerRestaurantSerializer;
+import com.example.foodapp.product.enumeration.Availability;
+import com.example.foodapp.product.model.Appendices;
+import com.example.foodapp.product.model.AppendicesCategory;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ChangeCategoryRequest;
 import com.example.foodapp.product.model.Request.ProductRequest;
+import com.example.foodapp.product.model.Request.SideDishCategoryRequest;
+import com.example.foodapp.product.model.Request.SideDishRequest;
+import com.example.foodapp.product.repo.AppendicesCategoryRepo;
+import com.example.foodapp.product.repo.AppendicesRepo;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
 import com.example.foodapp.product.repo.ProductRepo;
 import com.example.foodapp.product.serializers.ProductCategorySerializer;
@@ -27,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.itextpdf.text.ExceptionConverter;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,6 +65,8 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     private final ProductCategoryRepo productCategoryRepo;
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
+    private final AppendicesRepo appendicesRepo;
+    private final AppendicesCategoryRepo appendicesCategoryRepo;
     private final BusinessRepo businessRepo;
     private final BusinessOwnerRepo businessOwnerRepo;
     private long productCategoryId;
@@ -94,8 +104,8 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     @Override
     public Product create(ProductRequest productRequest, Principal principal) {
         try{
-            long productCategoryId = productRequest.getProductCategory();
-            User user = userRepo.findByEmail(principal.getName()).orElseThrow();
+//            long productCategoryId = productRequest.getProductCategory();
+//            User user = userRepo.findByEmail(principal.getName()).orElseThrow();
 
             if(productCategoryRepo.findById(productCategoryId).isPresent()){
                 ProductCategory productCategory = productCategoryRepo.findById(productCategoryId).get();
@@ -249,9 +259,96 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     }
 
     @Override
-    public Product update(ProductRequest productRequest, Long id, Principal principal) {
-        Product product = productRepo.findById(id).get();
-        return productRepo.save(product);
+    public String update(ProductRequest productRequest, Principal principal) throws Exception {
+        Product product;
+
+        if (productRequest.getId() != null) {
+            product = productRepo.findById(productRequest.getId())
+                    .orElseThrow(() -> new Exception("Product is not found"));
+        } else {
+            product = new Product();
+        }
+
+        Business business = businessRepo.findBusinessByBusinessOwner_User(
+                userRepo.findByEmail(principal.getName())
+                        .orElseThrow(() -> new Exception("User is not found"))
+        ).orElseThrow(() -> new Exception("Business is not found."));
+
+        if (product.getProductCategory() != null) {
+            if (product.getProductCategory().getBusiness() != business) {
+                throw new Exception("This product does not belong to you.");
+            }
+        }
+
+        Collection<Product> productList = productRepo.findProductsByProductCategory_Business(business);
+        for (Product productItem: productList) {
+            // TODO: Iterate through product list and find if there is product with assigned code, if there is, change it
+        }
+
+        product.setCodeOfProduct(productRequest.getCodeOfProduct());
+        product.setNameOfProduct(productRequest.getNameOfProduct());
+        product.setPriceOfProduct(productRequest.getPriceOfProduct());
+        product.setDiscountPrice(productRequest.getDiscountPrice());
+        product.setIsOnDiscount(productRequest.isOnDiscount());
+        product.setAboutProduct(productRequest.getAboutProduct());
+        product.setPreparationTime(productRequest.getPreparationTime());
+        product.setProductVisible(productRequest.isProductVisible());
+
+        if (isNumeric(productRequest.getProductCategory())) {
+            ProductCategory category = productCategoryRepo
+                    .findById(Long.parseLong(productRequest.getProductCategory()))
+                    .orElseThrow(() -> new Exception("Selected category does not exist."));
+
+            if (category.getBusiness() != business) {
+                throw new Exception("Selected category does not belong to you.");
+            }
+
+            product.setProductCategory(category);
+        }
+
+        if (productRequest.getSideDishCategories() != null) {
+            for (SideDishCategoryRequest sideDishCategory: productRequest.getSideDishCategories()) {
+                AppendicesCategory appendicesCategory;
+                if (sideDishCategory.getId() == null) {
+                    appendicesCategory = new AppendicesCategory();
+                } else {
+                    appendicesCategory = appendicesCategoryRepo.findById(sideDishCategory.getId())
+                            .orElseThrow(() -> new Exception("Side dish category does not exist."));
+                    if (appendicesCategory.getProduct().getProductCategory().getBusiness() != business) {
+                        throw new Exception("Selected side dish category does not belong to you.");
+                    }
+                }
+
+                appendicesCategory.setProduct(product);
+                appendicesCategory.setNameOfCategory(sideDishCategory.getNameOfCategory());
+                appendicesCategory.setNumberOfAllowed(sideDishCategory.getNumberOfAllowed());
+                appendicesCategory.setIsRequired(sideDishCategory.getIsRequired());
+
+                for (SideDishRequest sideDish : sideDishCategory.getSideDishes()) {
+                    Appendices appendices;
+                    if (sideDish.getId() == null) {
+                        appendices = new Appendices();
+                    } else {
+                        appendices = appendicesRepo.findById(sideDish.getId())
+                                .orElseThrow(() -> new Exception("Side dish with provided ID does not exist."));
+
+                        if (appendices.getAppendicesCategory().getProduct().getProductCategory().getBusiness() != business) {
+                            throw new Exception("Selected side dish does not belong to you.");
+                        }
+                    }
+
+                    appendices.setNameOfAppendices(sideDish.getNameOfAppendices());
+                    appendices.setPrice(sideDish.getPrice());
+                    appendices.setDoesAffectPrice(sideDish.getDoesAffectPrice());
+                    appendicesRepo.save(appendices);
+                }
+
+                appendicesCategoryRepo.save(appendicesCategory);
+            }
+        }
+
+        productRepo.save(product);
+        return "OK";
     }
 
     @Override

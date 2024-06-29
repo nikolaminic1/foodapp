@@ -18,6 +18,7 @@ public interface ProductRepo extends PagingAndSortingRepository<Product, Long> ,
     Optional<Product> findProductById(Long id);
     Optional<Product> findProductByIdAndProductCategory_Business_BusinessOwner_User(Long id, User user);
     Collection<Product> findProductsByProductCategory(ProductCategory productCategory);
+    Collection<Product> findProductsByProductCategory_Business(Business business);
     Page<Product> findProductsByProductCategory_BusinessAndProductVisible(Business business, Boolean visible, Pageable pageable);
     Page<Product> findProductsByProductCategory_Business(Business business, Pageable pageable);
 }

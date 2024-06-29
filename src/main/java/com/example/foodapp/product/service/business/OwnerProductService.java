@@ -18,7 +18,7 @@ public interface OwnerProductService {
     String get(Principal principal, Long id) throws Exception;
     String getProductsToDelete(Principal principal, Long id) throws Exception;
     String getListOptions(Principal principal) throws Exception;
-    Product update(ProductRequest productRequest, Long id , Principal principal) throws Exception;
+    String update(ProductRequest productRequest, Principal principal) throws Exception;
     String changeProductCategory(ChangeCategoryRequest request , Principal principal) throws Exception;
     String delete(Long id, Principal principal) throws Exception;
 }

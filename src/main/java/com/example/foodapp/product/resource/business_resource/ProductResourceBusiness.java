@@ -103,52 +103,14 @@ public class ProductResourceBusiness {
         }
     }
 
-
     @PostMapping("/save")
-    public ResponseEntity<Response> createProduct(@RequestBody ProductRequest productRequest, Principal principal){
-
-        if(ownerProductService.create(productRequest, principal) != null){
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message("List of products")
-                            .status(HttpStatus.CREATED)
-                            .statusCode(HttpStatus.CREATED.value())
-                            .build()
-            );
-        } else {
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .timeStamp(now())
-                            .message("List of products")
-                            .status(HttpStatus.BAD_REQUEST)
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
-                            .build()
-            );
-        }
-
-
-    }
-
-    @PostMapping("/update/{id}")
-    public ResponseEntity<Response> updateProduct(@RequestBody ProductRequest productRequest,
-                                                  @PathVariable Long id,
-                                                  Principal principal){
+    public ResponseEntity<?> createOrUpdateProduct(@RequestBody ProductRequest productRequest, Principal principal){
 
         try {
-            ownerProductService.update(productRequest,id , principal);
+            return ResponseEntity.ok(ownerProductService.update(productRequest, principal));
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .message("List of products")
-                        .status(HttpStatus.OK)
-                        .statusCode(HttpStatus.OK.value())
-                        .build()
-        );
     }
-
 }

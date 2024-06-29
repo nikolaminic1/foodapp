@@ -55,9 +55,11 @@ public class OwnerImageServiceImplementation implements BusinessImageService {
             throw new Exception("Selected product does not belong to you.");
         }
 
-        ProductImage img = productImageRepo.findProductImageByProduct(product)
-                .orElseThrow(() -> new Exception("Not found"));
-        img.setProduct(null);
+        boolean exists = productImageRepo.findProductImageByProduct(product).isPresent();
+        if (exists) {
+            var image = productImageRepo.findProductImageByProduct(product).get();
+            image.setProduct(null);
+        }
 
         ProductImage image = new ProductImage();
         String fileName = file.getOriginalFilename();

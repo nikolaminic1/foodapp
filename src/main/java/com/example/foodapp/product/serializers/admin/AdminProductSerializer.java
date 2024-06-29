@@ -1,5 +1,7 @@
 package com.example.foodapp.product.serializers.admin;
 
+import com.example.foodapp.product.model.Appendices;
+import com.example.foodapp.product.model.AppendicesCategory;
 import com.example.foodapp.product.model.Product;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +16,46 @@ import java.util.List;
 @JsonComponent
 public class AdminProductSerializer {
 
+    public static void writeSideDishCategoriesList(Product product, JsonGenerator jsonGenerator) throws IOException {
+        var categories = product.getAppendicesCategoryList();
+
+        jsonGenerator.writeFieldName("sideDishCategories");
+        jsonGenerator.writeStartArray();
+        for (AppendicesCategory category: categories) {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeNumberField("id", category.getId());
+            jsonGenerator.writeStringField("nameOfCategory", category.getNameOfCategory());
+
+            if (!category.getIsRequired()){
+                jsonGenerator.writeBooleanField("isRequired", false);
+            } else {
+                jsonGenerator.writeBooleanField("isRequired", true);
+            }
+
+            jsonGenerator.writeNumberField("numberOfAllowed", category.getNumberOfAllowed());
+
+            var sideDishes =     category.getAppendicesList();
+
+            jsonGenerator.writeFieldName("sideDishes");
+            jsonGenerator.writeStartArray();
+            for (Appendices sideDish : sideDishes) {
+                System.out.println(sideDish);
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeNumberField("id", sideDish.getId());
+                jsonGenerator.writeStringField("nameOfAppendices", sideDish.getNameOfAppendices());
+                jsonGenerator.writeBooleanField("doesAffectPrice", sideDish.getDoesAffectPrice());
+                jsonGenerator.writeNumberField("price", sideDish.getPrice());
+                jsonGenerator.writeEndObject();
+            }
+            jsonGenerator.writeEndArray();
+            jsonGenerator.writeEndObject();
+
+        }
+
+        jsonGenerator.writeEndArray();
+
+    }
+
     public static void writeData(Product product, JsonGenerator jsonGenerator) throws IOException {
 
         jsonGenerator.writeNumberField("id", product.getId());
@@ -25,7 +67,11 @@ public class AdminProductSerializer {
         jsonGenerator.writeBooleanField("isOnDiscount", product.getIsOnDiscount());
         jsonGenerator.writeStringField("aboutProduct", product.getAboutProduct());
         jsonGenerator.writeNumberField("preparationTime", product.getPreparationTime());
-        jsonGenerator.writeStringField("availability", product.getAvailability().getAvailability());
+
+        if (product.getAvailability() != null) {
+            jsonGenerator.writeStringField("availability", product.getAvailability().getAvailability());
+        }
+
         jsonGenerator.writeNumberField("weight", product.getWeight());
         jsonGenerator.writeStringField("dataCreated", product.getDataCreated().format(DateTimeFormatter.ISO_DATE_TIME));
         jsonGenerator.writeStringField("dateUpdated", product.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
