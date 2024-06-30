@@ -1,6 +1,7 @@
 package com.example.foodapp.product.service.business.implementation;
 
 import com.example.foodapp._api.PaginatedResponse;
+import com.example.foodapp._api.PaginatedResponseSerializer;
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -188,12 +190,12 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                     .findProductsByProductCategory_BusinessAndProductVisible(business, true, pageable);
         }
 
-        PaginatedResponse<Product> data = new PaginatedResponse<Product>(productsPage);
-        System.out.println("22222222222222222----------1--");
+        PaginatedResponse<Product> data = new PaginatedResponse<>(productsPage);
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        mapper.registerModule(module);
-        module.addSerializer(new RestaurantProductSerializer.ListSerializer());
+        mapper.registerModule(new JavaTimeModule());
+        module.addSerializer(PaginatedResponse.class, new PaginatedResponseSerializer());
+        module.addSerializer(Product.class, new RestaurantProductSerializer.LessDetailSerializer());
         mapper.registerModule(module);
         return mapper.writeValueAsString(data);
 
@@ -291,10 +293,22 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
             }
         }
 
-        Collection<Product> productList = productRepo.findProductsByProductCategory_Business(business);
-        for (Product productItem: productList) {
-            // TODO: Iterate through product list and find if there is product with assigned code, if there is, change it
+        if (productRepo.existsProductByCodeOfProduct(productRequest.getCodeOfProduct())) {
+            if (Objects.equals(product.getCodeOfProduct(), productRequest.getCodeOfProduct())){
+                product.setCodeOfProduct(productRequest.getCodeOfProduct());
+            } else {
+                throw new Exception("Product with provided code already exists.");
+            }
         }
+
+//        var i = 0;
+//        for (Product productItem: productList) {
+//            i = i + 1;
+//            System.out.println(productItem);
+//            productItem.setCodeOfProduct(String.format("code#%s", 12312 + i));
+//            productRepo.save(productItem);
+//            // TODO: Iterate through product list and find if there is product with assigned code, if there is, change it
+//        }
 
         product.setCodeOfProduct(productRequest.getCodeOfProduct());
         product.setNameOfProduct(productRequest.getNameOfProduct());
@@ -334,6 +348,10 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                 appendicesCategory.setNameOfCategory(sideDishCategory.getNameOfCategory());
                 appendicesCategory.setNumberOfAllowed(sideDishCategory.getNumberOfAllowed());
                 appendicesCategory.setIsRequired(sideDishCategory.getIsRequired());
+
+                if (sideDishCategory.getSideDishes() == null) {
+                    throw new Exception("At least one side dish is required.");
+                }
 
                 for (SideDishRequest sideDish : sideDishCategory.getSideDishes()) {
                     System.out.println(sideDish);

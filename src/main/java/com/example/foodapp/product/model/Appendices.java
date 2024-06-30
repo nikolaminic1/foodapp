@@ -7,6 +7,9 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity
@@ -35,6 +38,15 @@ public class Appendices {
     public void setAppendicesCategory(AppendicesCategory appendicesCategory){
         this.appendicesCategory = appendicesCategory;
         appendicesCategory.getAppendicesList().add(this);
+    }
+
+    public Map<String, Object> getDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("nameOfSideDish", getNameOfAppendices());
+        map.put("doesAffectPrice", getDoesAffectPrice());
+        map.put("price", getPrice());
+        return map;
     }
 
 }

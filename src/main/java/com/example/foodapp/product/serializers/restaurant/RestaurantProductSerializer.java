@@ -20,6 +20,20 @@ import static com.example.foodapp.product.serializers.admin.AdminProductSerializ
 @JsonComponent
 public class RestaurantProductSerializer {
 
+    public static class LessDetailSerializer extends JsonSerializer<Product> {
+        @Override
+        public void serialize(Product product, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeNumberField("id", product.getId());
+            jsonGenerator.writeStringField("nameOfProduct", product.getAboutProduct());
+            jsonGenerator.writeStringField("codeOfProduct", product.getCodeOfProduct());
+            if (product.getProductImage() != null) {
+                jsonGenerator.writeStringField("image", product.getProductImage().getImageUrl());
+            }
+            jsonGenerator.writeEndObject();
+        }
+    }
+
     public static class DetailSerializer extends JsonSerializer<Product> {
         @Override
         public void serialize(Product product, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {

@@ -19,10 +19,10 @@ import java.util.Map;
 
 @Entity
 @Data
-@ToString
+@ToString(exclude = {"businessOwner", "businessLocation"})
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "businessOwner", "businessLocation" })
 //@EqualsAndHashCode(exclude = { "productCategories" })
 public class Business {
 

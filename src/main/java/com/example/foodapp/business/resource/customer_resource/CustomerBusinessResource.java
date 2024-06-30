@@ -31,19 +31,18 @@ public class CustomerBusinessResource {
 
     @JsonView(View.PublicList.class)
     @GetMapping("/list")
-    public ResponseEntity<List<Business>> getRestaurantsList() {
+    public ResponseEntity<String> getRestaurantsList(@RequestParam(name = "page") String page,
+                                                     @RequestParam(name = "limit") String per_page) {
         try {
-            return ResponseEntity.ok().body(customerRestaurantService.list());
+            return ResponseEntity.ok().body(customerRestaurantService.list(page, per_page));
         } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, e.getMessage()
-            );
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @JsonView(View.PublicDetail.class)
     @GetMapping("/{id}")
-    public ResponseEntity<Business> getRestaurantDetail(@PathVariable String id) {
+    public ResponseEntity<?> getRestaurantDetail(@PathVariable String id) {
         try {
             var restaurant = customerRestaurantService.get(parseLong(id));
             return ResponseEntity.ok().body(restaurant);
@@ -53,7 +52,7 @@ public class CustomerBusinessResource {
 //                    .status(HttpStatus.OK)
 //                    .build()
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
 //            Response.builder()
 //                    .status(HttpStatus.BAD_REQUEST)
 //                    .message(e.getMessage())

@@ -63,13 +63,13 @@ public class AppendicesCategory {
     public Map<String, Object> getAdminSideDishCategoryDetail() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", this.getId());
-        map.put("nameOfCategory", this.getId());
-        map.put("isRequired", this.getId());
-        map.put("product", this.getId());
-
-        if (this.getImage() != null) {
-            map.put("image", this.getImage().getImageDetail());
-        }
+        map.put("nameOfCategory", this.getNameOfCategory());
+        map.put("isRequired", this.getIsRequired());
+        map.put("sideDishes", this.getAppendicesList());
+//
+//        if (this.getImage() != null) {
+//            map.put("image", this.getImage().getImageDetail());
+//        }
 
         map.put("numberOfAllowed", this.getNumberOfAllowed());
 

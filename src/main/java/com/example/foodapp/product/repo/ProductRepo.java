@@ -21,4 +21,5 @@ public interface ProductRepo extends PagingAndSortingRepository<Product, Long> ,
     Collection<Product> findProductsByProductCategory_Business(Business business);
     Page<Product> findProductsByProductCategory_BusinessAndProductVisible(Business business, Boolean visible, Pageable pageable);
     Page<Product> findProductsByProductCategory_Business(Business business, Pageable pageable);
+    Boolean existsProductByCodeOfProduct(String code);
 }

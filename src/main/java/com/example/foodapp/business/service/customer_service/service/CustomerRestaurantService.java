@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRestaurantService {
-    Business get(Long id) throws Exception;
-    List<Business> list () throws Exception;
+    String get(Long id) throws Exception;
+    String list (String page, String per_page) throws Exception;
     Boolean delete(Long id, Principal principal) throws Exception;
 }
