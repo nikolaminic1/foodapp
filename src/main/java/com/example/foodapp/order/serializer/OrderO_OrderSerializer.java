@@ -26,6 +26,7 @@ public class OrderO_OrderSerializer extends StdSerializer<OrderO> {
         jsonGenerator.writeStringField("uuid", value.getUuid());
 
         jsonGenerator.writeArrayFieldStart("order_products");
+        // edit to see if it works
 //        for(OrderProduct orderProduct : value.getProductList()){
 //            jsonGenerator.writeStartObject();
 //            jsonGenerator.writeNumberField("id", orderProduct.getId());
