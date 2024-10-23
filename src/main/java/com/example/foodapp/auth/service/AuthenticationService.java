@@ -8,10 +8,13 @@ import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.repo.profiles._ProfileRepository;
 import com.example.foodapp.auth.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+
+import static com.example.foodapp.auth.config.AesEncryptionDecryption.decrypt;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,8 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
     private final _ProfileRepository profileRepo;
+
+
 
     public AuthenticationResponse login(LoginRequest request) throws Exception {
 
@@ -74,6 +79,12 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
+    public String verifyHashedToken (String token, String iv) throws Exception {
+        System.out.println(token);
+        String decryptedString = decrypt(token, iv);
+        System.out.println("Decrypted: " + decryptedString);
+        return "It works";
+}
     private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty()) {

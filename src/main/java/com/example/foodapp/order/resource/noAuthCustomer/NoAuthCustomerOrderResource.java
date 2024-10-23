@@ -25,21 +25,18 @@ public class NoAuthCustomerOrderResource {
     private final CustomerOrderService customerOrderService;
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Response> getMyOrder(@PathVariable Long id, Principal principal){
-        return ResponseEntity.ok(
-                Response.builder()
-                .message("order")
-                .statusCode(HttpStatus.OK.value())
-                .status(HttpStatus.OK)
-                .timeStamp(now())
-                .build()
-        );
+    public ResponseEntity<?> getMyOrder(@PathVariable Long id, Principal principal){
+        try {
+            return ResponseEntity.ok(customerOrderService.getOrder(id, principal));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @GetMapping("/get_active_order")
-    public ResponseEntity<Response> getMyOrder(Principal principal) {
+    @GetMapping("/get-active-order")
+    public ResponseEntity<?> getMyOrder(Principal principal) {
         try {
-            OrderO orderO = customerOrderService.getActiveOrder(principal);
+            String orderO = customerOrderService.getActiveOrder(principal);
             return ResponseEntity.ok(
                     Response.builder()
                             .message("active order")
@@ -61,7 +58,7 @@ public class NoAuthCustomerOrderResource {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<Response> updateOrder(@PathVariable Long id, Principal principal){
+    public ResponseEntity<?> updateOrder(@PathVariable Long id, Principal principal){
         return ResponseEntity.badRequest().body(
                 Response.builder()
                         .message("Order updated")

@@ -32,6 +32,7 @@ public class OrderProduct {
 
     private String uuid;
     private boolean ordered;
+    private boolean isOrder;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JsonSerialize(using = OrderProduct_ProductSerializer.class)

@@ -65,4 +65,17 @@ public class AuthenticationController {
         }
 
     }
+
+    @PostMapping("/token/verify")
+    public ResponseEntity<String> verifyHashedToken(
+            @RequestBody Map<String, String> obj
+    ) {
+        try {
+            return ResponseEntity.ok(
+                    service.verifyHashedToken(obj.get("token"), obj.get("iv"))
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(e.getMessage());
+        }
+    }
 }

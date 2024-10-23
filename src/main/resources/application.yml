@@ -5,6 +5,7 @@ jwt:
     access: 604800000
     refresh: 2592000000
 host: "http://localhost:8070"
+hash_token: "1O6PLFq14Yf8gnncQSEFkhIkqsueRv1Z6CRfi4iV9fbkENU66bFy7fs48qJtlyOL"
 web_host: "http://localhost:5173"
 server:
   port: 8070
@@ -24,8 +25,8 @@ spring:
         enabled: true
   datasource:
     url: jdbc:mysql://localhost:3306/foodapp
-    username: root
-    password: IchBinEinBerliner1
+    username: nikola
+    password: nikola
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -46,6 +47,6 @@ spring:
           auth: 'true'
     host: smtp.gmail.com
     username: minicnikola999@gmail.com
-    password: ngxvjefzbkdueklg
+    password: cztadadlbpmmkcfe
     port: 587
 

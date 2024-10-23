@@ -121,7 +121,7 @@ public class UserService {
 //                .lastname(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .ERole(ERole.ADMIN)
+                .ERole(ERole.CUSTOMER)
                 .build();
 
         /*
@@ -341,7 +341,6 @@ public class UserService {
         passwordToken.setDateCreated(now());
         passwordToken.setUid(uuid);
         passwordToken.setToken(token);
-
         passwordTokenRepo.save(passwordToken);
 
         String activationLink = host + "/reset-password-confirmation?uid=" + uuid + "&token=" + token;

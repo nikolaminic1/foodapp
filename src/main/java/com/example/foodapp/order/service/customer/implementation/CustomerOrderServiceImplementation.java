@@ -16,12 +16,17 @@ import com.example.foodapp.order.model.Request.OrderCustomerUpdateRequest;
 import com.example.foodapp.order.repo.CouponRepo;
 import com.example.foodapp.order.repo.OrderProductRepo;
 import com.example.foodapp.order.repo.OrderRepo;
+import com.example.foodapp.order.serializer.customer.CustomerOrderSerializer;
 import com.example.foodapp.order.service.customer.CustomerOrderService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+
+import javax.persistence.criteria.Order;
 import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
@@ -43,113 +48,139 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
     private final BillingAddressRepo billingAddressRepo;
 
     @Override
-    public OrderO create(OrderO orderO) {
+    public String create(OrderO orderO, Principal principal) throws Exception  {
         return null;
     }
 
     @Override
-    public OrderO getActiveOrder(Principal principal) throws Exception{
+    public String getOrder(Long id, Principal principal) throws Exception  {
+        return null;
+    }
+
+    @Override
+    public String getActiveOrder(Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName()).orElseThrow();
         Customer customer = userProfileService.returnCustomer(user);
-        if(orderRepo.findOrderOByCustomerAndOrdered(customer, false).isPresent()){
-            return orderRepo.findOrderOByCustomerAndOrdered(customer, false).get();
-        } else {
-            throw new Exception("Order not found");
-        }
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(OrderO.class, new CustomerOrderSerializer.DetailSerializer());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(orderRepo.findOrderOByCustomerAndOrdered(customer, false)
+                .orElseThrow(() -> new Exception("Order not found")));
+
     }
 
     @Override
-    public OrderO orderingOrder(OrderO orderO) {
-        List<OrderProduct> orderProductList = orderProductRepo.findOrderProductsByOrderO(orderO);
-        for(OrderProduct orderProduct : orderProductList){
-            orderProduct.setTimeUpdated(now());
-            orderProduct.setOrdered(true);
-            orderProduct.setTimeOrdered(now());
-        }
-        orderProductRepo.saveAll(orderProductList);
+    public String orderingOrder(OrderO orderO, Principal principal) {
 
-        orderO.setTimeUpdated(now());
-        orderO.setOrderedTime(now());
-        orderO.setOrdered(true);
-
-        if(orderO.getCoupon() != null){
-            Coupon coupon = orderO.getCoupon();
-            if(!coupon.isApplied()){
-                coupon.setApplied(true);
-                couponRepo.save(coupon);
-            }
-        }
-
-        orderRepo.save(orderO);
-        return orderO;
-    }
-
-    @Override
-    public OrderO get(Long id) {
         return null;
     }
 
     @Override
-    public OrderO update(Long id, OrderCustomerUpdateRequest request, Principal principal) throws Exception {
-        Customer customer = userProfileService.returnCustomer(userRepo.findByEmail(principal.getName()).orElseThrow());
-        OrderO orderO = orderRepo.findOrderOByCustomerAndOrdered(customer, false)
-                .orElseThrow(() -> new Exception("Order does not exists"));
-        if(!Objects.equals(orderO.getId(), id)){
+    public String get(Long id, Principal principal) throws Exception {
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+        OrderO orderO = orderRepo.findOrderOById(id).orElseThrow(() -> new Exception("Order not found"));
+
+        if (orderO.getCustomer().getUser() != user) {
             throw new Exception("This order does not belong to you");
         }
 
-        Boolean ordered = request.getOrdered();
-        Long shippingAddressId = request.getShippingAddressId();
-        Long billingAddressId = request.getBillingAddressId();
-
-
-        if(shippingAddressId != null){
-            ShippingAddress shippingAddress = shippingAddressRepo.findShippingAddressById(id)
-                    .orElseThrow(() -> new Exception("Shipping address does not exits"));
-//            Address address = addressRepo.findAddressByShippingAddresses(shippingAddress)
-//                    .orElseThrow(() -> new Exception("Address does not exists"));
-//            UserProfile addressUser = userRepo.findByUsername(principal.getName());
-//
-//            if(addressUser != address){
-//                throw new Exception("This address does not belong to you");
-//            }
-
-            orderO.setShippingAddress(shippingAddress);
-        }
-
-//        if(billingAddressId != null){
-//            BillingAddress billingAddress = billingAddressRepo.findBillingAddressById(id)
-//                    .orElseThrow(() -> new Exception("Billing address does not exits"));
-//            Address address = addressRepo.findAddressByBillingAddresses(billingAddress)
-//                    .orElseThrow(() -> new Exception("Address does not exists"));
-//            UserProfile addressUser = userRepo.findByUsername(principal.getName());
-//
-//            if(addressUser != address){
-//                throw new Exception("This address does not belong to you");
-//            }
-
-//            orderO.setBillingAddress(billingAddress);
-//        }
-
-
-        if(ordered){
-            if(orderO.getShippingAddress() == null){
-                throw new Exception("You need to enter shipping address");
-            }
-
-            if(orderO.getBillingAddress() == null){
-                throw new Exception("You need to enter billing address");
-            }
-            orderO.setOrdered(true);
-        }
-
-        orderRepo.save(orderO);
-
-        return orderO;
+        return null;
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public String update(Long id, OrderCustomerUpdateRequest request, Principal principal) throws Exception {
+
+        return null;
+    }
+
+    @Override
+    public Boolean delete(Long id, Principal principal) throws Exception {
         return null;
     }
 }
+
+
+// update
+
+//    Customer customer = userProfileService.returnCustomer(userRepo.findByEmail(principal.getName()).orElseThrow());
+//    OrderO orderO = orderRepo.findOrderOByCustomerAndOrdered(customer, false)
+//            .orElseThrow(() -> new Exception("Order does not exists"));
+//        if(!Objects.equals(orderO.getId(), id)){
+//                throw new Exception("This order does not belong to you");
+//                }
+//
+//                Boolean ordered = request.getOrdered();
+//                Long shippingAddressId = request.getShippingAddressId();
+//                Long billingAddressId = request.getBillingAddressId();
+//
+//
+//                if(shippingAddressId != null){
+//                ShippingAddress shippingAddress = shippingAddressRepo.findShippingAddressById(id)
+//                .orElseThrow(() -> new Exception("Shipping address does not exits"));
+////            Address address = addressRepo.findAddressByShippingAddresses(shippingAddress)
+////                    .orElseThrow(() -> new Exception("Address does not exists"));
+////            UserProfile addressUser = userRepo.findByUsername(principal.getName());
+////
+////            if(addressUser != address){
+////                throw new Exception("This address does not belong to you");
+////            }
+//
+//                orderO.setShippingAddress(shippingAddress);
+//                }
+//
+////        if(billingAddressId != null){
+////            BillingAddress billingAddress = billingAddressRepo.findBillingAddressById(id)
+////                    .orElseThrow(() -> new Exception("Billing address does not exits"));
+////            Address address = addressRepo.findAddressByBillingAddresses(billingAddress)
+////                    .orElseThrow(() -> new Exception("Address does not exists"));
+////            UserProfile addressUser = userRepo.findByUsername(principal.getName());
+////
+////            if(addressUser != address){
+////                throw new Exception("This address does not belong to you");
+////            }
+//
+////            orderO.setBillingAddress(billingAddress);
+////        }
+//
+//
+//                if(ordered){
+//                if(orderO.getShippingAddress() == null){
+//                throw new Exception("You need to enter shipping address");
+//                }
+//
+//                if(orderO.getBillingAddress() == null){
+//                throw new Exception("You need to enter billing address");
+//                }
+//                orderO.setOrdered(true);
+//                }
+//
+//                orderRepo.save(orderO);
+
+// update
+
+// ordering order
+//List<OrderProduct> orderProductList = orderProductRepo.findOrderProductsByOrderO(orderO);
+//        for(OrderProduct orderProduct : orderProductList){
+//                orderProduct.setTimeUpdated(now());
+//                orderProduct.setOrdered(true);
+//                orderProduct.setTimeOrdered(now());
+//                }
+//                orderProductRepo.saveAll(orderProductList);
+//
+//                orderO.setTimeUpdated(now());
+//                orderO.setOrderedTime(now());
+//                orderO.setOrdered(true);
+//
+//                if(orderO.getCoupon() != null){
+//                Coupon coupon = orderO.getCoupon();
+//                if(!coupon.isApplied()){
+//                coupon.setApplied(true);
+//                couponRepo.save(coupon);
+//                }
+//                }
+//
+//                orderRepo.save(orderO);
+
+// ordering order
