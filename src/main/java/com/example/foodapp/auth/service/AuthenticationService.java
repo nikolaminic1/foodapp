@@ -34,13 +34,6 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new Exception("User with provided email does not exist"));
 
-        System.out.println(user.getEmail());
-        System.out.println(user.isEnabled());
-        System.out.println(user.isAccountNonExpired());
-        System.out.println(user.isAccountNonLocked());
-
-        System.out.println(user.getFirstname());
-
         if (!user.isEnabled()) {
             throw new Exception("Account is not active.");
         } else if (!user.isAccountNonLocked()) {
@@ -108,10 +101,10 @@ public class AuthenticationService {
 
         if (token == null || !token.startsWith("JWT ")) {
 //            return "Refresh token should be provided.";
-            throw new Exception("Error");
+            throw new Exception("Token is not valid.");
         }
 
-        refreshToken = token.substring(7);
+        refreshToken = token.substring(4);
         userEmail = jwtService.extractUsername(refreshToken);
 
         if (userEmail != null) {
@@ -130,9 +123,9 @@ public class AuthenticationService {
                         .build();
             }
         } else {
-            throw new Exception("Error");
+            throw new Exception("User email does not exist");
         }
-        throw new Exception("Error");
+        throw new Exception("General error");
     }
 
     public String verify(String token) throws Exception{

@@ -44,14 +44,16 @@ public class AuthenticationController {
             @RequestBody TokenRequest refresh
     ) {
         try {
+            System.out.println(refresh);
             return ResponseEntity.ok(
                     service.refreshToken(refresh.getToken())
             );
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(400)).build();
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(e.getMessage());
         }
 
     }
+
     @PostMapping("/jwt/verify")
     public ResponseEntity<String> jwtVerify (
             @RequestBody String token

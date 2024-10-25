@@ -18,9 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.net.http.HttpHeaders;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -49,8 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        log.info(authHeader);
-//        log.error("after filter jwt authentication");
 
         jwt = authHeader.substring(4);
         // todo extract the email from JWT token
@@ -59,10 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new ServletException("Token expired");
         }
         username = jwtService.extractUsername(jwt);
-
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails;
-
             try {
                 userDetails = this.userDetailsService.loadUserByUsername(username);
             } catch (Exception e) {

@@ -49,4 +49,8 @@ spring:
     username: minicnikola999@gmail.com
     password: cztadadlbpmmkcfe
     port: 587
+  data:
+    redis:
+      host: localhost
+      port: 6379
 

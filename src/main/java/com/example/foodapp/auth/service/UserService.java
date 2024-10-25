@@ -208,8 +208,10 @@ public class UserService {
     }
 
     public String getProfile(Principal principal) throws Exception {
+        System.out.println(principal);
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("User does not exists"));
+        System.out.println(user);
 //        SimpleModule module = new SimpleModule();
 //        module.addSerializer(User.class, new UserCustomerSerializer.Serializer());
 //        ObjectMapper mapper = new ObjectMapper();

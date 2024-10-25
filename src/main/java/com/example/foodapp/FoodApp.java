@@ -37,24 +37,24 @@ public class FoodApp {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(
-			BusinessOwnerAdminService adminService,
-			BusinessOwnerRepo businessOwnerRepo,
-			AdminBusinessService adminBusinessService,
-			UserRepository userRepository,
-			BusinessRepo businessRepo,
-			ProductCategoryRepo productCategoryRepo,
-			ProductRepo productRepo,
-			ProductImageRepo productImageRepo,
-			ProductVariationRepo productVariationRepo,
-			VariationRepo variationRepo,
-			ProductTagRepo tagRepo,
-			AppendicesCategoryRepo appendicesCategoryRepo,
-			AppendicesRepo appendicesRepo,
-			ImageRepo imageRepo,
-			BusinessLocationRepo businessLocationRepo,
-			TimeOpenedDayRepo timeOpenedDayRepo,
-			TimeOpenedWeekRepo timeOpenedWeekRepo,
-			TimeOpenedService timeOpenedService
+//			BusinessOwnerAdminService adminService,
+//			BusinessOwnerRepo businessOwnerRepo,
+//			AdminBusinessService adminBusinessService,
+//			UserRepository userRepository,
+//			BusinessRepo businessRepo,
+//			ProductCategoryRepo productCategoryRepo,
+//			ProductRepo productRepo,
+//			ProductImageRepo productImageRepo,
+//			ProductVariationRepo productVariationRepo,
+//			VariationRepo variationRepo,
+//			ProductTagRepo tagRepo,
+//			AppendicesCategoryRepo appendicesCategoryRepo,
+//			AppendicesRepo appendicesRepo,
+//			ImageRepo imageRepo,
+//			BusinessLocationRepo businessLocationRepo,
+//			TimeOpenedDayRepo timeOpenedDayRepo,
+//			TimeOpenedWeekRepo timeOpenedWeekRepo,
+//			TimeOpenedService timeOpenedService
 	) {
 		return args -> {
 //			List<ProductCategory> categories = productCategoryRepo.findAll();

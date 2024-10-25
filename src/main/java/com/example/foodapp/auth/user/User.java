@@ -1,10 +1,10 @@
 package com.example.foodapp.auth.user;
 
 import com.example.foodapp.auth.dto.Gender;
-import com.example.foodapp.auth.user.Addresses.Address;
 import com.example.foodapp.auth.user.Addresses.AddressModel;
 import com.example.foodapp.auth.user.Addresses.AddressType;
 import com.example.foodapp.auth.user.UserProfiles._Profile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
@@ -46,28 +45,35 @@ public class User implements UserDetails {
 //            inverseJoinColumns = @JoinColumn(name = "authority"))
 //    private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonManagedReference
+    @JsonIgnore
     private List<AddressModel> addresses;
 
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_table_id")
     private _Profile profile;
 
-    public HashMap<String, List<AddressModel>> getAddresses() {
-        List<AddressModel> billingAddresses = this.addresses.stream().filter((add) ->
-           add.getAddressType().equals(AddressType.BILLING)
-        ).collect(Collectors.toList());
+//    public HashMap<String, List<AddressModel>> getAddresses() {
+//        List<AddressModel> billingAddresses = this.addresses.stream().filter((add) ->
+//           add.getAddressType().equals(AddressType.BILLING)
+//        ).collect(Collectors.toList());
+//
+//        List<AddressModel> shippingAddresses = this.addresses.stream().filter((add) ->
+//                add.getAddressType().equals(AddressType.SHIPPING)
+//        ).collect(Collectors.toList());
+//
+//        HashMap<String, List<AddressModel>> add = new HashMap<>();
+//        add.put("billing_address", billingAddresses);
+//        add.put("shipping_address", shippingAddresses);
+//        return add;
+//    }
 
-        List<AddressModel> shippingAddresses = this.addresses.stream().filter((add) ->
-                add.getAddressType().equals(AddressType.SHIPPING)
-        ).collect(Collectors.toList());
-
-        HashMap<String, List<AddressModel>> add = new HashMap<>();
-        add.put("billing_address", billingAddresses);
-        add.put("shipping_address", shippingAddresses);
-        return add;
-    }
+//    public HashMap<String, Object> getAddresses() {
+//        HashMap<String, Object> map = new HashMap<>();
+//        map.put("lsdbn", "laksdnf");
+//        return map;
+//    }
 
     public void setProfileObject(_Profile profile){
         this.profile = profile;
@@ -87,6 +93,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private ERole ERole;
 
+    public String getRole(){
+        return this.ERole.toString();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return ERole.getAuthorities();
@@ -100,10 +110,6 @@ public class User implements UserDetails {
 //        return null;
 //    }
 
-
-    public Gender getGender() {
-        return gender;
-    }
 
     @Override
     public String getPassword() {

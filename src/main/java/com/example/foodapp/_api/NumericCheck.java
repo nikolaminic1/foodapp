@@ -9,4 +9,13 @@ public class NumericCheck {
             return false;
         }
     }
+
+    public static boolean isPositiveLong(String str) {
+        try {
+            long value = Long.parseLong(str);
+            return value > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

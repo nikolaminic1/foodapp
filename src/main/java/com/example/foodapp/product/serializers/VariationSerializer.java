@@ -25,7 +25,6 @@ public class VariationSerializer extends StdSerializer<Variation> {
         jsonGenerator.writeNumberField("id", variation.getId());
         jsonGenerator.writeStringField("name", variation.getName());
 //        jsonGenerator.writeArrayFieldStart("product_variations");
-        log.error("error serializer");
 
 //        for(ProductVariation productVariation : variation.getProductVariationList()){
 //            jsonGenerator.writeStartObject();
