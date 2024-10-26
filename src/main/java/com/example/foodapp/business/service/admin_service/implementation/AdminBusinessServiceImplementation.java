@@ -78,8 +78,12 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
     }
 
     @Override
-    public Business get(Long id, Principal principal) throws Exception {
-        return businessRepo.findById(id).orElseThrow(() -> new Exception("Not found"));
+    public String get(Long id, Principal principal) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(new BusinessListSerializer.Serializer());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(businessRepo.findBusinessById(id).orElseThrow(() -> new Exception("Not found")));
     }
 
 

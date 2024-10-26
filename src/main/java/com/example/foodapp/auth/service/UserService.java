@@ -95,6 +95,8 @@ public class UserService {
           }
 
     public String register(RegisterRequest request) throws Exception {
+
+
         System.out.println(request.getEmail());
         if (!isEmailValid(request.getEmail())){
             throw new Exception("Invalid email");
@@ -132,6 +134,7 @@ public class UserService {
             user.setRoles(roles);
         */
 
+        // todo this should be reversed, every true should be false and other way around
         user.setEnabled(false);
         user.setAccountNonLocked(false);
         user.setAccountNonExpired(true);

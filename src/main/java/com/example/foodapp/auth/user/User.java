@@ -45,12 +45,12 @@ public class User implements UserDetails {
 //            inverseJoinColumns = @JoinColumn(name = "authority"))
 //    private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
     @JsonManagedReference
     @JsonIgnore
     private List<AddressModel> addresses;
 
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_table_id")
     private _Profile profile;
 

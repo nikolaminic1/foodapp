@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -30,9 +32,10 @@ public class BusinessRequest {
     private String deniedInfo;
     private String businessRegistrationNumber;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     @JsonIgnore
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
 }

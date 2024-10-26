@@ -29,8 +29,8 @@ public class Token {
 
     public boolean expired;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+//    @OnDelete(action = OnDeleteAction.SET_DEFAULT)
     @JoinColumn(name = "user_id")
     public User user;
 }

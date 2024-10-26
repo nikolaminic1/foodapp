@@ -18,4 +18,13 @@ public class NumericCheck {
             return false;
         }
     }
+
+    public static Integer convertToInt(long number) {
+        if (number >= Integer.MIN_VALUE && number <= Integer.MAX_VALUE) {
+            return (int) number;
+        } else {
+            System.out.println("Error: long value is out of int range.");
+            return null;
+        }
+    }
 }

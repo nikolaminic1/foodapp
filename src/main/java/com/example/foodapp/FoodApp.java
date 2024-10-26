@@ -1,7 +1,9 @@
 package com.example.foodapp;
 
+import com.example.foodapp.auth.dto.RegisterRequest;
 import com.example.foodapp.auth.repo.BusinessOwnerRepo;
 import com.example.foodapp.auth.repo.UserRepository;
+import com.example.foodapp.auth.service.UserService;
 import com.example.foodapp.auth.service.customer.service.BusinessOwnerAdminService;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
@@ -17,6 +19,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -37,6 +40,7 @@ public class FoodApp {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(
+			UserService service
 //			BusinessOwnerAdminService adminService,
 //			BusinessOwnerRepo businessOwnerRepo,
 //			AdminBusinessService adminBusinessService,
@@ -57,6 +61,16 @@ public class FoodApp {
 //			TimeOpenedService timeOpenedService
 	) {
 		return args -> {
+
+			for (var i = 1; i<10 ; i++) {
+				RegisterRequest request = new RegisterRequest();
+				request.setEmail(String.format("user%s@gmail.com", i));
+				request.setName("nikola");
+				request.setPassword("nikola123");
+				request.setRe_password("nikola123");
+//				service.register(request);
+			}
+
 //			List<ProductCategory> categories = productCategoryRepo.findAll();
 //
 //			for (var category: categories) {

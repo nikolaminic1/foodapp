@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -21,8 +23,9 @@ public class ProductRating {
     private int rating;
     private String ratingDescription;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_rating_id")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne

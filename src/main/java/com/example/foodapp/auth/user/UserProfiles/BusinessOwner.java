@@ -7,6 +7,8 @@ import lombok.*;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -34,9 +36,10 @@ public class BusinessOwner {
     @UpdateTimestamp
     private LocalDateTime dateUpdated;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
     @JsonBackReference
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

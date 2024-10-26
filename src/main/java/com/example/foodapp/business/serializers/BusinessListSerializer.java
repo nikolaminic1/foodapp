@@ -13,6 +13,24 @@ import java.util.List;
 @JsonComponent
 public class BusinessListSerializer {
 
+    private static void writeBusinessData (JsonGenerator jsonGenerator, Business business) throws IOException {
+        jsonGenerator.writeNumberField("id", business.getId());
+
+        if (business.getStatus() != null){
+            jsonGenerator.writeBooleanField("status", business.getStatus().getStatus());
+        }
+
+        jsonGenerator.writeStringField("name", business.getName());
+        jsonGenerator.writeStringField("description", business.getDescription());
+        jsonGenerator.writeStringField("logo", business.getLogoImage());
+        jsonGenerator.writeNumberField("delivery_price", business.getPriceOfDelivery());
+        jsonGenerator.writeStringField("name", business.getName());
+        jsonGenerator.writeObjectField("timeOpened", business.getTimeOpened());
+        jsonGenerator.writeObjectField("businessLocation", business.getBusinessLocation());
+        jsonGenerator.writeNumberField("averageRating", business.getAverageRating());
+        jsonGenerator.writeBooleanField("isActive", business.isActive());
+    }
+
     public static class Serializer extends JsonSerializer<List<Business>> {
 
         @Override
@@ -31,17 +49,7 @@ public class BusinessListSerializer {
             businessList.forEach((business -> {
                 try {
                     jsonGenerator.writeStartObject();
-                    jsonGenerator.writeNumberField("id", business.getId());
-
-                    if (business.getStatus() != null){
-                        jsonGenerator.writeBooleanField("status", business.getStatus().getStatus());
-                    }
-
-                    jsonGenerator.writeStringField("name", business.getName());
-                    jsonGenerator.writeStringField("description", business.getDescription());
-                    jsonGenerator.writeStringField("logo", business.getLogoImage());
-                    jsonGenerator.writeNumberField("delivery_price", business.getPriceOfDelivery());
-                    jsonGenerator.writeStringField("name", business.getName());
+                    writeBusinessData(jsonGenerator, business);
                     jsonGenerator.writeEndObject();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -66,6 +74,20 @@ public class BusinessListSerializer {
 //        jsonGenerator.writeObjectField("time_opened", business.getWorkingTime());
 
         }}
+
+    public static class DetailSerializer extends JsonSerializer<Business> {
+        @Override
+        public void serialize(
+                Business business,
+                JsonGenerator jsonGenerator,
+                SerializerProvider serializerProvider
+        ) throws IOException {
+            jsonGenerator.writeStartObject();
+            writeBusinessData(jsonGenerator, business);
+
+            jsonGenerator.writeEndObject();
+        }
+    }
 
 
 }
