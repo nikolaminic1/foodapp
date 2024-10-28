@@ -1,6 +1,7 @@
 package com.example.foodapp.api_resources;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +48,12 @@ public class ImageFileSaveService {
 
     public static String saveFile(String fileName, MultipartFile multipartFile)
             throws Exception {
-
+        if (multipartFile.getSize() >= 1048576) {
+            throw new FileSizeLimitExceededException(
+                    "File size exceeded",
+                    multipartFile.getSize(),
+                    1048576);
+        }
 //        if (!Files.exists(uploadPath)) {
 //            Files.createDirectories(uploadPath);
 //        }

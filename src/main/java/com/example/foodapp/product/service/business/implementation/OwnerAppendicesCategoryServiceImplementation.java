@@ -3,6 +3,7 @@ package com.example.foodapp.product.service.business.implementation;
 import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
+import com.example.foodapp.product.model.Appendices;
 import com.example.foodapp.product.model.AppendicesCategory;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.Request.AppendicesCategoryCreateRequest;
@@ -98,5 +99,21 @@ public class OwnerAppendicesCategoryServiceImplementation implements OwnerAppend
     @Override
     public Boolean delete(Long id, Principal principal) {
         return null;
+    }
+
+    @Override
+    public void createDummyData() {
+        Product product = productRepo.findProductById(202L).get();
+        List<AppendicesCategory> appendicesCategoryList = appendicesCategoryRepo.findAppendicesCategoriesByProduct(product);
+        System.out.println(appendicesCategoryList);
+        appendicesCategoryList.forEach((app) -> {
+            Appendices appendices = new Appendices();
+            appendices.setAppendicesCategory(app);
+            appendices.setNameOfAppendices("name-2");
+            appendices.setDoesAffectPrice(true);
+            appendices.setPrice(80);
+            appendicesRepo.save(appendices);
+            appendicesCategoryRepo.save(app);
+        });
     }
 }

@@ -11,8 +11,12 @@ import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.*;
 import com.example.foodapp.business.service.admin_service.AdminBusinessService;
 import com.example.foodapp.business.service.admin_service.TimeOpenedService;
+import com.example.foodapp.product.model.Appendices;
+import com.example.foodapp.product.model.AppendicesCategory;
+import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.repo.*;
+import com.example.foodapp.product.service.business.OwnerAppendicesCategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -59,17 +63,22 @@ public class FoodApp {
 //			TimeOpenedDayRepo timeOpenedDayRepo,
 //			TimeOpenedWeekRepo timeOpenedWeekRepo,
 //			TimeOpenedService timeOpenedService
+			,
+			ProductRepo productRepo,
+			AppendicesCategoryRepo appendicesCategoryRepo,
+			AppendicesRepo appendicesRepo,
+			OwnerAppendicesCategoryService categoryService
 	) {
 		return args -> {
-
-			for (var i = 1; i<10 ; i++) {
-				RegisterRequest request = new RegisterRequest();
-				request.setEmail(String.format("user%s@gmail.com", i));
-				request.setName("nikola");
-				request.setPassword("nikola123");
-				request.setRe_password("nikola123");
-//				service.register(request);
-			}
+//			categoryService.createDummyData();
+//			for (var i = 1; i<10 ; i++) {
+//				RegisterRequest request = new RegisterRequest();
+//				request.setEmail(String.format("user%s@gmail.com", i));
+//				request.setName("nikola");
+//				request.setPassword("nikola123");
+//				request.setRe_password("nikola123");
+////				service.register(request);
+//			}
 
 //			List<ProductCategory> categories = productCategoryRepo.findAll();
 //

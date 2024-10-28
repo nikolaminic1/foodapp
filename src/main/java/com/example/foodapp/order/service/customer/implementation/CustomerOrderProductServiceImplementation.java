@@ -85,13 +85,13 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
                         orderProduct.setQuantity(orderProductRequest.getQuantity());
                         orderO.getProductList().add(orderProduct);
                         orderProduct.updatePrice();
-
-                        if(product.getVariation() != null){
-                            System.out.println(product.getVariation());
-                            if(product.getVariation().getProductVariationList().size() > 0){
-                                addProductVariations(product, orderProduct, orderProductVariation);
-                            }
-                        }
+//
+//                        if(product.getVariation() != null){
+//                            System.out.println(product.getVariation());
+//                            if(product.getVariation().getProductVariationList().size() > 0){
+//                                addProductVariations(product, orderProduct, orderProductVariation);
+//                            }
+//                        }
 
                         orderProductRepo.save(orderProduct);
                         orderRepo.save(orderO);
@@ -157,12 +157,12 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
                 orderO.getProductList().add(orderProduct);
                 orderProduct.updatePrice();
 
-                if(product.getVariation() != null){
-                    System.out.println(product.getVariation());
-                    if(product.getVariation().getProductVariationList().size() > 0){
-                        addProductVariations(product, orderProduct, orderProductVariation);
-                    }
-                }
+//                if(product.getVariation() != null){
+//                    System.out.println(product.getVariation());
+//                    if(product.getVariation().getProductVariationList().size() > 0){
+//                        addProductVariations(product, orderProduct, orderProductVariation);
+//                    }
+//                }
 
                 orderProductRepo.save(orderProduct);
                 orderRepo.save(orderO);
@@ -189,7 +189,7 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
             OrderProduct orderProduct = orderProductRepo.findById(orderProductId).get();
             if(productVariationRepo.findById(productVariationId).isPresent()){
                 ProductVariation productVariation = productVariationRepo.findById(productVariationId).get();
-                orderProduct.setProductVariation(productVariation);
+//                orderProduct.setProductVariation(productVariation);
                 orderProduct.setTimeUpdated(now());
                 orderProduct.setQuantity(quantity);
                 orderProduct.updatePrice();
@@ -251,23 +251,23 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
         }
     }
 
-    @Override
-    public void addProductVariations(Product product, OrderProduct orderProduct, Long orderProductVariation) throws Exception{
-            if(product.getVariation().getProductVariationList().size() > 0){
-                if(productVariationRepo.findById(orderProductVariation).isPresent()){
-                    ProductVariation productVariation = productVariationRepo.findById(orderProductVariation).get();
-                    if(product == productVariation.getVariation().getProduct()){
-                        orderProduct.setProductVariation(productVariation);
-                    } else {
-                        throw new Exception("Product doesn't have specified variation");
-                    }
-                } else {
-                    throw new Exception("This variation doesn't exist");
-                }
-            } else {
-                throw new Exception("Doesn't have product variations");
-            }
-    }
+//    @Override
+//    public void addProductVariations(Product product, OrderProduct orderProduct, Long orderProductVariation) throws Exception{
+//            if(product.getVariation().getProductVariationList().size() > 0){
+//                if(productVariationRepo.findById(orderProductVariation).isPresent()){
+//                    ProductVariation productVariation = productVariationRepo.findById(orderProductVariation).get();
+//                    if(product == productVariation.getVariation().getProduct()){
+//                        orderProduct.setProductVariation(productVariation);
+//                    } else {
+//                        throw new Exception("Product doesn't have specified variation");
+//                    }
+//                } else {
+//                    throw new Exception("This variation doesn't exist");
+//                }
+//            } else {
+//                throw new Exception("Doesn't have product variations");
+//            }
+//    }
 }
 
 

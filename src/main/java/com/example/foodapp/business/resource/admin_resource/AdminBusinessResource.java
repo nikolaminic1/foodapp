@@ -9,14 +9,17 @@ import com.example.foodapp.business.model.Requests.BusinessRequest;
 import com.example.foodapp.business.model.Requests.BusinessUpdateRequest;
 import com.example.foodapp.business.service.admin_service.AdminBusinessService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
 
@@ -25,6 +28,7 @@ import static java.time.LocalDateTime.now;
 @RequestMapping("/api/v1/admin/business")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
+@Log4j2
 public class AdminBusinessResource {
     private final AdminBusinessService adminBusinessService;
     private final UserRepository userRepo;
@@ -58,12 +62,21 @@ public class AdminBusinessResource {
     }
 
     @PostMapping("/image")
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<?> addImage(@RequestParam MultipartFile file,
-                                      @RequestParam ImageType type,
+                                      @RequestParam String type,
                                       @RequestParam Long businessID,
                                       Principal principal) {
         try {
-            Boolean status = adminBusinessService.addImage(file, type, businessID, principal);
+            Boolean status = false;
+            if (Objects.equals(type, "BUSINESS_LOGO_IMAGE")){
+                status = adminBusinessService.addImage(
+                        file,
+                        ImageType.BUSINESS_LOGO_IMAGE,
+                        businessID,
+                        principal
+                );
+            }
 
             if (status) {
                 return ResponseEntity.ok().body("OK");
@@ -71,6 +84,10 @@ public class AdminBusinessResource {
                 return ResponseEntity.badRequest().body("File is not saved.");
             }
 
+        } catch (MaxUploadSizeExceededException exceededException) {
+            return ResponseEntity
+                    .status(HttpStatus.PAYLOAD_TOO_LARGE)
+                    .body("File size exceeds limit! Please upload a file smaller than the configured limit.");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body("File is not saved.");
@@ -78,10 +95,13 @@ public class AdminBusinessResource {
 
     }
 
-    @PostMapping
-    public ResponseEntity<?> createOrUpdateAdminBusiness(@RequestBody BusinessUpdateRequest request, Principal principal) {
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> createOrUpdateAdminBusiness(
+            @PathVariable Long id,
+            @RequestBody BusinessUpdateRequest request,
+            Principal principal) {
         try {
-            return ResponseEntity.ok().body(adminBusinessService.createOrUpdate(request, principal));
+            return ResponseEntity.ok().body(adminBusinessService.createOrUpdate(id, request, principal));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

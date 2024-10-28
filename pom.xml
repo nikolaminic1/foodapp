@@ -27,6 +27,16 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>example-repo</id>
+			<url>https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 		<!-- Add more repositories as needed -->
 	</repositories>
 	<dependencies>
@@ -50,6 +60,7 @@
 			<artifactId>spring-data-redis</artifactId>
 			<version>3.2.5</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>

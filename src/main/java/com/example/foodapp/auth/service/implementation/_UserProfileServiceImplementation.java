@@ -34,6 +34,6 @@ public class _UserProfileServiceImplementation implements _UserProfileService {
 
     @Override
     public Customer returnCustomer(User user) throws Exception {
-        return customerRepo.findCustomerByUser(user);
+        return customerRepo.findCustomerByUser(user).orElseThrow(() -> new Exception("Customer not found"));
     }
 }

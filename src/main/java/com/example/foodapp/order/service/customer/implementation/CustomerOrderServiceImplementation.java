@@ -5,10 +5,14 @@ import com.example.foodapp.auth.repo.AddressRepo;
 import com.example.foodapp.auth.repo.BillingAddressRepo;
 import com.example.foodapp.auth.repo.ShippingAddressRepo;
 import com.example.foodapp.auth.repo.UserRepository;
+import com.example.foodapp.auth.repo.profiles.CustomerRepository;
 import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.Addresses.ShippingAddress;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
+import com.example.foodapp.business.model.Business;
+import com.example.foodapp.business.repo.BusinessRepo;
+import com.example.foodapp.business.serializers.BusinessListSerializer;
 import com.example.foodapp.order.model.Coupon;
 import com.example.foodapp.order.model.OrderO;
 import com.example.foodapp.order.model.OrderProduct;
@@ -20,6 +24,7 @@ import com.example.foodapp.order.serializer.customer.CustomerOrderSerializer;
 import com.example.foodapp.order.service.customer.CustomerOrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -46,6 +51,8 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
     private final AddressRepo addressRepo;
     private final ShippingAddressRepo shippingAddressRepo;
     private final BillingAddressRepo billingAddressRepo;
+    private final CustomerRepository customerRepository;
+    private final BusinessRepo businessRepo;
 
     @Override
     public String create(OrderO orderO, Principal principal) throws Exception  {
@@ -98,6 +105,43 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
     @Override
     public Boolean delete(Long id, Principal principal) throws Exception {
         return null;
+    }
+
+    @Override
+    public String getRestaurantOrder(Long businessId, Principal principal) throws Exception {
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+
+        Business business = businessRepo.findBusinessById(businessId)
+                .orElseThrow(() -> new Exception("Business not found"));
+
+        Customer customer = customerRepository.findCustomerByUser(user)
+                .orElseThrow(() -> new Exception("Customer not found."));
+
+        OrderO orderO;
+
+        if (orderRepo.findOrderOByCustomerAndOrderedAndBusiness(customer, false, business).isPresent()) {
+            orderO = orderRepo.findOrderOByCustomerAndOrderedAndBusiness(customer, false, business).get();
+        } else {
+            orderO = new OrderO();
+            orderO.setOrdered(false);
+            orderO.setPrepared(false);
+            orderO.setDelivered(false);
+            orderO.setPickedUp(false);
+            orderO.setRefundGranted(false);
+            orderO.setRefundRequested(false);
+            orderO.setCustomer(customer);
+            orderO.setBusiness(business);
+            orderO.setStartTime(now());
+            orderRepo.save(orderO);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(OrderO.class, new CustomerOrderSerializer.DetailSerializer());
+        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(orderO);
     }
 }
 

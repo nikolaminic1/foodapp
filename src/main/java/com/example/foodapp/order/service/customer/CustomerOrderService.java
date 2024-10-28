@@ -11,6 +11,8 @@ public interface CustomerOrderService {
     String getActiveOrder(Principal principal) throws Exception;
     String get(Long id, Principal principal) throws Exception ;
     String getOrder(Long id, Principal principal) throws Exception ;
+    String getRestaurantOrder(Long id, Principal principal) throws Exception ;
+
     String update(Long id, OrderCustomerUpdateRequest request, Principal principal) throws Exception;
     Boolean delete(Long id, Principal principal) throws Exception ;
     String orderingOrder(OrderO orderO, Principal principal) throws Exception ;

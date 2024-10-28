@@ -81,11 +81,10 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
     public String get(Long id, Principal principal) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addSerializer(new BusinessListSerializer.Serializer());
+        module.addSerializer(Business.class, new BusinessListSerializer.DetailSerializer());
         mapper.registerModule(module);
         return mapper.writeValueAsString(businessRepo.findBusinessById(id).orElseThrow(() -> new Exception("Not found")));
     }
-
 
     @Override
     public Boolean delete(Long id, Principal principal) throws Exception {
@@ -94,8 +93,10 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
     }
 
     @Override
-    public Business createOrUpdate(BusinessUpdateRequest request, Principal principal) throws Exception {
-        Long id = request.getId();
+    public String createOrUpdate(Long id, BusinessUpdateRequest request, Principal principal) throws Exception {
+        System.out.println(id);
+        System.out.println(request);
+
         Business business;
         if (id==null) {
             business = new Business();
@@ -109,7 +110,7 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
         business.setPriceOfDelivery(request.getPriceOfDelivery());
         business.setPriceOfOrderForFreeDelivery(request.getPriceOfOrderForFreeDelivery());
         businessRepo.save(business);
-        return business;
+        return "Successfully updated.";
     }
 
     @Override
@@ -128,7 +129,7 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
             throw new Exception("File is not sent.");
         }
 
-        if (Objects.equals(imageType.toString(), ImageType.BUSINESS_MAIN_IMAGE.toString())) {
+        if (Objects.equals(imageType.toString(), ImageType.BUSINESS_LOGO_IMAGE.toString())) {
             business.setLogoImage(fileString);
             return true;
         }

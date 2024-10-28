@@ -16,5 +16,5 @@ public interface CustomerOrderProductService {
     OrderProduct update(OrderProductUpdateRequest orderProductUpdateRequest, Principal principal) throws Exception;
     Boolean delete(Long id);
     void addAppendicesToOrderProduct(Product product, Map<Long, List<Long>> data, OrderProduct orderProduct) throws Exception;
-    void addProductVariations(Product product, OrderProduct orderProduct, Long productVariationId) throws Exception;
+//    void addProductVariations(Product product, OrderProduct orderProduct, Long productVariationId) throws Exception;
 }

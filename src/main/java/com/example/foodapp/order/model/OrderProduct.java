@@ -38,8 +38,8 @@ public class OrderProduct {
     @JsonSerialize(using = OrderProduct_ProductSerializer.class)
     private Product product;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private ProductVariation productVariation;
+//    @ManyToOne(cascade = CascadeType.MERGE)
+//    private ProductVariation productVariation;
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "orderProducts")
     @JsonManagedReference
@@ -76,23 +76,23 @@ public class OrderProduct {
 
     public double getPrice() {
         double totalPrice = 0;
-        if(this.productVariation != null){
-            if(this.productVariation.getDoesAffectPrice()){
-                if(this.productVariation.getIsOnDiscount() != null){
-                    if(this.productVariation.getIsOnDiscount()){
-                        totalPrice = this.productVariation.getPriceOfVariationDiscount();
-                    }
-                } else {
-                    totalPrice = this.productVariation.getPriceOfVariation();
-                }
-            }
-        } else {
-            if(this.product.getIsOnDiscount()){
-                totalPrice = this.product.getDiscountPrice();
-            } else {
-                totalPrice = this.product.getPriceOfProduct();
-            }
-        }
+//        if(this.productVariation != null){
+//            if(this.productVariation.getDoesAffectPrice()){
+//                if(this.productVariation.getIsOnDiscount() != null){
+//                    if(this.productVariation.getIsOnDiscount()){
+//                        totalPrice = this.productVariation.getPriceOfVariationDiscount();
+//                    }
+//                } else {
+//                    totalPrice = this.productVariation.getPriceOfVariation();
+//                }
+//            }
+//        } else {
+//            if(this.product.getIsOnDiscount()){
+//                totalPrice = this.product.getDiscountPrice();
+//            } else {
+//                totalPrice = this.product.getPriceOfProduct();
+//            }
+//        }
 
         if(this.getAppendicesCategoryList() != null && this.getAppendicesCategoryList().size() > 0){
             for(AppendicesCategoryOrderProduct appendicesCategoryOrderProduct: this.getAppendicesCategoryList()){
@@ -111,19 +111,19 @@ public class OrderProduct {
     }
 
     public void updatePrice(){
-        System.out.println(productVariation.getPriceOfVariation());
-        if(productVariation != null){
-            log.warn("product var price 1");
-            if(productVariation.getDoesAffectPrice()){
-                log.warn("product var price 2");
-                price = productVariation.getTotalPrice();
-                log.warn("product var price 3");
-            }
-        } else {
-            log.warn("product var price 4");
-            price = product.getPriceOfProduct();
-            log.warn("product var price 5");
-        }
+//        System.out.println(productVariation.getPriceOfVariation());
+//        if(productVariation != null){
+//            log.warn("product var price 1");
+//            if(productVariation.getDoesAffectPrice()){
+//                log.warn("product var price 2");
+//                price = productVariation.getTotalPrice();
+//                log.warn("product var price 3");
+//            }
+//        } else {
+//            log.warn("product var price 4");
+//            price = product.getPriceOfProduct();
+//            log.warn("product var price 5");
+//        }
 
         if(appendicesCategoryList != null){
             log.warn("product var price 6");

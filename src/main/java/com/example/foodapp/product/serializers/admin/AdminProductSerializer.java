@@ -42,7 +42,7 @@ public class AdminProductSerializer {
                 System.out.println(sideDish);
                 jsonGenerator.writeStartObject();
                 jsonGenerator.writeNumberField("id", sideDish.getId());
-                jsonGenerator.writeStringField("nameOfAppendices", sideDish.getNameOfAppendices());
+                jsonGenerator.writeStringField("nameOfSideDish", sideDish.getNameOfAppendices());
                 jsonGenerator.writeBooleanField("doesAffectPrice", sideDish.getDoesAffectPrice());
                 jsonGenerator.writeNumberField("price", sideDish.getPrice());
                 jsonGenerator.writeEndObject();
@@ -62,9 +62,9 @@ public class AdminProductSerializer {
         jsonGenerator.writeStringField("nameOfProduct", product.getNameOfProduct());
         jsonGenerator.writeStringField("codeOfProduct", product.getCodeOfProduct());
         jsonGenerator.writeNumberField("priceOfProduct", product.getPriceOfProduct());
-        jsonGenerator.writeNumberField("discountPrice", product.getDiscountPrice());
-        jsonGenerator.writeNumberField("discountPercentage", product.getDiscountPercentage());
-        jsonGenerator.writeBooleanField("isOnDiscount", product.getIsOnDiscount());
+//        jsonGenerator.writeNumberField("discountPrice", product.getDiscountPrice());
+//        jsonGenerator.writeNumberField("discountPercentage", product.getDiscountPercentage());
+//        jsonGenerator.writeBooleanField("isOnDiscount", product.getIsOnDiscount());
         jsonGenerator.writeStringField("aboutProduct", product.getAboutProduct());
         jsonGenerator.writeNumberField("preparationTime", product.getPreparationTime());
 

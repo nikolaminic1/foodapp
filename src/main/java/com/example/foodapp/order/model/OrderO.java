@@ -86,10 +86,16 @@ public class OrderO {
     @ManyToOne(cascade = CascadeType.MERGE)
     private Business business;
 
+    public void updatePrice() {
+        this.setPrice(this.getPrice());
+    }
+
     public void setPrice(double amount){
         this.price = amount;
     }
 
+
+    // todo : need to check is delivery free based on business
     public double getPrice(){
         double totalOrderPrice = 0;
         for(OrderProduct orderProduct : this.getProductList()){

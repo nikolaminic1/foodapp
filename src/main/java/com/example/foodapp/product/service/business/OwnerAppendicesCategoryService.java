@@ -15,4 +15,6 @@ public interface OwnerAppendicesCategoryService {
     List<AppendicesCategory> getAppendicesCategoryByProduct(Product product, Principal principal);
     AppendicesCategory update(Long id);
     Boolean delete(Long id, Principal principal);
+
+    void createDummyData();
 }

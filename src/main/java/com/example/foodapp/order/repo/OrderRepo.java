@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface OrderRepo extends JpaRepository<OrderO, Long> {
     Optional<OrderO> findOrderOById(Long id);
     Optional<OrderO> findOrderOByCustomerAndOrdered(Customer customer, Boolean ordered);
+    Optional<OrderO> findOrderOByCustomerAndOrderedAndBusiness(Customer customer, Boolean ordered, Business business);
     Optional<OrderO> findOrderOByUuid(String uuid);
     List<OrderO> findOrderOSByCustomer(Customer customer);
     List<OrderO> findOrderOSByBusiness(Business business);

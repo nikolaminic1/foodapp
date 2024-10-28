@@ -25,7 +25,9 @@ public class CustomerOrderResource {
     private final CustomerOrderService customerOrderService;
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<?> getMyOrder(@PathVariable Long id, Principal principal){
+    public ResponseEntity<?> getMyOrder(
+            @PathVariable Long id,
+            Principal principal){
         try {
             return ResponseEntity.ok().body(customerOrderService.getOrder(id, principal));
         } catch (Exception e) {
@@ -33,6 +35,19 @@ public class CustomerOrderResource {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> getRestaurantOrder(
+            @RequestParam(name = "business", required = false, defaultValue = "0") Long business,
+            Principal principal){
+        try {
+            return ResponseEntity.ok().body(customerOrderService.getRestaurantOrder(business, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     @GetMapping("/get-active-order")
     public ResponseEntity<?> getActiveOrder(Principal principal) {

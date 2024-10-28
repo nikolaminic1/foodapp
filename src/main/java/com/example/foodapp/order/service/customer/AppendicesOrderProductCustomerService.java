@@ -11,5 +11,6 @@ public interface AppendicesOrderProductCustomerService {
     void addToOrderProduct(AddAppendixRequest addAppendixRequest, Principal principal) throws Exception;
     Appendices get(Long id);
     Appendices update(OrderProduct orderProduct, Principal principal);
-    Boolean delete(Long id);
+    Boolean delete(Long id, Principal principal);
+    String initializeOrderProduct(Long id, Long businessId, Principal principal) throws Exception;
 }

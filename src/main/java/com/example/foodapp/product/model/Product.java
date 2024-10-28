@@ -41,9 +41,7 @@ public class Product {
     private String nameOfProduct;
     private String codeOfProduct;
     private double priceOfProduct;
-    private double discountPrice;
-    private double discountPercentage;
-    private Boolean isOnDiscount;
+//    private Boolean isOnDiscount;
     private String aboutProduct;
     private int preparationTime;
     private Availability availability;

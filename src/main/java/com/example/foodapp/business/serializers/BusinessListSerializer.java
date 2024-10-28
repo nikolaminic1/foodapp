@@ -22,10 +22,16 @@ public class BusinessListSerializer {
 
         jsonGenerator.writeStringField("name", business.getName());
         jsonGenerator.writeStringField("description", business.getDescription());
-        jsonGenerator.writeStringField("logo", business.getLogoImage());
-        jsonGenerator.writeNumberField("delivery_price", business.getPriceOfDelivery());
+        jsonGenerator.writeStringField("logoImage", business.getLogoImage());
+        jsonGenerator.writeStringField("backgroundImage", business.getBackgroundImage());
+        jsonGenerator.writeNumberField("priceOfDelivery", business.getPriceOfDelivery());
+        jsonGenerator.writeNumberField("priceOfOrderForFreeDelivery", business.getPriceOfOrderForFreeDelivery());
         jsonGenerator.writeStringField("name", business.getName());
-        jsonGenerator.writeObjectField("timeOpened", business.getTimeOpened());
+
+        if (business.getTimeOpened() != null) {
+            jsonGenerator.writeObjectField("timeOpened", business.getTimeOpened().getWorkingTime());
+        }
+
         jsonGenerator.writeObjectField("businessLocation", business.getBusinessLocation());
         jsonGenerator.writeNumberField("averageRating", business.getAverageRating());
         jsonGenerator.writeBooleanField("isActive", business.isActive());
@@ -84,7 +90,8 @@ public class BusinessListSerializer {
         ) throws IOException {
             jsonGenerator.writeStartObject();
             writeBusinessData(jsonGenerator, business);
-
+            jsonGenerator.writeNumberField("priceOfDelivery", business.getPriceOfDelivery());
+            jsonGenerator.writeNumberField("priceOfOrderForFreeDelivery", business.getPriceOfOrderForFreeDelivery());
             jsonGenerator.writeEndObject();
         }
     }

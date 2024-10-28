@@ -60,9 +60,9 @@ public class CustomerRestaurantSerializer {
                         jsonGenerator.writeStringField("nameOfProduct", product.getNameOfProduct());
                         jsonGenerator.writeStringField("codeOfProduct", product.getCodeOfProduct());
                         jsonGenerator.writeNumberField("priceOfProduct", product.getPriceOfProduct());
-                        jsonGenerator.writeNumberField("discountPrice", product.getDiscountPrice());
-                        jsonGenerator.writeNumberField("discountPercentage", product.getDiscountPercentage());
-                        jsonGenerator.writeBooleanField("isOnDiscount", product.getIsOnDiscount());
+//                        jsonGenerator.writeNumberField("discountPrice", product.getDiscountPrice());
+//                        jsonGenerator.writeNumberField("discountPercentage", product.getDiscountPercentage());
+//                        jsonGenerator.writeBooleanField("isOnDiscount", product.getIsOnDiscount());
                         jsonGenerator.writeStringField("aboutProduct", product.getAboutProduct());
                         jsonGenerator.writeNumberField("preparationTime", product.getPreparationTime());
                         jsonGenerator.writeNumberField("weight", product.getWeight());

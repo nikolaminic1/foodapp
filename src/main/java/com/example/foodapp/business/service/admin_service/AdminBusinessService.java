@@ -11,7 +11,7 @@ import java.security.Principal;
 import java.util.Collection;
 
 public interface AdminBusinessService {
-    Business createOrUpdate(BusinessUpdateRequest request, Principal principal) throws Exception;
+    String createOrUpdate(Long id, BusinessUpdateRequest request, Principal principal) throws Exception;
     String list(int page, int limit, Principal principal) throws Exception;
     String get(Long id, Principal principal) throws Exception;
     Boolean delete(Long id, Principal principal) throws Exception;

@@ -17,7 +17,7 @@ import java.security.Principal;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/customer/order_product")
+@RequestMapping("/api/v1/customer/order/order-product")
 @RequiredArgsConstructor
 @Log4j2
 public class CustomerOrderProductResource {
@@ -25,50 +25,31 @@ public class CustomerOrderProductResource {
     private final NoAuthCustomerOrderProductService noAuthCustomerOrderProductService;
     private final AppendicesOrderProductCustomerService appendicesOrderProductCustomerService;
 
+    @PostMapping("/update/{id}")
+    public ResponseEntity<String> updateOrderProduct(
+            @RequestBody OrderProductRequest orderProductRequest,
+            @PathVariable String id,
+            Principal principal
+    ){
+        return ResponseEntity.ok().body("OK");
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<Response> saveOrderProduct(@RequestBody OrderProductRequest orderProductRequest, Principal principal){
+    public ResponseEntity<String> saveOrderProduct(@RequestBody OrderProductRequest orderProductRequest, Principal principal){
+        return ResponseEntity.ok().body("OK");
+    }
 
-        if(principal != null){
-            try{
-                customerOrderProductService.create(orderProductRequest, principal);
-
-                return ResponseEntity.ok(
-                        Response.builder()
-                                .message("OK message")
-                                .status(HttpStatus.OK)
-                                .statusCode(HttpStatus.OK.value())
-                                .build()
-                );
-            } catch (Exception e){
-                return ResponseEntity.badRequest().body(
-                        Response.builder()
-                                .message(e.getMessage())
-                                .status(HttpStatus.BAD_REQUEST)
-                                .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .build()
-                );
-            }
-        } else {
-            try {
-                noAuthCustomerOrderProductService.create(orderProductRequest);
-
-                return ResponseEntity.ok(
-                        Response.builder()
-                                .message("OK message")
-                                .status(HttpStatus.OK)
-                                .statusCode(HttpStatus.OK.value())
-                                .build()
-                );
-
-            } catch (Exception e){
-                return ResponseEntity.badRequest().body(
-                        Response.builder()
-                                .message(e.getMessage())
-                                .status(HttpStatus.BAD_REQUEST)
-                                .statusCode(HttpStatus.BAD_REQUEST.value())
-                                .build()
-                );
-            }
+    @PostMapping("/{id}")
+    public ResponseEntity<String> initializeOrderProduct(
+            @PathVariable Long id,
+            @RequestParam(value = "businessId", defaultValue = "0") Long businessId,
+            Principal principal){
+        try {
+            return ResponseEntity.ok()
+                    .body(appendicesOrderProductCustomerService.initializeOrderProduct(id, businessId, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -96,3 +77,47 @@ public class CustomerOrderProductResource {
         }
     }
 }
+
+
+//        if(principal != null){
+//                try{
+//                customerOrderProductService.create(orderProductRequest, principal);
+//
+//                return ResponseEntity.ok(
+//                Response.builder()
+//                .message("OK message")
+//                .status(HttpStatus.OK)
+//                .statusCode(HttpStatus.OK.value())
+//                .build()
+//                );
+//                } catch (Exception e){
+//                return ResponseEntity.badRequest().body(
+//                Response.builder()
+//                .message(e.getMessage())
+//                .status(HttpStatus.BAD_REQUEST)
+//                .statusCode(HttpStatus.BAD_REQUEST.value())
+//                .build()
+//                );
+//                }
+//                } else {
+//                try {
+//                noAuthCustomerOrderProductService.create(orderProductRequest);
+//
+//                return ResponseEntity.ok(
+//                Response.builder()
+//                .message("OK message")
+//                .status(HttpStatus.OK)
+//                .statusCode(HttpStatus.OK.value())
+//                .build()
+//                );
+//
+//                } catch (Exception e){
+//                return ResponseEntity.badRequest().body(
+//                Response.builder()
+//                .message(e.getMessage())
+//                .status(HttpStatus.BAD_REQUEST)
+//                .statusCode(HttpStatus.BAD_REQUEST.value())
+//                .build()
+//                );
+//                }
+//                }

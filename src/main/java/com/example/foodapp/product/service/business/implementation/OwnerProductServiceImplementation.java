@@ -107,7 +107,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
                     product.setAboutProduct(productRequest.getAboutProduct());
                     product.setCodeOfProduct(productRequest.getCodeOfProduct());
                     product.setPriceOfProduct(productRequest.getPriceOfProduct());
-                    product.setIsOnDiscount(productRequest.isOnDiscount());
+//                    product.setIsOnDiscount(productRequest.isOnDiscount());
                     product.setPreparationTime(productRequest.getPreparationTime());
                     product.setAvailability(productRequest.getAvailability());
                     product.setProductVisible(productRequest.isProductVisible());
@@ -313,8 +313,8 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
         product.setCodeOfProduct(productRequest.getCodeOfProduct());
         product.setNameOfProduct(productRequest.getNameOfProduct());
         product.setPriceOfProduct(productRequest.getPriceOfProduct());
-        product.setDiscountPrice(productRequest.getDiscountPrice());
-        product.setIsOnDiscount(productRequest.isOnDiscount());
+//        product.setDiscountPrice(productRequest.getDiscountPrice());
+//        product.setIsOnDiscount(productRequest.isOnDiscount());
         product.setAboutProduct(productRequest.getAboutProduct());
         product.setPreparationTime(productRequest.getPreparationTime());
         product.setProductVisible(productRequest.isProductVisible());
