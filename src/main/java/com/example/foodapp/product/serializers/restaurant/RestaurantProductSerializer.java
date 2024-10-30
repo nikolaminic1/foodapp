@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.example.foodapp.product.serializers.admin.AdminProductSerializer.writeData;
-import static com.example.foodapp.product.serializers.admin.AdminProductSerializer.writeSideDishCategoriesList;
 
 @JsonComponent
 public class RestaurantProductSerializer {
@@ -39,11 +38,11 @@ public class RestaurantProductSerializer {
         public void serialize(Product product, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             jsonGenerator.writeStartObject();
             writeData(product, jsonGenerator);
-            writeSideDishCategoriesList(product, jsonGenerator);
+//            writeSideDishCategoriesList(product, jsonGenerator);
 
 //            jsonGenerator.writeFieldName("skills");
 //            jsonGenerator.writeStartArray(); // Start the array
-//            for (var skill : product.getAppendicesCategoryList()) {
+//            for (var skill : product.getSideDishCategoryList()) {
 //                Map<String, String> map = new HashMap<>();
 //                map.put("asdl", "asdnf");
 //                jsonGenerator.writeObjectField("category1", map);

@@ -2,10 +2,8 @@ package com.example.foodapp.order.model;
 
 
 import com.example.foodapp.order.serializer.OrderProduct_ProductSerializer;
-import com.example.foodapp.product.model.Appendices;
-import com.example.foodapp.product.model.AppendicesCategory;
+import com.example.foodapp.product.model.SideDish;
 import com.example.foodapp.product.model.Product;
-import com.example.foodapp.product.model.ProductVariation;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,8 +20,8 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"appendicesCategoryList"})
-@EqualsAndHashCode(exclude = {"appendicesCategoryList"})
+@ToString(exclude = {"sideDishes"})
+@EqualsAndHashCode(exclude = {"sideDishes"})
 @Log4j2
 public class OrderProduct {
 
@@ -44,7 +42,7 @@ public class OrderProduct {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "orderProducts")
     @JsonManagedReference
-    private List<AppendicesCategoryOrderProduct> appendicesCategoryList;
+    private List<SideDish> sideDishes;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
@@ -69,50 +67,14 @@ public class OrderProduct {
         }
     }
 
-    public boolean isAddToCartAllowed() {
-        List<AppendicesCategory> categoryList = this.product.getAppendicesCategoryList();
-        List<AppendicesCategoryOrderProduct> categoryOrderProducts = this.getAppendicesCategoryList();
-        List<Boolean> booleans = new ArrayList<>();
-
-        if (categoryList == null || categoryList.size() == 0) {
-            return true;
-        }
-
-        for (AppendicesCategory categoryOrderProduct : categoryList){
-            if (categoryOrderProduct.getIsRequired() && categoryOrderProducts == null) {
-                return false;
-            }
-            for (AppendicesCategoryOrderProduct cat : categoryOrderProducts) {
-                if (cat.getAppendicesCategory() == categoryOrderProduct) {
-                    if (categoryOrderProduct.getIsRequired() && cat.getAppendicesList().size() > 0){
-                        booleans.add(true);
-                    } else if (categoryOrderProduct.getIsRequired() && cat.getAppendicesList().size() == 0) {
-                        booleans.add(false);
-                    } else {
-                        booleans.add(true);
-                    }
-                }
-            }
-
-        }
-
-        for (Boolean value : booleans) {
-            if (!value) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public double getItemPrice() {
         double total = 0.0;
         total += this.getProduct().getPriceOfProduct();
-        if (this.getAppendicesCategoryList() != null
-            && this.getAppendicesCategoryList().size() > 0) {
-            for(AppendicesCategoryOrderProduct category:
-                    this.getAppendicesCategoryList()) {
-                total += category.getCategoryTotal();
+        if (this.getSideDishes() != null) {
+            for(SideDish sideDish: this.getSideDishes()) {
+                if (sideDish.getDoesAffectPrice()) {
+                    total += sideDish.getPrice();
+                }
             }
         }
         return total;
@@ -128,7 +90,7 @@ public class OrderProduct {
         product.put("ordered", this.isOrdered());
         product.put("inOrder", this.isInOrder());
         product.put("product", this.getProduct());
-        product.put("appendicesCategoryList", this.getAppendicesCategoryList());
+        product.put("sideDishes", this.getSideDishes());
         product.put("timeCreated", this.getTimeCreated());
         product.put("timeUpdated", this.getTimeUpdated());
         product.put("timeOrdered", this.getTimeOrdered());
@@ -139,81 +101,29 @@ public class OrderProduct {
     }
 
     public void updatePrice(){
-        if(appendicesCategoryList != null){
-            log.warn("product var price 6");
-            for (AppendicesCategoryOrderProduct appendicesCategory : appendicesCategoryList) {
-                log.warn("product var price 7");
-                double appendicesCategoryPrice = 0;
-//                for (Appendices appendices : appendicesCategory.getAppendicesList()) {
-//                    appendicesCategoryPrice =+ appendices.getPrice();
-//                    System.out.println(appendices.getPrice());
-//                    log.warn("product var price 8");
-//                }
-                log.warn("product var price 9");
-                price =+ appendicesCategoryPrice;
-            }
-        }
+        this.price = getItemPrice();
     }
+        
+
+//        if(appendicesCategoryList != null){
+//            log.warn("product var price 6");
+//            for (SideDishCategoryOrderProduct appendicesCategory : appendicesCategoryList) {
+//                log.warn("product var price 7");
+//                double appendicesCategoryPrice = 0;
+////                for (SideDish appendices : appendicesCategory.getSideDishList()) {
+////                    appendicesCategoryPrice =+ appendices.getPrice();
+////                    System.out.println(appendices.getPrice());
+////                    log.warn("product var price 8");
+////                }
+//                log.warn("product var price 9");
+//                price =+ appendicesCategoryPrice;
+//            }
+//        }
+    
 
     public List<Object> getCustomerSideDishCategories() {
         List<Object> list = new ArrayList<>();
-        List<AppendicesCategory> categories = this.product.getAppendicesCategoryList();
-        List<AppendicesCategoryOrderProduct> categoryOrderProducts = this.getAppendicesCategoryList();
 
-        if (categories!= null){
-            for (AppendicesCategory category : categories){
-                Map<String, Object> categoryDetail = new HashMap<>();
-                categoryDetail.put("id", category.getId());
-                categoryDetail.put("nameOfCategory", category.getNameOfCategory());
-                categoryDetail.put("isRequired", category.getIsRequired());
-                categoryDetail.put("numberOfAllowed", category.getNumberOfAllowed());
-
-                List<Object> objectsList = new ArrayList<>();
-
-                for (Appendices appendices : category.getAppendicesList()) {
-                    Map<String, Object> newSD = new HashMap<>();
-                    newSD.put("id", appendices.getId());
-                    newSD.put("nameOfSideDish", appendices.getNameOfAppendices());
-                    newSD.put("doesAffectPrice", appendices.getDoesAffectPrice());
-                    newSD.put("price", appendices.getPrice());
-
-                    if (categoryOrderProducts != null) {
-                        log.error('1');
-                        for (AppendicesCategoryOrderProduct categoryOrderProduct : categoryOrderProducts){
-                            if (categoryOrderProduct.getAppendicesCategory() == category) {
-                                if (categoryOrderProduct.getAppendicesList().contains(appendices)) {
-                                    newSD.put("inOrder", true);
-                                } else {
-                                    newSD.put("inOrder", false);
-                                }
-                                break;
-                            } else {
-                                newSD.put("inOrder", false);
-                            }
-                            if (categoryDetail.get("isMax") == null) {
-                                if (category.getNumberOfAllowed() < categoryOrderProduct.getAppendicesList().size()){
-                                    categoryDetail.put("isMax", false);
-                                } else {
-                                    categoryDetail.put("isMax", true);
-                                }
-                            } else {
-                                categoryDetail.put("isMax", true);
-                            }
-
-                        }
-                    } else {
-                        newSD.put("inOrder", false);
-                        categoryDetail.put("isMax", false);
-                    }
-
-                    objectsList.add(newSD);
-                }
-
-
-                categoryDetail.put("sideDishes", objectsList);
-                list.add(categoryDetail);
-            }
-        }
         return list;
     }
 }
@@ -249,3 +159,93 @@ public class OrderProduct {
 //            price = product.getPriceOfProduct();
 //            log.warn("product var price 5");
 //        }
+
+
+//
+//        if (categories!= null){
+//                for (SideDishCategory category : categories){
+//                Map<String, Object> categoryDetail = new HashMap<>();
+//        categoryDetail.put("id", category.getId());
+//        categoryDetail.put("nameOfCategory", category.getNameOfCategory());
+//        categoryDetail.put("isRequired", category.getIsRequired());
+//        categoryDetail.put("numberOfAllowed", category.getNumberOfAllowed());
+//
+//        List<Object> objectsList = new ArrayList<>();
+//
+//        for (SideDish sideDish : category.getSideDishList()) {
+//        Map<String, Object> newSD = new HashMap<>();
+//        newSD.put("id", sideDish.getId());
+//        newSD.put("nameOfSideDish", sideDish.getNameOfSideDish());
+//        newSD.put("doesAffectPrice", sideDish.getDoesAffectPrice());
+//        newSD.put("price", sideDish.getPrice());
+//
+//        if (categoryOrderProducts != null) {
+//        log.error('1');
+//        for (SideDishCategoryOrderProduct categoryOrderProduct : categoryOrderProducts){
+//        if (categoryOrderProduct.getSideDishCategory() == category) {
+//        if (categoryOrderProduct.getSideDishList().contains(sideDish)) {
+//        newSD.put("inOrder", true);
+//        } else {
+//        newSD.put("inOrder", false);
+//        }
+//        break;
+//        } else {
+//        newSD.put("inOrder", false);
+//        }
+//        if (categoryDetail.get("isMax") == null) {
+//        if (category.getNumberOfAllowed() < categoryOrderProduct.getSideDishList().size()){
+//        categoryDetail.put("isMax", false);
+//        } else {
+//        categoryDetail.put("isMax", true);
+//        }
+//        } else {
+//        categoryDetail.put("isMax", true);
+//        }
+//
+//        }
+//        } else {
+//        newSD.put("inOrder", false);
+//        categoryDetail.put("isMax", false);
+//        }
+//
+//        objectsList.add(newSD);
+//        }
+//
+//
+//        categoryDetail.put("sideDishes", objectsList);
+//        list.add(categoryDetail);
+//        }
+//        }
+
+//
+//    List<SideDishCategory> categoryList = this.product.getSideDishCategoryList();
+//    List<SideDishCategoryOrderProduct> categoryOrderProducts = this.getSideDishCategoryList();
+//    List<Boolean> booleans = new ArrayList<>();
+//
+//        if (categoryList == null || categoryList.size() == 0) {
+//                return true;
+//                }
+//
+//                for (SideDishCategory categoryOrderProduct : categoryList){
+//                if (categoryOrderProduct.getIsRequired() && categoryOrderProducts == null) {
+//                return false;
+//                }
+//                for (SideDishCategoryOrderProduct cat : categoryOrderProducts) {
+//                if (cat.getSideDishCategory() == categoryOrderProduct) {
+//                if (categoryOrderProduct.getIsRequired() && cat.getSideDishList().size() > 0){
+//                booleans.add(true);
+//                } else if (categoryOrderProduct.getIsRequired() && cat.getSideDishList().size() == 0) {
+//                booleans.add(false);
+//                } else {
+//                booleans.add(true);
+//                }
+//                }
+//                }
+//
+//                }
+//
+//                for (Boolean value : booleans) {
+//                if (!value) {
+//                return false;
+//                }
+//                }

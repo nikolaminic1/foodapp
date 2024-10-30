@@ -68,28 +68,28 @@ public class CustomerRestaurantSerializer {
                         if (product.getProductImage() != null) {
                             jsonGenerator.writeStringField("image", product.getProductImage().getImageUrl());
                         }
-                        jsonGenerator.writeFieldName("sideDishCategories");
-                        jsonGenerator.writeStartArray();
-                        for (var k : product.getAppendicesCategoryList()) {
-                            jsonGenerator.writeStartObject();
-                            jsonGenerator.writeNumberField("id", k.getId());
-                            jsonGenerator.writeNumberField("numberOfAllowed", k.getNumberOfAllowed());
-                            jsonGenerator.writeBooleanField("isRequired", k.getIsRequired());
-                            jsonGenerator.writeStringField("nameOfCategory", k.getNameOfCategory());
-                            jsonGenerator.writeFieldName("sideDishes");
-                            jsonGenerator.writeStartArray();
-                            for (var m : k.getAppendicesList()) {
-                                jsonGenerator.writeStartObject();
-                                jsonGenerator.writeNumberField("id", m.getId());
-                                jsonGenerator.writeBooleanField("doesAffectPrice", m.getDoesAffectPrice());
-                                jsonGenerator.writeStringField("nameOfSideDish", m.getNameOfAppendices());
-                                jsonGenerator.writeNumberField("price", m.getPrice());
-                                jsonGenerator.writeEndObject();
-                            }
-                            jsonGenerator.writeEndArray();
-                            jsonGenerator.writeEndObject();
-                        }
-                        jsonGenerator.writeEndArray();
+//                        jsonGenerator.writeFieldName("sideDishCategories");
+//                        jsonGenerator.writeStartArray();
+//                        for (var k : product.getSideDishCategoryList()) {
+//                            jsonGenerator.writeStartObject();
+//                            jsonGenerator.writeNumberField("id", k.getId());
+//                            jsonGenerator.writeNumberField("numberOfAllowed", k.getNumberOfAllowed());
+//                            jsonGenerator.writeBooleanField("isRequired", k.getIsRequired());
+//                            jsonGenerator.writeStringField("nameOfCategory", k.getNameOfCategory());
+//                            jsonGenerator.writeFieldName("sideDishes");
+//                            jsonGenerator.writeStartArray();
+//                            for (var m : k.getSideDishList()) {
+//                                jsonGenerator.writeStartObject();
+//                                jsonGenerator.writeNumberField("id", m.getId());
+//                                jsonGenerator.writeBooleanField("doesAffectPrice", m.getDoesAffectPrice());
+//                                jsonGenerator.writeStringField("nameOfSideDish", m.getNameOfSideDish());
+//                                jsonGenerator.writeNumberField("price", m.getPrice());
+//                                jsonGenerator.writeEndObject();
+//                            }
+//                            jsonGenerator.writeEndArray();
+//                            jsonGenerator.writeEndObject();
+//                        }
+//                        jsonGenerator.writeEndArray();
                         jsonGenerator.writeEndObject();
                     }
                     jsonGenerator.writeEndArray();

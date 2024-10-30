@@ -26,11 +26,11 @@ public class OrderProductRequest {
         this.productVariationId = productVariationId;
     }
 
-//    public Map<Long, List<Long>> getAppendicesCategoryList() {
+//    public Map<Long, List<Long>> getSideDishCategoryList() {
 //        return appendicesCategoryList;
 //    }
 //
-//    public void setAppendicesCategoryList(Map<Long, List<Long>> appendicesCategoryList) {
+//    public void setSideDishCategoryList(Map<Long, List<Long>> appendicesCategoryList) {
 //        this.appendicesCategoryList = appendicesCategoryList;
 //    }
 

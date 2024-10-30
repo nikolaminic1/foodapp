@@ -8,24 +8,18 @@ import com.example.foodapp.auth.user.User;
 import com.example.foodapp.auth.user.UserProfiles.Customer;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.BusinessRepo;
-import com.example.foodapp.order.model.AppendicesCategoryOrderProduct;
 import com.example.foodapp.order.model.OrderO;
 import com.example.foodapp.order.model.OrderProduct;
 import com.example.foodapp.order.model.Request.AddAppendixRequest;
 import com.example.foodapp.order.model.Request.AddSideDishToProductRequest;
-import com.example.foodapp.order.repo.AppendicesCategoryOrderProductRepo;
 import com.example.foodapp.order.repo.OrderProductRepo;
 import com.example.foodapp.order.repo.OrderRepo;
 import com.example.foodapp.order.serializer.customer.CustomerOrderProductSerializer;
-import com.example.foodapp.order.service.customer.AppendicesOrderProductCustomerService;
-import com.example.foodapp.product.model.Appendices;
-import com.example.foodapp.product.model.AppendicesCategory;
+import com.example.foodapp.order.service.customer.SideDishOrderProductCustomerService;
+import com.example.foodapp.product.model.SideDish;
 import com.example.foodapp.product.model.Product;
-import com.example.foodapp.product.repo.AppendicesCategoryRepo;
-import com.example.foodapp.product.repo.AppendicesRepo;
+import com.example.foodapp.product.repo.SideDishRepo;
 import com.example.foodapp.product.repo.ProductRepo;
-import com.example.foodapp.product.repo.ProductVariationRepo;
-import com.example.foodapp.product.serializers.admin.AdminProductSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -44,15 +38,12 @@ import static java.time.LocalDateTime.now;
 @Service
 @Transactional
 @Log4j2
-public class AppendicesOrderProductCustomerServiceImplementation implements AppendicesOrderProductCustomerService {
+public class SideDishOrderProductCustomerServiceImplementation implements SideDishOrderProductCustomerService {
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
     private final OrderProductRepo orderProductRepo;
     private final OrderRepo orderRepo;
-    private final ProductVariationRepo productVariationRepo;
-    private final AppendicesCategoryRepo appendicesCategoryRepo;
-    private final AppendicesCategoryOrderProductRepo appendicesCategoryOrderProductRepo;
-    private final AppendicesRepo appendicesRepo;
+    private final SideDishRepo appendicesRepo;
     private final BusinessRepo businessRepo;
     private final ProductRepo productRepo;
     private final CustomerRepository customerRepo;
@@ -84,70 +75,18 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
         }
 
         OrderProduct orderProduct = orderProductRepo.findById(orderProductId).get();
-        Appendices appendices = appendicesRepo.findById(appendixId).get();
+        SideDish sideDish = appendicesRepo.findById(appendixId).get();
 
-        if(appendices.getAppendicesCategory().getProduct() != orderProduct.getProduct()){
-            throw new Exception("This appendix is not associated with this product");
-        }
 
-        List<AppendicesCategoryOrderProduct> appendicesCategoryList = orderProduct.getAppendicesCategoryList();
-
-        if(appendicesCategoryList.size() == 0){
-
-            AppendicesCategoryOrderProduct appendicesCategoryOrderProduct = new AppendicesCategoryOrderProduct();
-//            appendicesCategoryOrderProduct.setAppendicesCategory(appendices.getAppendicesCategory());
-
-            if(appendicesCategoryOrderProduct.getAppendicesList() == null) {
-//                List<Appendices> appendicesList = new ArrayList<>();
-//                appendicesList.add(appendices);
-//                appendicesCategoryOrderProduct.setAppendicesList(appendicesList);
-            }
-
-//            appendicesCategoryOrderProduct.addAppendicesToList(appendices);
-            appendicesCategoryOrderProduct.setOrderProducts(orderProduct);
-            orderProduct.updatePrice();
-
-            orderProductRepo.save(orderProduct);
-            appendicesCategoryOrderProductRepo.save(appendicesCategoryOrderProduct);
-
-        } else {
-
-            boolean doesAppendicesCategoryOrderProductExists = appendicesCategoryOrderProductRepo
-                    .findAppendicesCategoryOrderProductByAppendicesCategoryAndOrderProducts(appendices.getAppendicesCategory(), orderProduct)
-                    .isPresent();
-
-            if(!doesAppendicesCategoryOrderProductExists){
-                throw new Exception("This appendix does not have its own category");
-            }
-
-            AppendicesCategoryOrderProduct appendicesCategoryOrderProduct = appendicesCategoryOrderProductRepo
-                    .findAppendicesCategoryOrderProductByAppendicesCategoryAndOrderProducts(appendices.getAppendicesCategory(), orderProduct)
-                    .get();
-
-//            if(appendicesCategoryOrderProduct.getAppendicesCategory().getNumberOfAllowed() <= appendicesCategoryOrderProduct.getAppendicesList().size()){
-//                throw new Exception("You can not add more appendices to order product");
-//            }
-
-//            if(appendicesCategoryOrderProduct.getAppendicesList().contains(appendices)){
-//                throw new Exception("You already have this appendix in your order product");
-//            }
-
-//            appendicesCategoryOrderProduct.addAppendicesToList(appendices);
-            appendicesCategoryOrderProduct.setOrderProducts(orderProduct);
-            orderProduct.updatePrice();
-
-            orderProductRepo.save(orderProduct);
-            appendicesCategoryOrderProductRepo.save(appendicesCategoryOrderProduct);
-        }
     }
 
     @Override
-    public Appendices get(Long id) {
+    public SideDish get(Long id) {
         return null;
     }
 
     @Override
-    public Appendices update(OrderProduct orderProduct, Principal principal) {
+    public SideDish update(OrderProduct orderProduct, Principal principal) {
         return null;
     }
 
@@ -171,38 +110,9 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
             throw new Exception("This order product does not belong to this user");
         }
 
-        Appendices appendices = appendicesRepo.findById(request.getSideDishId())
+        SideDish sideDish = appendicesRepo.findById(request.getSideDishId())
                 .orElseThrow(() -> new Exception("Side dish not found"));
 
-        AppendicesCategory categoryOrderProduct = appendicesCategoryRepo
-                .findById(request.getSideDishOrderProductCategoryId())
-                .orElseThrow(() -> new Exception("Category not found"));
-
-
-        if (categoryOrderProduct.getAppendicesList().size() <= appendices.getAppendicesCategory().getNumberOfAllowed()){
-            throw new Exception("Maximum number allowed");
-        }
-
-        List<AppendicesCategoryOrderProduct> categoryOrderProductList = orderProduct.getAppendicesCategoryList();
-
-        if (categoryOrderProductList != null){
-            for(AppendicesCategoryOrderProduct op : categoryOrderProductList) {
-                if (op.getAppendicesCategory() == categoryOrderProduct){
-                    op.getAppendicesList().add(appendices);
-                    appendicesCategoryOrderProductRepo.save(op);
-                } else {
-                    AppendicesCategoryOrderProduct opc = new AppendicesCategoryOrderProduct();
-                    opc.setOrderProduct(orderProduct);
-                    opc.setAppendicesCategory(categoryOrderProduct);
-
-                    List<Appendices> appendicesList = new ArrayList<>();
-                    appendicesList.add(appendices);
-                    opc.setAppendicesList(appendicesList);
-                    appendicesCategoryOrderProductRepo.save(opc);
-
-                }
-            }
-        }
         orderProductRepo.save(orderProduct);
         return this.orderProductMapping(orderProduct);
     }
@@ -247,9 +157,9 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
         orderProduct.setOrderO(orderO);
         orderProduct.setInOrder(false);
 
-//        for (AppendicesCategory category : product.getAppendicesCategoryList()) {
-//            AppendicesCategoryOrderProduct categoryOrderProduct = new AppendicesCategoryOrderProduct();
-//            categoryOrderProduct.setAppendicesCategory(category);
+//        for (SideDishCategory category : product.getSideDishCategoryList()) {
+//            SideDishCategoryOrderProduct categoryOrderProduct = new SideDishCategoryOrderProduct();
+//            categoryOrderProduct.setSideDishCategory(category);
 //            categoryOrderProduct.setOrderProduct(orderProduct);
 //        }
 
@@ -267,3 +177,87 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
         return mapper.writeValueAsString(orderProduct);
     }
 }
+//
+//        if(sideDish.getSideDishCategory().getProduct() != orderProduct.getProduct()){
+//                throw new Exception("This appendix is not associated with this product");
+//                }
+//
+//                List<SideDishCategoryOrderProduct> appendicesCategoryList = orderProduct.getSideDishCategoryList();
+//
+//        if(appendicesCategoryList.size() == 0){
+//
+//        SideDishCategoryOrderProduct appendicesCategoryOrderProduct = new SideDishCategoryOrderProduct();
+////            appendicesCategoryOrderProduct.setSideDishCategory(appendices.getSideDishCategory());
+//
+//        if(appendicesCategoryOrderProduct.getSideDishList() == null) {
+////                List<SideDish> appendicesList = new ArrayList<>();
+////                appendicesList.add(appendices);
+////                appendicesCategoryOrderProduct.setSideDishList(appendicesList);
+//        }
+//
+////            appendicesCategoryOrderProduct.addSideDishToList(appendices);
+//        appendicesCategoryOrderProduct.setOrderProducts(orderProduct);
+//        orderProduct.updatePrice();
+//
+//        orderProductRepo.save(orderProduct);
+//        appendicesCategoryOrderProductRepo.save(appendicesCategoryOrderProduct);
+//
+//        } else {
+//
+//        boolean doesSideDishCategoryOrderProductExists = appendicesCategoryOrderProductRepo
+//        .findSideDishCategoryOrderProductBySideDishCategoryAndOrderProducts(sideDish.getSideDishCategory(), orderProduct)
+//        .isPresent();
+//
+//        if(!doesSideDishCategoryOrderProductExists){
+//        throw new Exception("This appendix does not have its own category");
+//        }
+//
+//        SideDishCategoryOrderProduct appendicesCategoryOrderProduct = appendicesCategoryOrderProductRepo
+//        .findSideDishCategoryOrderProductBySideDishCategoryAndOrderProducts(sideDish.getSideDishCategory(), orderProduct)
+//        .get();
+//
+////            if(appendicesCategoryOrderProduct.getSideDishCategory().getNumberOfAllowed() <= appendicesCategoryOrderProduct.getSideDishList().size()){
+////                throw new Exception("You can not add more appendices to order product");
+////            }
+//
+////            if(appendicesCategoryOrderProduct.getSideDishList().contains(appendices)){
+////                throw new Exception("You already have this appendix in your order product");
+////            }
+//
+////            appendicesCategoryOrderProduct.addSideDishToList(appendices);
+//        appendicesCategoryOrderProduct.setOrderProducts(orderProduct);
+//        orderProduct.updatePrice();
+//
+//        orderProductRepo.save(orderProduct);
+//        appendicesCategoryOrderProductRepo.save(appendicesCategoryOrderProduct);
+
+
+//        SideDishCategory categoryOrderProduct = appendicesCategoryRepo
+//                .findById(request.getSideDishOrderProductCategoryId())
+//                .orElseThrow(() -> new Exception("Category not found"));
+//
+//
+//                if (categoryOrderProduct.getSideDishList().size() <= sideDish.getSideDishCategory().getNumberOfAllowed()){
+//                throw new Exception("Maximum number allowed");
+//                }
+//
+//                List<SideDishCategoryOrderProduct> categoryOrderProductList = orderProduct.getSideDishCategoryList();
+//
+//        if (categoryOrderProductList != null){
+//        for(SideDishCategoryOrderProduct op : categoryOrderProductList) {
+//        if (op.getSideDishCategory() == categoryOrderProduct){
+//        op.getSideDishList().add(sideDish);
+//        appendicesCategoryOrderProductRepo.save(op);
+//        } else {
+//        SideDishCategoryOrderProduct opc = new SideDishCategoryOrderProduct();
+//        opc.setOrderProduct(orderProduct);
+//        opc.setSideDishCategory(categoryOrderProduct);
+//
+//        List<SideDish> sideDishList = new ArrayList<>();
+//        sideDishList.add(sideDish);
+//        opc.setSideDishList(sideDishList);
+//        appendicesCategoryOrderProductRepo.save(opc);
+//
+//        }
+//        }
+//        }

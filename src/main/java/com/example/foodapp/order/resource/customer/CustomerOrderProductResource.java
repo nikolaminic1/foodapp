@@ -6,7 +6,7 @@ import com.example.foodapp.order.model.Request.AddAppendixRequest;
 import com.example.foodapp.order.model.Request.AddSideDishToProductRequest;
 import com.example.foodapp.order.model.Request.OrderProductRequest;
 import com.example.foodapp.order.model.Request.OrderProductUpdateRequest;
-import com.example.foodapp.order.service.customer.AppendicesOrderProductCustomerService;
+import com.example.foodapp.order.service.customer.SideDishOrderProductCustomerService;
 import com.example.foodapp.order.service.customer.CustomerOrderProductService;
 import com.example.foodapp.order.service.noAuthCustomer.NoAuthCustomerOrderProductService;
 import com.example.foodapp.product.model.Request.SideDishRequest;
@@ -26,7 +26,7 @@ import java.security.Principal;
 public class CustomerOrderProductResource {
     private final CustomerOrderProductService customerOrderProductService;
     private final NoAuthCustomerOrderProductService noAuthCustomerOrderProductService;
-    private final AppendicesOrderProductCustomerService appendicesOrderProductCustomerService;
+    private final SideDishOrderProductCustomerService appendicesOrderProductCustomerService;
 
     @PostMapping("/update/{id}")
     public ResponseEntity<String> updateOrderProduct(

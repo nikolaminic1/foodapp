@@ -17,6 +17,6 @@ public interface CustomerOrderProductService {
     OrderProduct update(Long id, OrderProductUpdateRequest orderProductUpdateRequest, Principal principal) throws Exception;
     Boolean delete(Long id) throws Exception;
     String addToOrder(Long id, Principal principal) throws Exception;
-    void addAppendicesToOrderProduct(Product product, Map<Long, List<Long>> data, OrderProduct orderProduct) throws Exception;
+    void addSideDishToOrderProduct(Product product, Map<Long, List<Long>> data, OrderProduct orderProduct) throws Exception;
 //    void addProductVariations(Product product, OrderProduct orderProduct, Long productVariationId) throws Exception;
 }

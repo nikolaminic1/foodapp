@@ -1,7 +1,6 @@
 package com.example.foodapp.product.serializers.admin;
 
-import com.example.foodapp.product.model.Appendices;
-import com.example.foodapp.product.model.AppendicesCategory;
+import com.example.foodapp.product.model.SideDish;
 import com.example.foodapp.product.model.Product;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,45 +15,45 @@ import java.util.List;
 @JsonComponent
 public class AdminProductSerializer {
 
-    public static void writeSideDishCategoriesList(Product product, JsonGenerator jsonGenerator) throws IOException {
-        var categories = product.getAppendicesCategoryList();
-
-        jsonGenerator.writeFieldName("sideDishCategories");
-        jsonGenerator.writeStartArray();
-        for (AppendicesCategory category: categories) {
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeNumberField("id", category.getId());
-            jsonGenerator.writeStringField("nameOfCategory", category.getNameOfCategory());
-
-            if (!category.getIsRequired()){
-                jsonGenerator.writeBooleanField("isRequired", false);
-            } else {
-                jsonGenerator.writeBooleanField("isRequired", true);
-            }
-
-            jsonGenerator.writeNumberField("numberOfAllowed", category.getNumberOfAllowed());
-
-            var sideDishes =     category.getAppendicesList();
-
-            jsonGenerator.writeFieldName("sideDishes");
-            jsonGenerator.writeStartArray();
-            for (Appendices sideDish : sideDishes) {
-                System.out.println(sideDish);
-                jsonGenerator.writeStartObject();
-                jsonGenerator.writeNumberField("id", sideDish.getId());
-                jsonGenerator.writeStringField("nameOfSideDish", sideDish.getNameOfAppendices());
-                jsonGenerator.writeBooleanField("doesAffectPrice", sideDish.getDoesAffectPrice());
-                jsonGenerator.writeNumberField("price", sideDish.getPrice());
-                jsonGenerator.writeEndObject();
-            }
-            jsonGenerator.writeEndArray();
-            jsonGenerator.writeEndObject();
-
-        }
-
-        jsonGenerator.writeEndArray();
-
-    }
+//    public static void writeSideDishCategoriesList(Product product, JsonGenerator jsonGenerator) throws IOException {
+//        var categories = product.getSideDishCategoryList();
+//
+//        jsonGenerator.writeFieldName("sideDishCategories");
+//        jsonGenerator.writeStartArray();
+//        for (SideDishCategory category: categories) {
+//            jsonGenerator.writeStartObject();
+//            jsonGenerator.writeNumberField("id", category.getId());
+//            jsonGenerator.writeStringField("nameOfCategory", category.getNameOfCategory());
+//
+//            if (!category.getIsRequired()){
+//                jsonGenerator.writeBooleanField("isRequired", false);
+//            } else {
+//                jsonGenerator.writeBooleanField("isRequired", true);
+//            }
+//
+//            jsonGenerator.writeNumberField("numberOfAllowed", category.getNumberOfAllowed());
+//
+//            var sideDishes =     category.getSideDishList();
+//
+//            jsonGenerator.writeFieldName("sideDishes");
+//            jsonGenerator.writeStartArray();
+//            for (SideDish sideDish : sideDishes) {
+//                System.out.println(sideDish);
+//                jsonGenerator.writeStartObject();
+//                jsonGenerator.writeNumberField("id", sideDish.getId());
+//                jsonGenerator.writeStringField("nameOfSideDish", sideDish.getNameOfSideDish());
+//                jsonGenerator.writeBooleanField("doesAffectPrice", sideDish.getDoesAffectPrice());
+//                jsonGenerator.writeNumberField("price", sideDish.getPrice());
+//                jsonGenerator.writeEndObject();
+//            }
+//            jsonGenerator.writeEndArray();
+//            jsonGenerator.writeEndObject();
+//
+//        }
+//
+//        jsonGenerator.writeEndArray();
+//
+//    }
 
     public static void writeData(Product product, JsonGenerator jsonGenerator) throws IOException {
 
@@ -127,10 +126,10 @@ public class AdminProductSerializer {
             jsonGenerator.writeStartObject();
             writeData(product, jsonGenerator);
 
-            jsonGenerator.writeObjectField("product_description", product.getProductDescriptionList());
+//            jsonGenerator.writeObjectField("product_description", product.getProductDescriptionList());
             jsonGenerator.writeObjectField("product_image", product.getAdminProductImageDetail());
 //            jsonGenerator.writeObjectField("product_tags", product.getAdminProductTagsList());
-            jsonGenerator.writeObjectField("side_dish_category", product.getAdminAppendixCategoryList());
+//            jsonGenerator.writeObjectField("side_dish_category", product.getAdminAppendixCategoryList());
             jsonGenerator.writeEndObject();
         }
     }

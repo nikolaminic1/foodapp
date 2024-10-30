@@ -8,20 +8,16 @@ import com.example.foodapp.auth.service._UserProfileService;
 import com.example.foodapp.auth.user.User;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.business.repo.BusinessRepo;
-import com.example.foodapp.product.model.Appendices;
-import com.example.foodapp.product.model.AppendicesCategory;
+import com.example.foodapp.product.model.SideDish;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.model.Request.ChangeCategoryRequest;
 import com.example.foodapp.product.model.Request.ProductRequest;
-import com.example.foodapp.product.model.Request.SideDishCategoryRequest;
 import com.example.foodapp.product.model.Request.SideDishRequest;
-import com.example.foodapp.product.repo.AppendicesCategoryRepo;
-import com.example.foodapp.product.repo.AppendicesRepo;
+import com.example.foodapp.product.repo.SideDishRepo;
 import com.example.foodapp.product.repo.ProductCategoryRepo;
 import com.example.foodapp.product.repo.ProductRepo;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductCategorySerializer;
-import com.example.foodapp.product.serializers.restaurant.RestaurantProductPageSerializer;
 import com.example.foodapp.product.serializers.restaurant.RestaurantProductSerializer;
 import com.example.foodapp.product.service.business.OwnerProductService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -55,8 +51,7 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
     private final ProductCategoryRepo productCategoryRepo;
     private final UserRepository userRepo;
     private final _UserProfileService userProfileService;
-    private final AppendicesRepo appendicesRepo;
-    private final AppendicesCategoryRepo appendicesCategoryRepo;
+    private final SideDishRepo appendicesRepo;
     private final BusinessRepo businessRepo;
     private final BusinessOwnerRepo businessOwnerRepo;
     private long productCategoryId;
@@ -331,52 +326,6 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
             product.setProductCategory(category);
         }
 
-        if (productRequest.getSideDishCategories() != null) {
-            for (SideDishCategoryRequest sideDishCategory: productRequest.getSideDishCategories()) {
-                AppendicesCategory appendicesCategory;
-                if (sideDishCategory.getId() == null) {
-                    appendicesCategory = new AppendicesCategory();
-                } else {
-                    appendicesCategory = appendicesCategoryRepo.findById(sideDishCategory.getId())
-                            .orElseThrow(() -> new Exception("Side dish category does not exist."));
-                    if (appendicesCategory.getProduct().getProductCategory().getBusiness() != business) {
-                        throw new Exception("Selected side dish category does not belong to you.");
-                    }
-                }
-
-                appendicesCategory.setProduct(product);
-                appendicesCategory.setNameOfCategory(sideDishCategory.getNameOfCategory());
-                appendicesCategory.setNumberOfAllowed(sideDishCategory.getNumberOfAllowed());
-                appendicesCategory.setIsRequired(sideDishCategory.getIsRequired());
-
-                if (sideDishCategory.getSideDishes() == null) {
-                    throw new Exception("At least one side dish is required.");
-                }
-
-                for (SideDishRequest sideDish : sideDishCategory.getSideDishes()) {
-                    System.out.println(sideDish);
-                    Appendices appendices;
-                    if (sideDish.getId() == null) {
-                        appendices = new Appendices();
-                    } else {
-                        appendices = appendicesRepo.findById(sideDish.getId())
-                                .orElseThrow(() -> new Exception("Side dish with provided ID does not exist."));
-
-                        if (appendices.getAppendicesCategory().getProduct().getProductCategory().getBusiness() != business) {
-                            throw new Exception("Selected side dish does not belong to you.");
-                        }
-                    }
-
-                    appendices.setNameOfAppendices(sideDish.getNameOfAppendices());
-                    appendices.setPrice(sideDish.getPrice());
-                    appendices.setDoesAffectPrice(sideDish.getDoesAffectPrice());
-                    appendices.setAppendicesCategory(appendicesCategory);
-                    appendicesRepo.save(appendices);
-                }
-
-                appendicesCategoryRepo.save(appendicesCategory);
-            }
-        }
 
         productRepo.save(product);
         return "OK";
@@ -429,3 +378,51 @@ public class OwnerProductServiceImplementation implements OwnerProductService {
         return "OK";
     }
 }
+//
+//
+//        if (productRequest.getSideDishCategories() != null) {
+//                for (SideDishCategoryRequest sideDishCategory: productRequest.getSideDishCategories()) {
+//                SideDishCategory appendicesCategory;
+//                if (sideDishCategory.getId() == null) {
+//                appendicesCategory = new SideDishCategory();
+//                } else {
+//                appendicesCategory = appendicesCategoryRepo.findById(sideDishCategory.getId())
+//                .orElseThrow(() -> new Exception("Side dish category does not exist."));
+//                if (appendicesCategory.getProduct().getProductCategory().getBusiness() != business) {
+//                throw new Exception("Selected side dish category does not belong to you.");
+//                }
+//                }
+//
+//                appendicesCategory.setProduct(product);
+//                appendicesCategory.setNameOfCategory(sideDishCategory.getNameOfCategory());
+//                appendicesCategory.setNumberOfAllowed(sideDishCategory.getNumberOfAllowed());
+//                appendicesCategory.setIsRequired(sideDishCategory.getIsRequired());
+//
+//                if (sideDishCategory.getSideDishes() == null) {
+//                throw new Exception("At least one side dish is required.");
+//                }
+//
+//                for (SideDishRequest sideDish : sideDishCategory.getSideDishes()) {
+//                System.out.println(sideDish);
+//                SideDish appendices;
+//                if (sideDish.getId() == null) {
+//                appendices = new SideDish();
+//                } else {
+//                appendices = appendicesRepo.findById(sideDish.getId())
+//                .orElseThrow(() -> new Exception("Side dish with provided ID does not exist."));
+//
+//                if (appendices.getSideDishCategory().getProduct().getProductCategory().getBusiness() != business) {
+//                throw new Exception("Selected side dish does not belong to you.");
+//                }
+//                }
+//
+//                appendices.setNameOfSideDish(sideDish.getNameOfSideDish());
+//                appendices.setPrice(sideDish.getPrice());
+//                appendices.setDoesAffectPrice(sideDish.getDoesAffectPrice());
+//                appendices.setSideDishCategory(appendicesCategory);
+//                appendicesRepo.save(appendices);
+//                }
+//
+//                appendicesCategoryRepo.save(appendicesCategory);
+//                }
+//                }

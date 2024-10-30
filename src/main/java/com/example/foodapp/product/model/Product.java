@@ -69,11 +69,11 @@ public class Product {
     @JsonBackReference
     private ProductImage productImage;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "product")
-//    @JsonSerialize(using = VariationSerializer.class)
-    @JsonManagedReference
-    @JsonIgnore
-    private Variation variation;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "product")
+////    @JsonSerialize(using = VariationSerializer.class)
+//    @JsonManagedReference
+//    @JsonIgnore
+//    private Variation variation;
 
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 //    @JsonManagedReference
@@ -85,7 +85,7 @@ public class Product {
             fetch = FetchType.EAGER
     )
     @JsonManagedReference
-    private List<AppendicesCategory> appendicesCategoryList = new ArrayList<>();
+    private List<SideDish> sideDishes = new ArrayList<>();
 
     public void setProductVisible(Boolean productVisible) {
         this.productVisible = productVisible;
@@ -100,30 +100,30 @@ public class Product {
         this.productImage = null;
     }
 
-    @JsonManagedReference
-    @JsonIgnore
-    public Variation getVariation(){
-        System.out.println("var");
-        return this.variation;
-    }
+//    @JsonManagedReference
+//    @JsonIgnore
+//    public Variation getVariation(){
+//        System.out.println("var");
+//        return this.variation;
+//    }
 
-    //    public List<AppendicesCategory> getAppendicesCategoryList() {
+    //    public List<SideDishCategory> getSideDishCategoryList() {
     //        System.out.println(this.appendicesCategoryList);
     //        return this.appendicesCategoryList;
     //    }
 
-    @OneToMany(mappedBy = "product")
-    private Collection<ProductDescription> productDescription;
+//    @OneToMany(mappedBy = "product")
+//    private Collection<ProductDescription> productDescription;
 
-    public Collection<ProductDescription> getProductDescription() {
-        return productDescription;
-    }
+//    public Collection<ProductDescription> getProductDescription() {
+//        return productDescription;
+//    }
 
-    public void setProductDescription(Collection<ProductDescription> productDescription) {
-        this.productDescription = productDescription;
-    }
+//    public void setProductDescription(Collection<ProductDescription> productDescription) {
+//        this.productDescription = productDescription;
+//    }
 
-    public void addToAppendicesCategoryList (AppendicesCategory appendicesCategory) {
+//    public void addToSideDishCategoryList (SideDishCategory appendicesCategory) {
 //        this.appendicesCategoryList.add(appendicesCategory);
 //        if (this.appendicesCategoryList == null){
 //            this.appendicesCategoryList = new ArrayList<>();
@@ -132,7 +132,7 @@ public class Product {
 //            this.appendicesCategoryList.add(appendicesCategory);
 //        }
 //        appendicesCategory.setProduct(this);
-    }
+//    }
 
 //    public List<Map<String, Object>> getAllRelatedCategories() {
 //        List<Map<String, Object>> list = new ArrayList<>();
@@ -150,12 +150,12 @@ public class Product {
         return null;
     }
 
-    @JsonIgnore
-    public List<Map<String, Object>> getProductDescriptionList() {
-        List<Map<String, Object>> mapsList = new ArrayList<>();
-        this.productDescription.forEach(desc -> mapsList.add(desc.getProductDescriptionData()));
-        return mapsList;
-    }
+//    @JsonIgnore
+//    public List<Map<String, Object>> getProductDescriptionList() {
+//        List<Map<String, Object>> mapsList = new ArrayList<>();
+//        this.productDescription.forEach(desc -> mapsList.add(desc.getProductDescriptionData()));
+//        return mapsList;
+//    }
 
     @JsonIgnore
     public Object getAdminProductImageDetail() {
@@ -171,12 +171,12 @@ public class Product {
 //        return mapsList;
 //    }
 
-    @JsonIgnore
-    public List<Map<String, Object>> getAdminAppendixCategoryList() {
-        List<Map<String, Object>> mapsList = new ArrayList<>();
-        this.getAppendicesCategoryList().forEach(tag -> mapsList.add(tag.getAdminSideDishCategoryDetail()));
-        return mapsList;
-    }
+//    @JsonIgnore
+//    public List<Map<String, Object>> getAdminAppendixCategoryList() {
+//        List<Map<String, Object>> mapsList = new ArrayList<>();
+//        this.getSideDishCategoryList().forEach(tag -> mapsList.add(tag.getAdminSideDishCategoryDetail()));
+//        return mapsList;
+//    }
 
     public void setProductCategory(ProductCategory category) {
         this.productCategory = category;

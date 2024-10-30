@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppendicesCreateRequest {
-    private String nameOfAppendices;
+public class SideDishCreateRequest {
+    private String nameOfSideDish;
     private Boolean doesAffectPrice;
     private double price;
     private Long appendicesCategoryId;

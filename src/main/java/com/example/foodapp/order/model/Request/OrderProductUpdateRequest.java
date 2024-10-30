@@ -10,6 +10,6 @@ import java.util.Map;
 @Setter
 public class OrderProductUpdateRequest {
     private Long orderProductId;
-    private Long productVariationId;
+//    private Long productVariationId;
     private int quantity;
 }

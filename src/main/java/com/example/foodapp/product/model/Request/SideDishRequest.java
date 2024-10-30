@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class SideDishRequest {
     private Long id;
-    private String nameOfAppendices;
+    private String nameOfSideDish;
     private Boolean doesAffectPrice;
     private int price;
 }

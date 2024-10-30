@@ -1,33 +1,14 @@
 package com.example.foodapp;
 
-import com.example.foodapp.auth.dto.RegisterRequest;
-import com.example.foodapp.auth.repo.BusinessOwnerRepo;
-import com.example.foodapp.auth.repo.UserRepository;
 import com.example.foodapp.auth.service.UserService;
-import com.example.foodapp.auth.service.customer.service.BusinessOwnerAdminService;
-import com.example.foodapp.auth.user.User;
-import com.example.foodapp.auth.user.UserProfiles.BusinessOwner;
-import com.example.foodapp.business.model.Business;
-import com.example.foodapp.business.repo.*;
-import com.example.foodapp.business.service.admin_service.AdminBusinessService;
-import com.example.foodapp.business.service.admin_service.TimeOpenedService;
-import com.example.foodapp.product.model.Appendices;
-import com.example.foodapp.product.model.AppendicesCategory;
-import com.example.foodapp.product.model.Product;
-import com.example.foodapp.product.model.ProductCategory;
 import com.example.foodapp.product.repo.*;
-import com.example.foodapp.product.service.business.OwnerAppendicesCategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import java.util.List;
 
 import static java.time.LocalDateTime.now;
 //import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -56,8 +37,8 @@ public class FoodApp {
 //			ProductVariationRepo productVariationRepo,
 //			VariationRepo variationRepo,
 //			ProductTagRepo tagRepo,
-//			AppendicesCategoryRepo appendicesCategoryRepo,
-//			AppendicesRepo appendicesRepo,
+//			SideDishCategoryRepo appendicesCategoryRepo,
+//			SideDishRepo appendicesRepo,
 //			ImageRepo imageRepo,
 //			BusinessLocationRepo businessLocationRepo,
 //			TimeOpenedDayRepo timeOpenedDayRepo,
@@ -65,9 +46,7 @@ public class FoodApp {
 //			TimeOpenedService timeOpenedService
 			,
 			ProductRepo productRepo,
-			AppendicesCategoryRepo appendicesCategoryRepo,
-			AppendicesRepo appendicesRepo,
-			OwnerAppendicesCategoryService categoryService
+			SideDishRepo appendicesRepo
 	) {
 		return args -> {
 //			categoryService.createDummyData();
@@ -215,7 +194,7 @@ public class FoodApp {
 //			variation.getProductVariationList().add(productVariation);
 //			variationRepo.save(variation);
 //
-//			AppendicesCategory appendicesCategory = new AppendicesCategory();
+//			SideDishCategory appendicesCategory = new SideDishCategory();
 //			appendicesCategory.setNameOfCategory("Name of appendices category");
 //			appendicesCategory.setIsRequired(true);
 //			appendicesCategory.setNumberOfAllowed(2);
@@ -225,14 +204,14 @@ public class FoodApp {
 //			imageRepo.save(img);
 //			appendicesCategory.setImage(img);
 //			appendicesCategoryRepo.save(appendicesCategory);
-//			product.addToAppendicesCategoryList(appendicesCategory);
+//			product.addToSideDishCategoryList(appendicesCategory);
 //
-//			Appendices appendices = new Appendices();
-//			appendices.setNameOfAppendices("Name of appendices");
+//			SideDish appendices = new SideDish();
+//			appendices.setNameOfSideDish("Name of appendices");
 //			appendices.setDoesAffectPrice(true);
 //			appendices.setPrice(321);
 //
-//			appendices.setAppendicesCategory(appendicesCategory);
+//			appendices.setSideDishCategory(appendicesCategory);
 //
 //			appendicesRepo.save(appendices);
 //			productRepo.save(product);
@@ -265,22 +244,22 @@ public class FoodApp {
 //			productVariationRepo.save(productVariation);
 //			variation.setProductVariationList(new ArrayList<>());
 //			variation.getProductVariationList().add(productVariation);
-//			AppendicesCategory appendicesCategory = new AppendicesCategory();
+//			SideDishCategory appendicesCategory = new SideDishCategory();
 //			appendicesCategory.setNameOfCategory("Name of appendices category");
 //			appendicesCategory.setIsRequired(true);
 //			appendicesCategory.setNumberOfAllowed(2);
 //			appendicesCategory.setProduct(product);
 //
-//			System.out.println(product.getAppendicesCategoryList());
+//			System.out.println(product.getSideDishCategoryList());
 
-//			Hibernate.initialize(product.getAppendicesCategoryList().add(appendicesCategory));
-//			product.addToAppendicesCategoryList(appendicesCategory);
+//			Hibernate.initialize(product.getSideDishCategoryList().add(appendicesCategory));
+//			product.addToSideDishCategoryList(appendicesCategory);
 
-//			Appendices appendices = new Appendices();
-//			appendices.setNameOfAppendices("Name of appendices");
+//			SideDish appendices = new SideDish();
+//			appendices.setNameOfSideDish("Name of appendices");
 //			appendices.setDoesAffectPrice(true);
 //			appendices.setPrice(321);
-//			appendices.setAppendicesCategory(appendicesCategory);
+//			appendices.setSideDishCategory(appendicesCategory);
 
 //			appendicesCategoryRepo.save(appendicesCategory);
 

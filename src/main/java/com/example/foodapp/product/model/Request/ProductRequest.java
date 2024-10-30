@@ -20,10 +20,11 @@ public class ProductRequest {
     private Availability availability;
     private boolean productVisible;
     private String productCategory;
-    private List<SideDishCategoryRequest> sideDishCategories;
+    private List<SideDishRequest> sideDishRequests;
 
     public Long getId() {
         return this.product_id;
     }
+
 }
 
