@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Order;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -180,40 +181,56 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
     }
 
     @Override
-    public OrderProduct update(OrderProductUpdateRequest orderProductUpdateRequest, Principal principal) throws Exception {
+    public OrderProduct update(Long id, OrderProductUpdateRequest orderProductUpdateRequest, Principal principal) throws Exception {
+        OrderProduct orderProduct = orderProductRepo.findById(id)
+                .orElseThrow(() -> new Exception("Order product not found"));
+
         Long orderProductId = orderProductUpdateRequest.getOrderProductId();
-        Long productVariationId = orderProductUpdateRequest.getProductVariationId();
         int quantity = orderProductUpdateRequest.getQuantity();
-
-        if(orderProductRepo.findById(orderProductId).isPresent()){
-            OrderProduct orderProduct = orderProductRepo.findById(orderProductId).get();
-            if(productVariationRepo.findById(productVariationId).isPresent()){
-                ProductVariation productVariation = productVariationRepo.findById(productVariationId).get();
-//                orderProduct.setProductVariation(productVariation);
-                orderProduct.setTimeUpdated(now());
-                orderProduct.setQuantity(quantity);
-                orderProduct.updatePrice();
-                orderProductRepo.save(orderProduct);
-
-                return orderProduct;
-
-//                if(appendicesRepo.findById(appendixId).isPresent()){
-//                    Appendices appendices = appendicesRepo.findById(appendixId).get();
-//                    if (appendicesCategoryRepo.findAppendicesCategoryByAppendicesListContaining(appendices).isPresent()){
-//                        AppendicesCategory appendicesCategory = appendicesCategoryRepo.findAppendicesCategoryByAppendicesListContaining(appendices).get();
-//                        System.out.println(appendicesCategory);
-//                    }
-//                }
-            }
-
-        }
 
         return null;
     }
 
     @Override
+    public String addToOrder(Long id, Principal principal) throws Exception {
+        OrderProduct orderProduct = orderProductRepo.findById(id)
+                .orElseThrow(() -> new Exception("Order product not found"));
+
+        OrderO order = orderProduct.getOrderO();
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+        if (order.getCustomer().getUser() == user) {
+            orderProduct.setInOrder(true);
+            orderProduct.setTimeUpdated(now());
+            orderProductRepo.save(orderProduct);
+            return "OK";
+        } else {
+            return "This product is not in your order";
+        }
+    }
+
+
+    @Override
     public Boolean delete(Long id) {
         return null;
+    }
+
+    @Override
+    public String deleteOrderProduct(Long id, Principal principal) throws Exception {
+        if (orderProductRepo.findById(id).isEmpty()){
+            return "OK";
+        }
+
+        OrderProduct orderProduct = orderProductRepo.findById(id).get();
+
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+        if (orderProduct.getOrderO().getCustomer().getUser() == user){
+            orderProductRepo.delete(orderProduct);
+            return "Product deleted";
+        } else {
+            throw new Exception("Error while deleting product");
+        }
     }
 
     @Override
@@ -249,6 +266,8 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
                 throw new Exception("Appendices category doesnt exist");
             }
         }
+
+
     }
 
 //    @Override

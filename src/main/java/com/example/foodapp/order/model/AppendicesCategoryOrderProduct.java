@@ -36,6 +36,19 @@ public class AppendicesCategoryOrderProduct {
         orderProduct.getAppendicesCategoryList().add(this);
     }
 
+    public double getCategoryTotal() {
+        double total = 0.0;
+        if (this.appendicesList != null &&
+            this.appendicesList.size() > 0) {
+            for (Appendices side_dish: this.appendicesList) {
+                if (side_dish.getDoesAffectPrice()) {
+                    total += side_dish.getPrice();
+                }
+            }
+        }
+        return total;
+    }
+
     public void addAppendicesToList(Appendices appendices){
         System.out.println(this.appendicesList);
         this.appendicesList.add(appendices);

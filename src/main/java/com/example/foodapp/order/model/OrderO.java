@@ -6,6 +6,7 @@ import com.example.foodapp.auth.user.UserProfiles.Customer;
 import com.example.foodapp.business.model.Business;
 import com.example.foodapp.order.enumeration.DeliveryType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -41,6 +44,7 @@ public class OrderO {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "orderO", fetch = FetchType.EAGER)
     @JsonManagedReference
+    @JsonIgnore
     private List<OrderProduct> productList;
 
     @CreationTimestamp
@@ -79,7 +83,6 @@ public class OrderO {
     private Boolean delivered;
     private Boolean refundRequested;
     private Boolean refundGranted;
-    private Boolean isDeliveryFree;
     private double deliveryPrice;
     private double price;
 
@@ -94,20 +97,29 @@ public class OrderO {
         this.price = amount;
     }
 
+    public List<OrderProduct> getProducts() {
+        List<OrderProduct> products = new LinkedList<>();
+        for(OrderProduct orderProduct : this.getProductList()){
+            if (orderProduct.isInOrder()){
+                products.add(orderProduct);
+            }
+        }
+        return products;
+    }
+
 
     // todo : need to check is delivery free based on business
     public double getPrice(){
         double totalOrderPrice = 0;
         for(OrderProduct orderProduct : this.getProductList()){
-            totalOrderPrice = totalOrderPrice + orderProduct.getPrice();
-        }
-
-        if(this.isDeliveryFree != null){
-            if(!this.isDeliveryFree){
-                totalOrderPrice += this.deliveryPrice;
+            if (orderProduct.isInOrder()){
+                totalOrderPrice = totalOrderPrice + orderProduct.getPrice();
             }
-        }
 
+        }
+        totalOrderPrice += this.deliveryPrice;
         return totalOrderPrice;
     }
+
+
 }

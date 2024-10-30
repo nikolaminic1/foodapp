@@ -108,7 +108,6 @@ public class AdminBusinessServiceImplementation implements AdminBusinessService 
         business.setName(request.getName());
         business.setDescription(request.getDescription());
         business.setPriceOfDelivery(request.getPriceOfDelivery());
-        business.setPriceOfOrderForFreeDelivery(request.getPriceOfOrderForFreeDelivery());
         businessRepo.save(business);
         return "Successfully updated.";
     }

@@ -79,7 +79,6 @@ public class OwnerBusinessServiceImplementation implements OwnerBusinessService 
         business.setName(request.getName());
         business.setDescription(request.getDescription());
         business.setPriceOfDelivery(request.getPriceOfDelivery());
-        business.setPriceOfOrderForFreeDelivery(request.getPriceOfOrderForFreeDelivery());
         setTimeOpened(business, request);
 //            setBusinessTags(business, request.getTags());
         businessRepo.save(business);

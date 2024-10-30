@@ -140,4 +140,17 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.isEnabled;
     }
+
+    public Map<String, Object> getBasicUserDetail() {
+        Map<String, Object> detail = new HashMap<>();
+        detail.put("id", this.id);
+        detail.put("firstname", this.firstname);
+        detail.put("lastname", this.lastname);
+        detail.put("email", this.email);
+        detail.put("isEnabled", this.isEnabled);
+        detail.put("phone", this.phone);
+        detail.put("gender", this.gender);
+        return detail;
+    }
+
 }

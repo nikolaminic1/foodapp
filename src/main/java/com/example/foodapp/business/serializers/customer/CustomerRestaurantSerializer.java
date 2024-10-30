@@ -27,7 +27,6 @@ public class CustomerRestaurantSerializer {
         jsonGenerator.writeStringField("backgroundImage", business.getBackgroundImage());
         jsonGenerator.writeStringField("logoImage", business.getLogoImage());
         jsonGenerator.writeNumberField("priceOfDelivery", business.getPriceOfDelivery());
-        jsonGenerator.writeNumberField("priceOfOrderForFreeDelivery", business.getPriceOfOrderForFreeDelivery());
         jsonGenerator.writeNumberField("averageRating", business.getAverageRating());
         jsonGenerator.writeObjectField("workingTime", business.getTimeOpened().getWorkingTime());
         jsonGenerator.writeObjectField("tags", business.getTags());

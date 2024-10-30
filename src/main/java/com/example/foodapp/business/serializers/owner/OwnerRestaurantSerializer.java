@@ -22,7 +22,6 @@ public class OwnerRestaurantSerializer {
             jsonGenerator.writeStringField("backgroundImage", business.getBackgroundImage());
             jsonGenerator.writeStringField("logoImage", business.getLogoImage());
             jsonGenerator.writeNumberField("priceOfDelivery", business.getPriceOfDelivery());
-            jsonGenerator.writeNumberField("priceOfOrderForFreeDelivery", business.getPriceOfOrderForFreeDelivery());
             jsonGenerator.writeBooleanField("isActive", business.isActive());
             jsonGenerator.writeFieldName("tags");
             jsonGenerator.writeStartArray();

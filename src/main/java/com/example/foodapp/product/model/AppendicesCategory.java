@@ -75,6 +75,15 @@ public class AppendicesCategory {
 
         return map;
     }
+
+    public Map<String, Object> getCustomerSideDishCategoryDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("nameOfCategory", this.getNameOfCategory());
+        map.put("isRequired", this.getIsRequired());
+        map.put("numberOfAllowed", this.getNumberOfAllowed());
+        return map;
+    }
 }
 
 

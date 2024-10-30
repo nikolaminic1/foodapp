@@ -157,6 +157,7 @@ public class Product {
         return mapsList;
     }
 
+    @JsonIgnore
     public Object getAdminProductImageDetail() {
         if (this.getProductImage() != null) {
             return this.getProductImage().getAdminProductImageDetail();
@@ -170,6 +171,7 @@ public class Product {
 //        return mapsList;
 //    }
 
+    @JsonIgnore
     public List<Map<String, Object>> getAdminAppendixCategoryList() {
         List<Map<String, Object>> mapsList = new ArrayList<>();
         this.getAppendicesCategoryList().forEach(tag -> mapsList.add(tag.getAdminSideDishCategoryDetail()));
@@ -179,6 +181,28 @@ public class Product {
     public void setProductCategory(ProductCategory category) {
         this.productCategory = category;
         category.getProductList().add(this);
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getProductDetail() {
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("id", this.id);
+        objectMap.put("nameOfProduct", this.nameOfProduct);
+        objectMap.put("codeOfProduct", this.codeOfProduct);
+        objectMap.put("priceOfProduct", this.priceOfProduct);
+        objectMap.put("aboutProduct", this.aboutProduct);
+        objectMap.put("preparationTime", this.preparationTime);
+        if (this.availability != null) {
+            objectMap.put("availability", this.availability.getAvailability());
+        }
+        objectMap.put("weight", this.weight);
+        objectMap.put("dataCreated", this.dataCreated);
+        objectMap.put("dateUpdated", this.dateUpdated);
+        objectMap.put("productCategory", this.productCategory.getCustomerProductCategoryDetail());
+        if (this.productImage != null) {
+            objectMap.put("productImage", this.productImage.getImageUrl());
+        }
+        return objectMap;
     }
 
 }

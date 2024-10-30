@@ -16,7 +16,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -50,4 +52,16 @@ public class Customer {
 
     @OneToMany
     private List<OrderO> orderList;
+
+    public Map<String, Object> getCustomerBasicDetail() {
+        Map<String, Object> detail = new HashMap<>();
+        detail.put("id", this.id);
+        detail.put("username", this.username);
+        detail.put("addresses", this.addresses);
+        detail.put("dateCreated", this.dateCreated);
+        detail.put("dateUpdated", this.dateUpdated);
+        detail.put("user", this.user.getBasicUserDetail());
+        return detail;
+    }
+
 }

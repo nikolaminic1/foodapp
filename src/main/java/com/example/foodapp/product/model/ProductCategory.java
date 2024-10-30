@@ -7,6 +7,7 @@ import com.example.foodapp.product.serializers.ProductCategory_BusinessSerialize
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
+import org.attoparser.prettyhtml.PrettyHtmlMarkupHandler;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -91,5 +92,14 @@ public class ProductCategory {
         detail.put("dateUpdated", this.getDateUpdated().format(DateTimeFormatter.ISO_DATE_TIME));
         detail.put("businessId", this.getBusiness().getId());
         return detail;
+    }
+
+    public Map<String, Object> getCustomerProductCategoryDetail() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.getId());
+        map.put("nameOfCategory", this.getNameOfCategory());
+        map.put("descOfCategory", this.getDescOfCategory());
+        map.put("businessId", this.getBusiness().getId());
+        return map;
     }
 }

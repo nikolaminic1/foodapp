@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 @JsonComponent
+@Log4j2
 public class CustomerOrderSerializer {
 
     public static class DetailSerializer extends JsonSerializer<OrderO> {
@@ -24,15 +26,15 @@ public class CustomerOrderSerializer {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("id", orderO.getId());
             jsonGenerator.writeStringField("uuid", orderO.getUuid());
-            jsonGenerator.writeObjectField("customer", orderO.getCustomer());
+            jsonGenerator.writeObjectField("customer", orderO.getCustomer().getCustomerBasicDetail());
             jsonGenerator.writeFieldName("productList");
             jsonGenerator.writeStartArray();
-
-            if (orderO.getProductList() != null) {
-                orderO.getProductList().forEach(product -> {
+            if (orderO.getProducts() != null) {
+                log.error("----");
+                orderO.getProducts().forEach(product -> {
                     try {
 //                    jsonGenerator.writeStartObject();
-                        jsonGenerator.writeObject(product);
+                        jsonGenerator.writeObject(product.getOrderProductDetail());
 //                    jsonGenerator.writeEndObject();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -70,10 +72,9 @@ public class CustomerOrderSerializer {
             jsonGenerator.writeBooleanField("delivered", orderO.getDelivered());
             jsonGenerator.writeBooleanField("refundRequested", orderO.getRefundRequested());
             jsonGenerator.writeBooleanField("refundGranted", orderO.getRefundGranted());
-            jsonGenerator.writeBooleanField("isDeliveryFree", orderO.getIsDeliveryFree());
             jsonGenerator.writeNumberField("deliveryPrice", orderO.getDeliveryPrice());
             jsonGenerator.writeNumberField("price", orderO.getPrice());
-            jsonGenerator.writeObjectField("business", orderO.getBusiness());
+            jsonGenerator.writeObjectField("business", orderO.getBusiness().getBasicDetail());
 
             if (orderO.getDeliveryType() != null) {
                 jsonGenerator.writeStringField("deliveryType", orderO.getDeliveryType().getDeliveryType());

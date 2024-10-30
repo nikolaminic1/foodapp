@@ -12,12 +12,14 @@ import com.example.foodapp.order.model.AppendicesCategoryOrderProduct;
 import com.example.foodapp.order.model.OrderO;
 import com.example.foodapp.order.model.OrderProduct;
 import com.example.foodapp.order.model.Request.AddAppendixRequest;
+import com.example.foodapp.order.model.Request.AddSideDishToProductRequest;
 import com.example.foodapp.order.repo.AppendicesCategoryOrderProductRepo;
 import com.example.foodapp.order.repo.OrderProductRepo;
 import com.example.foodapp.order.repo.OrderRepo;
 import com.example.foodapp.order.serializer.customer.CustomerOrderProductSerializer;
 import com.example.foodapp.order.service.customer.AppendicesOrderProductCustomerService;
 import com.example.foodapp.product.model.Appendices;
+import com.example.foodapp.product.model.AppendicesCategory;
 import com.example.foodapp.product.model.Product;
 import com.example.foodapp.product.repo.AppendicesCategoryRepo;
 import com.example.foodapp.product.repo.AppendicesRepo;
@@ -26,6 +28,7 @@ import com.example.foodapp.product.repo.ProductVariationRepo;
 import com.example.foodapp.product.serializers.admin.AdminProductSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -154,12 +157,62 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
     }
 
     @Override
-    public String initializeOrderProduct(Long id, Long businessId, Principal principal) throws Exception {
+    public String addSideDishToOrderProduct(
+            Long orderProductId,
+            AddSideDishToProductRequest request,
+            Principal principal) throws Exception {
+        OrderProduct orderProduct = orderProductRepo.findById(orderProductId)
+                .orElseThrow(() -> new Exception("Order product not found"));
+
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+
+        if (orderProduct.getOrderO().getCustomer().getUser() != user) {
+            throw new Exception("This order product does not belong to this user");
+        }
+
+        Appendices appendices = appendicesRepo.findById(request.getSideDishId())
+                .orElseThrow(() -> new Exception("Side dish not found"));
+
+        AppendicesCategory categoryOrderProduct = appendicesCategoryRepo
+                .findById(request.getSideDishOrderProductCategoryId())
+                .orElseThrow(() -> new Exception("Category not found"));
+
+
+        if (categoryOrderProduct.getAppendicesList().size() <= appendices.getAppendicesCategory().getNumberOfAllowed()){
+            throw new Exception("Maximum number allowed");
+        }
+
+        List<AppendicesCategoryOrderProduct> categoryOrderProductList = orderProduct.getAppendicesCategoryList();
+
+        if (categoryOrderProductList != null){
+            for(AppendicesCategoryOrderProduct op : categoryOrderProductList) {
+                if (op.getAppendicesCategory() == categoryOrderProduct){
+                    op.getAppendicesList().add(appendices);
+                    appendicesCategoryOrderProductRepo.save(op);
+                } else {
+                    AppendicesCategoryOrderProduct opc = new AppendicesCategoryOrderProduct();
+                    opc.setOrderProduct(orderProduct);
+                    opc.setAppendicesCategory(categoryOrderProduct);
+
+                    List<Appendices> appendicesList = new ArrayList<>();
+                    appendicesList.add(appendices);
+                    opc.setAppendicesList(appendicesList);
+                    appendicesCategoryOrderProductRepo.save(opc);
+
+                }
+            }
+        }
+        orderProductRepo.save(orderProduct);
+        return this.orderProductMapping(orderProduct);
+    }
+
+    @Override
+    public String initializeOrderProduct(Long id, Principal principal) throws Exception {
         Product product = productRepo.findProductById(id)
                 .orElseThrow(() -> new Exception("Product not found"));
 
-        Business business = businessRepo.findBusinessById(businessId)
-                .orElseThrow(() -> new Exception("Restaurant not found"));
+        Business business = product.getProductCategory().getBusiness();
 
         User user = userRepo.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("User not found"));
@@ -192,11 +245,24 @@ public class AppendicesOrderProductCustomerServiceImplementation implements Appe
         orderProduct.setQuantity(1);
         orderProduct.setPrice(product.getPriceOfProduct());
         orderProduct.setOrderO(orderO);
-        orderProductRepo.save(orderProduct);
+        orderProduct.setInOrder(false);
 
+//        for (AppendicesCategory category : product.getAppendicesCategoryList()) {
+//            AppendicesCategoryOrderProduct categoryOrderProduct = new AppendicesCategoryOrderProduct();
+//            categoryOrderProduct.setAppendicesCategory(category);
+//            categoryOrderProduct.setOrderProduct(orderProduct);
+//        }
+
+        orderProductRepo.save(orderProduct);
+        return this.orderProductMapping(orderProduct);
+    }
+
+    @Override
+    public String orderProductMapping(OrderProduct orderProduct) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(OrderProduct.class, new CustomerOrderProductSerializer.DetailSerializer());
+        mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(module);
         return mapper.writeValueAsString(orderProduct);
     }

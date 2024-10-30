@@ -36,7 +36,6 @@ public class Business {
     private String backgroundImage;
     private String logoImage;
     private double priceOfDelivery;
-    private double priceOfOrderForFreeDelivery;
 
     @JsonIgnore
     private boolean isActive;
@@ -76,6 +75,18 @@ public class Business {
         productCategory.setBusiness(this);
     }
 
+    public Map<String, Object> getBasicDetail() {
+        Map<String, Object> detail = new HashMap<>();
+        detail.put("id", this.id);
+        detail.put("name", this.name);
+        detail.put("status", this.status);
+        detail.put("description", this.description);
+        detail.put("logoImage", this.logoImage);
+        detail.put("priceOfDelivery", this.priceOfDelivery);
+        detail.put("isActive", this.isActive);
+        detail.put("averageRating", this.averageRating);
+        return detail;
+    }
 //    @JsonIgnore
 //    public Map<String, Object> getWorkingTime() {
 //        Map<String, Object> map = new HashMap<>();

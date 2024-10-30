@@ -25,7 +25,6 @@ public class BusinessListSerializer {
         jsonGenerator.writeStringField("logoImage", business.getLogoImage());
         jsonGenerator.writeStringField("backgroundImage", business.getBackgroundImage());
         jsonGenerator.writeNumberField("priceOfDelivery", business.getPriceOfDelivery());
-        jsonGenerator.writeNumberField("priceOfOrderForFreeDelivery", business.getPriceOfOrderForFreeDelivery());
         jsonGenerator.writeStringField("name", business.getName());
 
         if (business.getTimeOpened() != null) {
@@ -91,7 +90,6 @@ public class BusinessListSerializer {
             jsonGenerator.writeStartObject();
             writeBusinessData(jsonGenerator, business);
             jsonGenerator.writeNumberField("priceOfDelivery", business.getPriceOfDelivery());
-            jsonGenerator.writeNumberField("priceOfOrderForFreeDelivery", business.getPriceOfOrderForFreeDelivery());
             jsonGenerator.writeEndObject();
         }
     }
