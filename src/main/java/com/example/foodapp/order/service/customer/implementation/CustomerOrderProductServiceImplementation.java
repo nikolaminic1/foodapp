@@ -10,16 +10,22 @@ import com.example.foodapp.order.model.Request.OrderProductRequest;
 import com.example.foodapp.order.model.Request.OrderProductUpdateRequest;
 import com.example.foodapp.order.repo.OrderProductRepo;
 import com.example.foodapp.order.repo.OrderRepo;
+import com.example.foodapp.order.serializer.customer.CustomerOrderProductSerializer;
 import com.example.foodapp.order.service.customer.CustomerOrderProductService;
 import com.example.foodapp.product.model.Product;
+import com.example.foodapp.product.model.SideDish;
 import com.example.foodapp.product.repo.SideDishRepo;
 import com.example.foodapp.product.repo.ProductRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -36,8 +42,37 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
     private final _UserProfileService userProfileService;
     private final OrderProductRepo orderProductRepo;
     private final OrderRepo orderRepo;
-    private final SideDishRepo appendicesRepo;
+    private final SideDishRepo sideDishRepo;
     private final ProductRepo productRepo;
+
+    private String orderProductMapping(OrderProduct orderProduct) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(OrderProduct.class, new CustomerOrderProductSerializer.DetailSerializer());
+        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(module);
+        return mapper.writeValueAsString(orderProduct);
+    }
+
+    @Override
+    public String updateQuantity(Long orderProductId, Integer quantity, Principal principal) throws Exception {
+        if (quantity == 0) {
+            return "OK";
+        }
+        OrderProduct orderProduct = orderProductRepo.findById(orderProductId)
+                .orElseThrow(() -> new Exception("Order product not found"));
+
+        User user = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new Exception("User not found"));
+
+        if (orderProduct.getOrderO().getCustomer().getUser() == user){
+            orderProduct.setQuantity(quantity);
+            orderProductRepo.save(orderProduct);
+            return "OK";
+        }
+
+        throw new Exception("This order product does not belong to this user");
+    }
 
     @Override
     public OrderProduct create(OrderProductRequest orderProductRequest, Principal principal) throws Exception {
@@ -109,8 +144,18 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
     }
 
     @Override
-    public OrderProduct get(Long id) {
-        return null;
+    public String get(Long id, Principal principal) throws Exception {
+        OrderProduct orderProduct = orderProductRepo.findById(id)
+                .orElseThrow(() -> new Exception("Order product not found"));
+
+        User user = userRepo.findByEmail(principal.getName())
+            .orElseThrow(() -> new Exception("User not found"));
+
+        if (orderProduct.getOrderO().getCustomer().getUser() == user){
+            return this.orderProductMapping(orderProduct);
+        }
+
+        throw new Exception("This order product does not belong to this user");
     }
 
     @Override
@@ -135,7 +180,12 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
         if (order.getCustomer().getUser() == user) {
             orderProduct.setInOrder(true);
             orderProduct.setTimeUpdated(now());
+            orderProduct.updatePrice();
             orderProductRepo.save(orderProduct);
+
+            order.setTimeUpdated(now());
+            order.updatePrice();
+            orderRepo.save(order);
             return "OK";
         } else {
             return "This product is not in your order";
@@ -167,10 +217,36 @@ public class CustomerOrderProductServiceImplementation implements CustomerOrderP
     }
 
     @Override
-    public void addSideDishToOrderProduct(Product product, Map<Long, List<Long>> data, OrderProduct orderProduct) throws Exception{
+    public String addSideDishToOrderProduct(
+            Long orderProductId,
+            Long sideDishId,
+            Principal principal) throws Exception {
+        OrderProduct orderProduct = orderProductRepo.findById(orderProductId)
+                .orElseThrow(() -> new Exception("Order product not found"));
+        SideDish sideDish = sideDishRepo.findById(sideDishId)
+                .orElseThrow(() -> new Exception("Side dish not found"));
 
+        User user = userRepo.findByEmail(principal.getName())
+            .orElseThrow(() -> new Exception("User not found"));
 
+        if (orderProduct.getOrderO().getCustomer().getUser() != user) {
+            throw new Exception("This order does not belong to this user");
+        }
 
+        List<SideDish> sideDishes = orderProduct.getSideDishes();
+
+        if (sideDishes == null) {
+            sideDishes = new ArrayList<>();
+        }
+
+        if (sideDishes.contains(sideDish)) {
+            sideDishes.remove(sideDish);
+        } else {
+            sideDishes.add(sideDish);
+        }
+        orderProduct.updatePrice();
+        orderProductRepo.save(orderProduct);
+        return "OK";
     }
 
 //    @Override

@@ -15,6 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -40,8 +41,16 @@ public class OrderProduct {
 //    @ManyToOne(cascade = CascadeType.MERGE)
 //    private ProductVariation productVariation;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "orderProducts")
-    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.MERGE
+//            ,mappedBy = "orderProducts"
+    )
+//    @JsonManagedReference
+//    @JoinColumn(nullable = false)
+    @JoinTable(
+            name = "order_product_side_dishes_join",
+            joinColumns = @JoinColumn(name = "order_product_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "side_dish_id", nullable = false)
+    )
     private List<SideDish> sideDishes;
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -84,6 +93,22 @@ public class OrderProduct {
         return this.quantity * this.getItemPrice();
     }
 
+    public Map<String, Object> getCustomerOrderDetail() {
+        Map<String, Object> product = new HashMap<>();
+        product.put("id", this.getId());
+        product.put("ordered", this.isOrdered());
+        product.put("inOrder", this.isInOrder());
+        product.put("product", this.product.getBasicProductDetail());
+        product.put("sideDishes", this.getCustomerOrderSideDishes());
+        product.put("timeCreated", this.getTimeCreated());
+        product.put("timeUpdated", this.getTimeUpdated());
+        product.put("timeOrdered", this.getTimeOrdered());
+        product.put("quantity", this.getQuantity());
+        product.put("price", this.getItemPrice());
+        product.put("totalPrice", this.getTotalPrice());
+        return product;
+    }
+
     public Map<String, Object> getOrderProductDetail() {
         Map<String, Object> product = new HashMap<>();
         product.put("id", this.getId());
@@ -98,6 +123,16 @@ public class OrderProduct {
         product.put("price", this.getItemPrice());
         product.put("totalPrice", this.getTotalPrice());
         return product;
+    }
+
+    public Boolean getIsMaximum () {
+        if (this.product.getSideDishes() == null) {
+            return true;
+        }
+        if (this.sideDishes.size() >= this.product.getNumberOfAllowedSideDishes()){
+            return true;
+        }
+        return false;
     }
 
     public void updatePrice(){
@@ -120,10 +155,40 @@ public class OrderProduct {
 //            }
 //        }
     
+    public List<Map<String, Object>> getCustomerOrderSideDishes() {
+        return this.getCustomerSideDishes().stream()
+                .filter((sideDishes) -> (Boolean) sideDishes.get("inOrder"))
+                .collect(Collectors.toList());
+    }
 
-    public List<Object> getCustomerSideDishCategories() {
-        List<Object> list = new ArrayList<>();
+    public List<Map<String, Object>> getCustomerSideDishes() {
+        List<SideDish> sideDishesProduct = this.product.getSideDishes();
+        List<Map<String, Object>> list = new ArrayList<>();
 
+        if (sideDishesProduct == null) {
+            return list;
+        }
+
+        if (this.sideDishes == null){
+            this.sideDishes = new ArrayList<>();
+        }
+
+        for (SideDish sideDish : this.product.getSideDishes()) {
+            Map<String, Object> sideDishMap = new HashMap<>();
+            sideDishMap.put("id", sideDish.getId());
+            sideDishMap.put("nameOfSideDish", sideDish.getNameOfSideDish());
+            sideDishMap.put("doesAffectPrice", sideDish.getDoesAffectPrice());
+            sideDishMap.put("price", sideDish.getPrice());
+
+            if (this.sideDishes.contains(sideDish)){
+                sideDishMap.put("inOrder", true);
+            } else {
+                sideDishMap.put("inOrder", false);
+            }
+
+            list.add(sideDishMap);
+        }
+        list.sort(Comparator.comparingLong(obj -> (Long) obj.get("id")));
         return list;
     }
 }

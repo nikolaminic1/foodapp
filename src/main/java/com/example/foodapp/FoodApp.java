@@ -1,7 +1,9 @@
 package com.example.foodapp;
 
 import com.example.foodapp.auth.service.UserService;
+import com.example.foodapp.product.model.Request.SideDishRequest;
 import com.example.foodapp.product.repo.*;
+import com.example.foodapp.product.service.admin.AdminSideDishService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,18 +48,19 @@ public class FoodApp {
 //			TimeOpenedService timeOpenedService
 			,
 			ProductRepo productRepo,
-			SideDishRepo appendicesRepo
+			SideDishRepo appendicesRepo,
+			AdminSideDishService sideDishService
 	) {
 		return args -> {
 //			categoryService.createDummyData();
-//			for (var i = 1; i<10 ; i++) {
-//				RegisterRequest request = new RegisterRequest();
-//				request.setEmail(String.format("user%s@gmail.com", i));
-//				request.setName("nikola");
-//				request.setPassword("nikola123");
-//				request.setRe_password("nikola123");
-////				service.register(request);
-//			}
+			for (var i = 1; i<10 ; i++) {
+				SideDishRequest request = new SideDishRequest();
+				request.setPrice(10 * i);
+				request.setDoesAffectPrice(i % 2 == 0);
+				request.setNameOfSideDish(String.format("name - %s", i));
+				request.setProductId(202L);
+//				sideDishService.createAdmin(request);
+			}
 
 //			List<ProductCategory> categories = productCategoryRepo.findAll();
 //

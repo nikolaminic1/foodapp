@@ -34,7 +34,7 @@ public class CustomerOrderSerializer {
                 orderO.getProducts().forEach(product -> {
                     try {
 //                    jsonGenerator.writeStartObject();
-                        jsonGenerator.writeObject(product.getOrderProductDetail());
+                        jsonGenerator.writeObject(product.getCustomerOrderDetail());
 //                    jsonGenerator.writeEndObject();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -73,7 +73,7 @@ public class CustomerOrderSerializer {
             jsonGenerator.writeBooleanField("refundRequested", orderO.getRefundRequested());
             jsonGenerator.writeBooleanField("refundGranted", orderO.getRefundGranted());
             jsonGenerator.writeNumberField("deliveryPrice", orderO.getDeliveryPrice());
-            jsonGenerator.writeNumberField("price", orderO.getPrice());
+            jsonGenerator.writeNumberField("price", orderO.getTotalPrice());
             jsonGenerator.writeObjectField("business", orderO.getBusiness().getBasicDetail());
 
             if (orderO.getDeliveryType() != null) {

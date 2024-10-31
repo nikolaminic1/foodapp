@@ -111,18 +111,14 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
     public String getRestaurantOrder(Long businessId, Principal principal) throws Exception {
         User user = userRepo.findByEmail(principal.getName())
                 .orElseThrow(() -> new Exception("User not found"));
-        log.error(1);
         Business business = businessRepo.findBusinessById(businessId)
                 .orElseThrow(() -> new Exception("Business not found"));
-        log.error(2);
         Customer customer = customerRepository.findCustomerByUser(user)
                 .orElseThrow(() -> new Exception("Customer not found."));
-        log.error(3);
         OrderO orderO;
-        log.error(4);
+
         if (orderRepo.findOrderOByCustomerAndOrderedAndBusiness(customer, false, business).isPresent()) {
             orderO = orderRepo.findOrderOByCustomerAndOrderedAndBusiness(customer, false, business).get();
-            log.error(5);
         } else {
             orderO = new OrderO();
             orderO.setOrdered(false);
@@ -134,10 +130,9 @@ public class CustomerOrderServiceImplementation implements CustomerOrderService 
             orderO.setCustomer(customer);
             orderO.setBusiness(business);
             orderO.setStartTime(now());
+            orderO.updatePrice();
             orderRepo.save(orderO);
-            log.error(6);
         }
-        log.error(1);
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(OrderO.class, new CustomerOrderSerializer.DetailSerializer());

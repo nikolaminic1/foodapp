@@ -48,6 +48,43 @@ public class CustomerOrderProductResource {
         return ResponseEntity.ok().body("OK");
     }
 
+    @PostMapping("/add-to-cart/{id}")
+    public ResponseEntity<String> saveOrderProduct(@PathVariable Long id, Principal principal){
+        try {
+            return ResponseEntity.ok().body(customerOrderProductService.addToOrder(id, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/update-quantity/{orderProductId}")
+    public ResponseEntity<String> updateQuantity(@PathVariable Long orderProductId,
+                                                 @RequestBody Integer quantity,
+                                                 Principal principal){
+        try {
+            return ResponseEntity.ok().body(customerOrderProductService
+                    .updateQuantity(orderProductId, quantity, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getOrderProduct(@PathVariable Long id,
+                                                     Principal principal
+    ){
+        try {
+            return ResponseEntity.ok()
+                    .body(customerOrderProductService.get(id, principal));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrderProduct(@PathVariable Long id,
                                                      Principal principal
@@ -62,16 +99,16 @@ public class CustomerOrderProductResource {
     }
 
     @PostMapping("/add-side-dish/{id}")
-    public ResponseEntity<String> addSideDishToOrderProduct(
+    public ResponseEntity<String> updateSideDishToOrderProduct(
             @PathVariable(name = "id") Long orderProductId,
-            @RequestBody AddSideDishToProductRequest sideDishToProductRequest,
+            @RequestBody Long sideDishId,
             Principal principal){
         try {
             return ResponseEntity.ok()
-                    .body(appendicesOrderProductCustomerService
+                    .body(customerOrderProductService
                             .addSideDishToOrderProduct(
                                     orderProductId,
-                                    sideDishToProductRequest,
+                                    sideDishId,
                                     principal));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -92,29 +129,6 @@ public class CustomerOrderProductResource {
         }
     }
 
-    @PostMapping("/add_appendix")
-    public ResponseEntity<Response> addAppendixToOrderProduct(@RequestBody AddAppendixRequest addAppendixRequest, Principal principal){
-        try {
-            appendicesOrderProductCustomerService.addToOrderProduct(addAppendixRequest, principal);
-
-            return ResponseEntity.ok(
-                    Response.builder()
-                            .message("OK message")
-                            .status(HttpStatus.OK)
-                            .statusCode(HttpStatus.OK.value())
-                            .build()
-            );
-
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(
-                    Response.builder()
-                            .message(e.getMessage())
-                            .status(HttpStatus.BAD_REQUEST)
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
-                            .build()
-            );
-        }
-    }
 }
 
 

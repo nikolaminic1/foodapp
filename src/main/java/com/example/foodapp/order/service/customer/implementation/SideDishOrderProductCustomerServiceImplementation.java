@@ -48,37 +48,37 @@ public class SideDishOrderProductCustomerServiceImplementation implements SideDi
     private final ProductRepo productRepo;
     private final CustomerRepository customerRepo;
 
-    @Override
-    public void addToOrderProduct(AddAppendixRequest addAppendixRequest, Principal principal) throws Exception {
-        User user = userRepo.findByEmail(principal.getName()).orElseThrow();
-        Long appendixId = addAppendixRequest.getAppendixId();
-        Long orderProductId = addAppendixRequest.getOrderProductId();
-        Customer customer = userProfileService.returnCustomer(user);
-
-        boolean doesAppendixExists = appendicesRepo.findById(appendixId).isPresent();
-        boolean doesOrderProductExists = orderProductRepo.findById(orderProductId).isPresent();
-        boolean doesOrderExists = orderRepo.findOrderOByCustomerAndOrdered(customer, false).isPresent();
-        OrderO orderO = orderRepo.findOrderOByCustomerAndOrdered(customer, false).get();
-        orderO.setTimeUpdated(now());
-        orderRepo.save(orderO);
-
-        if(!doesOrderExists){
-            throw new Exception("You dont have active order");
-        }
-
-        if(!doesOrderProductExists){
-            throw new Exception("This order product does not exists");
-        }
-
-        if(!doesAppendixExists){
-            throw new Exception("This appendix does not exists");
-        }
-
-        OrderProduct orderProduct = orderProductRepo.findById(orderProductId).get();
-        SideDish sideDish = appendicesRepo.findById(appendixId).get();
-
-
-    }
+//    @Override
+//    public void addToOrderProduct(AddAppendixRequest addAppendixRequest, Principal principal) throws Exception {
+//        User user = userRepo.findByEmail(principal.getName()).orElseThrow();
+//        Long appendixId = addAppendixRequest.getAppendixId();
+//        Long orderProductId = addAppendixRequest.getOrderProductId();
+//        Customer customer = userProfileService.returnCustomer(user);
+//
+//        boolean doesAppendixExists = appendicesRepo.findById(appendixId).isPresent();
+//        boolean doesOrderProductExists = orderProductRepo.findById(orderProductId).isPresent();
+//        boolean doesOrderExists = orderRepo.findOrderOByCustomerAndOrdered(customer, false).isPresent();
+//        OrderO orderO = orderRepo.findOrderOByCustomerAndOrdered(customer, false).get();
+//        orderO.setTimeUpdated(now());
+//        orderRepo.save(orderO);
+//
+//        if(!doesOrderExists){
+//            throw new Exception("You dont have active order");
+//        }
+//
+//        if(!doesOrderProductExists){
+//            throw new Exception("This order product does not exists");
+//        }
+//
+//        if(!doesAppendixExists){
+//            throw new Exception("This appendix does not exists");
+//        }
+//
+//        OrderProduct orderProduct = orderProductRepo.findById(orderProductId).get();
+//        SideDish sideDish = appendicesRepo.findById(appendixId).get();
+//
+//
+//    }
 
     @Override
     public SideDish get(Long id) {
@@ -95,27 +95,27 @@ public class SideDishOrderProductCustomerServiceImplementation implements SideDi
         return null;
     }
 
-    @Override
-    public String addSideDishToOrderProduct(
-            Long orderProductId,
-            AddSideDishToProductRequest request,
-            Principal principal) throws Exception {
-        OrderProduct orderProduct = orderProductRepo.findById(orderProductId)
-                .orElseThrow(() -> new Exception("Order product not found"));
+//    @Override
+//    public String addSideDishToOrderProduct(
+//            Long orderProductId,
+//            Long sideDishId,
+//            Principal principal) throws Exception {
+//        OrderProduct orderProduct = orderProductRepo.findById(orderProductId)
+//                .orElseThrow(() -> new Exception("Order product not found"));
+//
+//        User user = userRepo.findByEmail(principal.getName())
+//                .orElseThrow(() -> new Exception("User not found"));
+//
+//        if (orderProduct.getOrderO().getCustomer().getUser() != user) {
+//            throw new Exception("This order product does not belong to this user");
+//        }
+//
+//        SideDish sideDish = appendicesRepo.findById(request.getSideDishId())
+//                .orElseThrow(() -> new Exception("Side dish not found"));
 
-        User user = userRepo.findByEmail(principal.getName())
-                .orElseThrow(() -> new Exception("User not found"));
-
-        if (orderProduct.getOrderO().getCustomer().getUser() != user) {
-            throw new Exception("This order product does not belong to this user");
-        }
-
-        SideDish sideDish = appendicesRepo.findById(request.getSideDishId())
-                .orElseThrow(() -> new Exception("Side dish not found"));
-
-        orderProductRepo.save(orderProduct);
-        return this.orderProductMapping(orderProduct);
-    }
+//        orderProductRepo.save(orderProduct);
+//        return this.orderProductMapping(orderProduct);
+//    }
 
     @Override
     public String initializeOrderProduct(Long id, Principal principal) throws Exception {

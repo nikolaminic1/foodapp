@@ -8,4 +8,5 @@ public class SideDishRequest {
     private String nameOfSideDish;
     private Boolean doesAffectPrice;
     private int price;
+    private Long productId;
 }

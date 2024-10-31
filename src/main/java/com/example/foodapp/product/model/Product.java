@@ -25,8 +25,8 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"productCategory", "variation"})
-@EqualsAndHashCode(exclude = {"productCategory", "variation"})
+@ToString(exclude = {"productCategory"})
+@EqualsAndHashCode(exclude = {"productCategory"})
 @Log4j2
 //@Transactional
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "productCategory" })
@@ -46,6 +46,7 @@ public class Product {
     private int preparationTime;
     private Availability availability;
     private int weight;
+    private int numberOfAllowedSideDishes;
 
     @CreationTimestamp
     private LocalDateTime dataCreated;
@@ -94,6 +95,18 @@ public class Product {
     public void setProductImage(ProductImage productImage) {
         this.productImage = productImage;
         productImage.setProduct(this);
+    }
+
+    public Map<String, Object> getBasicProductDetail() {
+        var map = getOnlyBasicProductDetail();
+        map.put("availability", this.availability);
+        map.put("weight", this.weight);
+        map.put("numberOfAllowedSideDishes", this.numberOfAllowedSideDishes);
+
+        if (this.productImage != null) {
+            map.put("productImage", this.productImage.getImageUrl());
+        }
+        return map;
     }
 
     public void removeProductImage() {
@@ -185,16 +198,7 @@ public class Product {
 
     @JsonIgnore
     public Map<String, Object> getProductDetail() {
-        Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("id", this.id);
-        objectMap.put("nameOfProduct", this.nameOfProduct);
-        objectMap.put("codeOfProduct", this.codeOfProduct);
-        objectMap.put("priceOfProduct", this.priceOfProduct);
-        objectMap.put("aboutProduct", this.aboutProduct);
-        objectMap.put("preparationTime", this.preparationTime);
-        if (this.availability != null) {
-            objectMap.put("availability", this.availability.getAvailability());
-        }
+        var objectMap = getOnlyBasicProductDetail();
         objectMap.put("weight", this.weight);
         objectMap.put("dataCreated", this.dataCreated);
         objectMap.put("dateUpdated", this.dateUpdated);
@@ -202,6 +206,22 @@ public class Product {
         if (this.productImage != null) {
             objectMap.put("productImage", this.productImage.getImageUrl());
         }
+
+        if (this.availability != null) {
+            objectMap.put("availability", this.availability.getAvailability());
+        }
+        return objectMap;
+    }
+
+    @JsonIgnore
+    private Map<String, Object> getOnlyBasicProductDetail() {
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("id", this.id);
+        objectMap.put("nameOfProduct", this.nameOfProduct);
+        objectMap.put("codeOfProduct", this.codeOfProduct);
+        objectMap.put("priceOfProduct", this.priceOfProduct);
+        objectMap.put("aboutProduct", this.aboutProduct);
+        objectMap.put("preparationTime", this.preparationTime);
         return objectMap;
     }
 

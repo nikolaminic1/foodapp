@@ -22,14 +22,15 @@ public class CustomerOrderProductSerializer {
             jsonGenerator.writeBooleanField("ordered", orderProduct.isOrdered());
             jsonGenerator.writeBooleanField("inOrder", orderProduct.isInOrder());
             jsonGenerator.writeObjectField("product", orderProduct.getProduct().getProductDetail());
-            jsonGenerator.writeObjectField("sideDishCategories", orderProduct.getCustomerSideDishCategories());
+            jsonGenerator.writeObjectField("sideDishes", orderProduct.getCustomerSideDishes());
 //            jsonGenerator.writeObjectField("order", orderProduct.getOrderO());
             jsonGenerator.writeObjectField("timeCreated", orderProduct.getTimeCreated());
             jsonGenerator.writeObjectField("timeUpdated", orderProduct.getTimeUpdated());
             jsonGenerator.writeObjectField("timeOrdered", orderProduct.getTimeOrdered());
             jsonGenerator.writeObjectField("timePrepared", orderProduct.getTimePrepared());
             jsonGenerator.writeNumberField("quantity", orderProduct.getQuantity());
-            jsonGenerator.writeBooleanField("isAddToCartAllowed", orderProduct.isAddToCartAllowed());
+            jsonGenerator.writeBooleanField("isMaximumAllowed", orderProduct.getIsMaximum());
+//            jsonGenerator.writeBooleanField("isAddToCartAllowed", orderProduct.isAddToCartAllowed());
             jsonGenerator.writeNumberField("price", orderProduct.getItemPrice());
             jsonGenerator.writeNumberField("totalPrice", orderProduct.getTotalPrice());
             jsonGenerator.writeEndObject();

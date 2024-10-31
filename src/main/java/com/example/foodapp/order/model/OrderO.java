@@ -16,6 +16,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,10 @@ public class OrderO {
     }
 
     public List<OrderProduct> getProducts() {
-        List<OrderProduct> products = new LinkedList<>();
+        List<OrderProduct> products = new ArrayList<>();
+        if (this.getProductList() == null) {
+            return products;
+        }
         for(OrderProduct orderProduct : this.getProductList()){
             if (orderProduct.isInOrder()){
                 products.add(orderProduct);
@@ -109,11 +113,14 @@ public class OrderO {
 
 
     // todo : need to check is delivery free based on business
-    public double getPrice(){
+    public double getTotalPrice(){
         double totalOrderPrice = 0;
+        if (this.getProductList() == null) {
+            return totalOrderPrice;
+        }
         for(OrderProduct orderProduct : this.getProductList()){
             if (orderProduct.isInOrder()){
-                totalOrderPrice = totalOrderPrice + orderProduct.getPrice();
+                totalOrderPrice = totalOrderPrice + orderProduct.getTotalPrice();
             }
 
         }
